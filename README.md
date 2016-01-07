@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jonnyzzz/TeamCity2DSL.svg)](https://travis-ci.org/jonnyzzz/TeamCity2DSL)
+
 TeamCity2DSL
 ============
 
