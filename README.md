@@ -21,7 +21,7 @@ TeamCity configuration files.
 
 The tool provides
 * A generator from XML files into the DSL
-* An evaluator to generate XML files from DSL
+* An evaluator for the DSL to generate XML files
 
 By definition, a transition from XML -> DSL -> XML
 should not introduce any changes.
@@ -33,6 +33,7 @@ Further Work
 make it work as a refactoring/develpment tool
 * Design and implement unification rules, so that
 generated DSL was re-using similar things
+* Introduce DSL extension plugins & APIs (to support build runner/features/vcs/... plugins presentation)
 * Document DSL and mixins
 * Add more integration tests
 * Invite contributirs
