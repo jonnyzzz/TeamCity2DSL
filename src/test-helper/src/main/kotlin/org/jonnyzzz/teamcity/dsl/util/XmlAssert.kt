@@ -4,9 +4,6 @@ package org.jonnyzzz.teamcity.dsl.util
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.loadUTF
 import java.io.File
-import kotlin.collections.*
-import kotlin.text.endsWith
-import kotlin.text.replace
 
 fun assertGeneratedTeamCityModel(orig : File, temp : File) {
   fun File.loadForCompare() = loadUTF().replace("\r\n", "\n")
