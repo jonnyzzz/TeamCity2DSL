@@ -1,0 +1,14 @@
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'maven'
+
+dependencies {
+  compile project(':src:DSL')
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository( url: uri(local_maven_repo) )
+    }
+  }
+}

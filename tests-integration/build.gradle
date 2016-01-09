@@ -1,6 +1,16 @@
 
+buildscript {
+  repositories {
+    maven {
+      url uri(local_maven_repo)
+    }
+  }
 
-subprojects {
-
+  dependencies {
+    classpath "org.jonnyzzz.teamcity.dsl:gradle-plugin:SNAPSHOT"
+  }
 }
 
+subprojects {
+//  apply plugin: 'org.jonnyzzz.teamcity.dsl'
+}

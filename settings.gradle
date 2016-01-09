@@ -1,6 +1,9 @@
 rootProject.name = 'TeamCity2DSL'
 
-include ':src:DSL', ':src:model',
+include ':src:DSL',
+        ':src:model',
+        ':src:gradle-plugin',
+
         ':tests-integration',
         ':tests-integration:test-001'
 
