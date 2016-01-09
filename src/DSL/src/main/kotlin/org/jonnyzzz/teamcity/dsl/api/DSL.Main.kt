@@ -4,12 +4,6 @@ import org.jonnyzzz.teamcity.dsl.using
 import java.io.File
 import java.io.InputStreamReader
 import java.net.URLClassLoader
-import kotlin.collections.asSequence
-import kotlin.collections.map
-import kotlin.collections.toTypedArray
-import kotlin.sequences.drop
-import kotlin.sequences.toList
-import kotlin.text.trim
 
 interface TCDSLLazy {
   fun doLazyInit()
@@ -54,8 +48,8 @@ val version : String by lazy(LazyThreadSafetyMode.NONE) {
 
 fun teamcity_dls_generator_main_impl(vararg args: String) : Int {
   println("TeamCity.DSL project files generator")
-  println("version: $version")
-  println()
+  println("  version: $version")
+  println("  arguments: ${args.joinToString(" ")}")
 
   fun help() {
     val app = "java -jar TeamCityDSL.jar"
