@@ -1,29 +1,76 @@
+def thisBuildScript = project.buildFile
 
-/*
-buildscript {
-  repositories {
-    maven {
-      url uri(local_maven_repo)
-    }
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'kotlin'
+
+  def XMLs_in = project.file("teamcity")
+  def XMLs_out = project.file("generated/teamcity")
+  def DSLs = project.file("generated/kotlin")
+  def DSL_package = "org.jonnyzzz.autodsl.${project.name.replaceAll("[^a-z0-9]", "_")}"
+  def DSL_classes = project.sourceSets.main.output.classesDir
+
+  sourceSets {
+    main.kotlin.srcDirs += DSLs
   }
 
   dependencies {
-    classpath "org.jonnyzzz.teamcity.dsl:gradle-plugin:SNAPSHOT"
+    //TODO: fixme. Use modules with fewer dependencies here
+    compile project(':src:DSL')
   }
-}
-*/
 
-subprojects {
-//  apply plugin: 'org.jonnyzzz.teamcity.dsl'
+  compileKotlin.dependsOn "generateDSL"
+  test.dependsOn "generateXMLs"
 
+  def runGenerator = { argz ->
+    def baseTask = (JavaExec) project(":src:DSL").tasks.run
+
+    javaexec {
+      main = baseTask.main
+      classpath = baseTask.classpath
+      jvmArgs = baseTask.jvmArgs
+      args = argz
+    }
+  }
 
   task generateDSL {
-    inputs.dir file("teamcity")
-    dependsOn ":src:DSL:compileJava"
+    inputs.dir XMLs_in
+    inputs.file project.buildFile
+    inputs.file thisBuildScript
 
-    JavaExec
+    outputs.dir DSLs
+
+    dependsOn ":src:DSL:classes"
+    dependsOn "clean"
+
     doLast {
-      project(":src:DSL").tasks.run.execute()
+      delete DSLs
+
+      runGenerator(["import",
+                    "$DSL_package",
+                    "$XMLs_in",
+                    "$DSLs"])
+    }
+  }
+
+  task generateXMLs {
+    inputs.dir DSLs
+    inputs.file project.buildFile
+    inputs.file thisBuildScript
+
+    outputs.dir XMLs_out
+
+    dependsOn ":src:DSL:classes"
+    dependsOn "classes"
+
+    doLast {
+      delete XMLs_out
+
+      runGenerator(["generate",
+                    "$DSL_package",
+                    "$XMLs_out",
+                    "$DSL_classes"])
     }
   }
 }
