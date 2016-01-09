@@ -24,5 +24,3 @@ open class TCMetaRunner : TCID(), TCWithSettings, TCMetaRunnerRef {
       return s
     }
 }
-
-private class please_show_TCMetaRunner_class_with_kt_icon_in_idea

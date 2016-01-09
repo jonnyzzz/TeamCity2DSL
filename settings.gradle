@@ -1,3 +1,4 @@
 rootProject.name = 'kotlin xml bind dsl'
 
-include ':DSL'
+include ':DSL', ':DSL.Model'
+

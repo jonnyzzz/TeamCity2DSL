@@ -23,5 +23,3 @@ open class TCBuildTemplate : TCBuildOrTemplate(), TCWithSettings, TCBuildTemplat
       return s
     }
 }
-
-private class please_show_TCBuildTemplate_class_with_kt_icon_in_idea

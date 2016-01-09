@@ -3,12 +3,6 @@ package org.jonnyzzz.teamcity.dsl.model
 import org.jonnyzzz.kotlin.xml.bind.*
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
 import org.jonnyzzz.kotlin.xml.bind.jdom.XUnknown
-import kotlin.collections.joinToString
-import kotlin.collections.listOf
-import kotlin.collections.toList
-import kotlin.collections.toTypedArray
-import kotlin.text.split
-import kotlin.text.toRegex
 
 
 class TCBuildTypeSettings : TCBuildSettings() {
@@ -39,13 +33,14 @@ class TCBuildTypeSettings : TCBuildSettings() {
   private var templateIdImpl by JXML[0x400] / XAttribute("ref")
 }
 
-class TCBuildTemplateSettings : TCBuildSettings() {
-}
+class TCBuildTemplateSettings : TCBuildSettings()
 
-class TCMetaRunnerSettings : TCBuildSettings() { init {
-  buildTriggers = null
-  vcs = null
-}}
+class TCMetaRunnerSettings : TCBuildSettings() {
+  init {
+    buildTriggers = null
+    vcs = null
+  }
+}
 
 class TCRequirement {
   var type by JXML / XName
@@ -70,4 +65,3 @@ open class TCBuildSettings {
 interface TCWithSettings {
   val settings: TCBuildSettings
 }
-

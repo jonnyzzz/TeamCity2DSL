@@ -5,11 +5,6 @@ import org.jdom2.Element
 import org.jonnyzzz.kotlin.xml.bind.*
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
 import org.jonnyzzz.kotlin.xml.bind.jdom.XUnknown
-import org.jonnyzzz.teamcity.dsl.generating.quote
-import kotlin.collections.any
-import kotlin.text.contains
-import kotlin.text.isNotEmpty
-import kotlin.text.trim
 
 interface TCAbstractParam {
   var name : String?
@@ -69,7 +64,7 @@ open class TCParameter : TCAbstractParam {
   }
 
   override fun toString(): String {
-    return "param(${(name?:"").quote()}, ${(value?:"").quote()})";
+    return "param{$name = $value}";
   }
 }
 

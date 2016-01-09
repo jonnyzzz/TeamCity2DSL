@@ -1,0 +1,9 @@
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+  compile "org.jonnyzzz.kotlin.xml.bind:jdom:$kotlin_xml_bind_version"
+
+  compile 'org.jdom:jdom2:2.0.6'
+  compile "xerces:xercesImpl:2.11.0"
+}

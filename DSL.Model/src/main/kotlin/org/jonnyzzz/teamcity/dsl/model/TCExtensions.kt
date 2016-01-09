@@ -4,7 +4,6 @@ import org.jonnyzzz.kotlin.xml.bind.XAttribute
 import org.jonnyzzz.kotlin.xml.bind.XElements
 import org.jonnyzzz.kotlin.xml.bind.XSub
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
-import kotlin.collections.listOf
 
 interface TCSettingsExtensionRef {
   val id : String?

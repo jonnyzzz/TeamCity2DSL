@@ -25,5 +25,3 @@ open class TCBuildType : TCBuildOrTemplate(), TCWithSettings, TCBuildTypeRef {
       return s
     }
 }
-
-private class please_show_TCBuildType_class_with_kt_icon_in_idea
