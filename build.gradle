@@ -26,55 +26,6 @@ subprojects {
     mavenCentral()
     maven { url "http://dl.bintray.com/jonnyzzz/maven" }
   }
-
-  dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    testCompile "junit:junit:4.12"
-  }
-
-  test {
-    useJUnit()
-    testLogging.showStandardStreams = true
-  }
-
-
-  apply plugin: 'maven-publish'
-  apply plugin: "com.jfrog.bintray"
-
-  task sourceJar(type: Jar) {
-    from sourceSets.main.allSource
-  }
-
-  artifacts {
-    archives sourceJar
-  }
-
-  publishing {
-    publications {
-      mavenJava(MavenPublication) {
-        from components.java
-        artifact sourceJar {
-          classifier "sources"
-        }
-      }
-    }
-  }
-
-  if (rootProject.hasProperty("bintrayUser")) {
-    bintray {
-      user = getProperty('bintrayUser')
-      key = getProperty('bintrayApiKey')
-      publications = ['mavenJava']
-      pkg {
-        repo = 'maven'
-        name = 'kotlin.xml.bind'
-        userOrg = getProperty('bintrayUser')
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/jonnyzzz/kotlin.xml.bind.git'
-      }
-    }
-  }
 }
 
 task wrapper(type: Wrapper) {
