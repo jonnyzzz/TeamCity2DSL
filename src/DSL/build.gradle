@@ -1,3 +1,7 @@
+apply plugin: 'application'
+mainClassName = "org.jonnyzzz.teamcity.dsl.api.DSLMain"
+applicationDefaultJvmArgs = ["-ea"]
+
 dependencies {
 
   compile project(':src:model')

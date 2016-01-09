@@ -15,4 +15,15 @@ buildscript {
 
 subprojects {
 //  apply plugin: 'org.jonnyzzz.teamcity.dsl'
+
+
+  task generateDSL {
+    inputs.dir file("teamcity")
+    dependsOn ":src:DSL:compileJava"
+
+    JavaExec
+    doLast {
+      project(":src:DSL").tasks.run.execute()
+    }
+  }
 }
