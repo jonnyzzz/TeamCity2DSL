@@ -1,11 +1,13 @@
-package org.jonnyzzz.teamcity.dsl
-
+import org.jonnyzzz.teamcity.dsl.deleteAll
+import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.generating.DSLGenerating
 import org.jonnyzzz.teamcity.dsl.generating.DSLOptions
+import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.util.assertGeneratedTeamCityModel
 import org.jonnyzzz.teamcity.dsl.util.dumpFiles
 import org.jonnyzzz.teamcity.dsl.util.runUnderTempDirectory
+import org.jonnyzzz.teamcity.dsl.writeUTF
 import org.jonnyzzz.teamcity.dsl.xml.XmlGenerating
 import org.jonnyzzz.teamcity.dsl.xml.XmlParsing
 import org.junit.Assert

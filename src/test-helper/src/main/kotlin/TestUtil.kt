@@ -4,8 +4,6 @@ import com.google.common.io.Files
 import org.jonnyzzz.teamcity.dsl.deleteAll
 import org.jonnyzzz.teamcity.dsl.loadUTF
 import java.io.File
-import kotlin.collections.forEach
-import kotlin.collections.sorted
 
 inline fun <Y> runUnderTempDirectory(action: (File) -> Y) {
   val file = Files.createTempDir()!!.canonicalFile;

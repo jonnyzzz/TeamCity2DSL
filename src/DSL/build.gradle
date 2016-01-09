@@ -5,6 +5,7 @@ applicationDefaultJvmArgs = ["-ea"]
 dependencies {
 
   compile project(':src:model')
+  compile project(':src:util')
 
   compile "org.reflections:reflections:0.9.10"
 
