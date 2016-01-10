@@ -18,6 +18,8 @@ subprojects {
   dependencies {
     //TODO: fixme. Use modules with fewer dependencies here
     compile project(':src:DSL')
+
+    testCompile project(":src:test-integration-helper")
   }
 
   compileKotlin.dependsOn "generateDSL"
@@ -72,5 +74,16 @@ subprojects {
                     "$XMLs_out",
                     "$DSL_classes"])
     }
+  }
+
+
+  test {
+    useJUnit()
+
+    dependsOn "generateDSL"
+    dependsOn "generateXMLs"
+
+    systemProperty "DATA_XMLS_IN", "$XMLs_in"
+    systemProperty "DATA_XMLS_OUT", "$XMLs_out"
   }
 }
