@@ -56,7 +56,7 @@ open class TCBuildSettings {
   var vcs by JXML[0x500] / "vcs-settings" / XElements("vcs-entry-ref") / XSub(TCSettingsVCSRef::class.java) - listOf()
   var requirements by JXML[0x600] / "requirements" / XAnyElements / XSub(TCRequirement::class.java) - listOf()
   var buildTriggers by JXML[0x700] / "build-triggers" / XElements("build-trigger") / XSub(TCSettingsTrigger::class.java) - listOf()
-  var extensions by JXML[0x800] / "b[uild-extensions" / XElements("extension") / XSub(TCSettingsExtension::class.java)
+  var extensions by JXML[0x800] / "build-extensions" / XElements("extension") / XSub(TCSettingsExtension::class.java)
   var artifactDependencies by  JXML[0x900] / "artifact-dependencies" / XElements("dependency") / XSub(TCSettingsArtifactDependency::class.java)
   var snapshotDependencies by JXML[0xa00] / "dependencies" / XElements("depend-on") / XSub(TCSettingsSnapshotDependency::class.java)
   var cleanup by JXML[0xb00] / "cleanup" / XUnknown
