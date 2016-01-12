@@ -3,8 +3,10 @@
 TeamCity2DSL
 ============
 
-Experimental project aiming to build a Kotlin DSL for editing
-and refactoring TeamCity's build configuration files.
+*Experimental* project aiming to build a Kotlin API and generator for editing
+and refactoring TeamCity's build configuration XML files.
+
+**NOTE**. This is my (Eugene Petrenko) personal experiments with TeamCity XML configurations. I try different own ideas to represent XML settings with Kotlin code. This has nothing in common with any possible embedded implementaions of a DSL in existing or future versions of TeamCity.
 
 License
 =======
@@ -65,7 +67,8 @@ Further Work
 * Design and implement unification rules, so that generated DSL was re-using similar things
 * Introduce DSL extension plugins & APIs (to support build runner/features/vcs/... plugins presentation)
 * Document DSL and mixins
-* Add more integration tests
+* Blog on Kotlin code generation
+* Add more integration tests (please share your TeamCity project configuration files with me!)
 * Invite contributors
-* Publish binaries to Mavendded e
+* Publish binaries to Maven repository / Gradle plugins repository
 * Have fun!
