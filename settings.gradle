@@ -12,6 +12,7 @@ include ':src:DSL',
         ':src:xml',
 
         ':tests-integration',
-        ':tests-integration:test-001'
+        ':tests-integration:test-001',
+        ':tests-integration:test-002'
 
 
