@@ -1,10 +1,13 @@
 apply plugin: 'application'
-mainClassName = "org.jonnyzzz.teamcity.dsl.api.DSLMain"
+mainClassName = "org.jonnyzzz.teamcity.dsl.main.DSLMain"
 applicationDefaultJvmArgs = ["-ea"]
 
 dependencies {
 
   compile project(':src:model')
+  compile project(':src:model-dsl')
+  compile project(':src:generating-xml')
+  compile project(':src:generating-kotlin')
   compile project(':src:util')
   testCompile project(':src:test-helper')
 

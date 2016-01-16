@@ -1,0 +1,6 @@
+dependencies {
+
+  compile project(':src:model')
+  compile project(':src:util')
+  compile project(':src:xml')
+}

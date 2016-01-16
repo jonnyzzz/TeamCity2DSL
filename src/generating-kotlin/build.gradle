@@ -1,0 +1,7 @@
+dependencies {
+  compile project(':src:model')
+  compile project(':src:model-dsl')
+  compile project(':src:util')
+
+  compile "org.apache.commons:commons-lang3:3.3.2"
+}
