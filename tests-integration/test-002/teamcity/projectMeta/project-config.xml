@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="d7e20fea-721a-48ab-97e9-8c3e646f5060" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>METAZ</name>
+  <description>Meta runners tests</description>
+  <parameters />
+</project>
+

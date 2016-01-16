@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="042d4456-dff8-4213-beec-aee87c9e978e" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>zz Build And Upload Snapshot Build to Development</name>
+  <description>For remote run, use with care (нажимать нежно)</description>
+  <settings>
+    <parameters />
+    <build-runners />
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <artifact-dependencies>
+      <dependency sourceBuildTypeId="Upsource_Compile" cleanDestination="true">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="deploy.zip!**=&gt;out/artifacts/deploy&#xD;&#xA;deploy.zip=&gt;dist&#xD;&#xA;" />
+      </dependency>
+    </artifact-dependencies>
+  </settings>
+</build-type>
+
