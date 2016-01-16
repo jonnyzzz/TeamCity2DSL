@@ -61,6 +61,28 @@ val Build_Test001_Build = Project_projectX.build("Test001_Build") {
 }
 ```
 
+Reporting test data
+===================
+
+The project needs more TeamCity XML configuration files for integration tests. It's way better to 
+use real examples than synthetic files. 
+
+Creating more integration tests: (replace ``<NNN>`` with a number you like)
+- create a folder ``tests-integration/test-<NNN>``
+- copy you TeamCity project files into ``tests-integration/test-<NNN>/teamcity``
+- create a test file ``tests-integration/test-NNN/src/test/kotlin/org/jonnyzzz/teamcity/dsl/util/Test<NNN>.kt``
+- create a test class 
+```kotlin
+package org.jonnyzzz.teamcity.dsl.util
+
+class Test<NNN> : IntegrationTestBase()
+```
+- run gradle project for test
+
+Submitting test data is easy. You may either follow steps above or simply share 
+your test data with me in any way you like.
+
+
 Further Work
 ============
 * Introduce Gradle plugin to simplify generations and to provide refactorings tool
