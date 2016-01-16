@@ -11,6 +11,15 @@ subprojects {
   def DSL_package = "org.jonnyzzz.autodsl.${project.name.replaceAll("[^a-z0-9]", "_")}"
   def DSL_classes = project.sourceSets.main.output.classesDir
 
+  task cleanGenerated {
+    doLast {
+      delete XMLs_out
+      delete DSLs
+    }
+  }
+
+  clean.dependsOn cleanGenerated
+
   sourceSets {
     main.kotlin.srcDirs += DSLs
   }
