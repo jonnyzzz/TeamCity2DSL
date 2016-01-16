@@ -26,7 +26,7 @@ subprojects {
 
   dependencies {
     //TODO: fixme. Use modules with fewer dependencies here
-    compile project(':src:DSL')
+    compile project(':src:model-dsl')
 
     testCompile project(":src:test-integration-helper")
   }
