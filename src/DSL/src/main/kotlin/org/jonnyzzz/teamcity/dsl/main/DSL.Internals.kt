@@ -72,6 +72,12 @@ object DSLRegistry : DSLRegistryFacade {
         }
       }
       suppressing {
+        with(it.getField("INSTANCE")){
+          setAccessible(true)
+          get(null)?.toString()
+        }
+      }
+      suppressing {
         with(it.getField("instance$")){
           setAccessible(true)
           get(null)?.toString()
