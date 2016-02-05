@@ -3,7 +3,7 @@ package org.jonnyzzz.teamcity.dsl.api
 import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.xml.generateXMLString
-import kotlin.collections.*
+import kotlin.comparisons.compareBy
 import kotlin.reflect.KMutableProperty1
 
 

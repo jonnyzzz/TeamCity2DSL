@@ -3,10 +3,6 @@ package org.jonnyzzz.teamcity.dsl.generating
 import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsArtifactDependency
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsSnapshotDependency
-import kotlin.collections.*
-import kotlin.text.compareTo
-import kotlin.text.startsWith
-import kotlin.text.substring
 
 
 fun KotlinWriter.generateDependencies(context : GenerationContext, settings : TCBuildSettings) {
@@ -67,7 +63,7 @@ fun KotlinWriter.generateDependencies(context : GenerationContext, settings : TC
     }
   }
 
-  val deps = (settings.artifactDependencies ?: listOf()).map { BuildTypeId(it.buildTypeId!!) to Dependency() + it }.toArrayList()
+  val deps = (settings.artifactDependencies ?: listOf()).map { BuildTypeId(it.buildTypeId!!) to Dependency() + it }.toMutableList()
   var min = 0
   settings.snapshotDependencies?.forEach {
     val bt = BuildTypeId(it.buildTypeId!!)

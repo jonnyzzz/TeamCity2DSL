@@ -10,6 +10,7 @@ import org.jonnyzzz.teamcity.dsl.generating.block
 import org.jonnyzzz.teamcity.dsl.having
 import java.util.*
 import kotlin.collections.*
+import kotlin.comparisons.*
 
 fun <T : Any> mixinIncluded(runner: T, mixin: T.() -> Unit): Boolean {
   fun Element.toText() = XMLOutputter().outputString(this) ?: ""

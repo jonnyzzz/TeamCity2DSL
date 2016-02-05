@@ -55,9 +55,9 @@ fun assertGeneratedTeamCityModel(orig : File, temp : File) {
     println("Checking: " + file)
 
     val actualText = actualData[file]
-    org.junit.Assert.assertNotNull("File $file should be genereated", actualText)
+    org.junit.Assert.assertNotNull("File $file should be generated", actualText)
     try {
-      org.junit.Assert.assertEquals("$file is generated incorrectly}", origText, actualText)
+      org.junit.Assert.assertEquals("$file is generated incorrectly", origText, actualText)
     } catch (t: Throwable) {
       println("Generated file:")
       println(actualText)

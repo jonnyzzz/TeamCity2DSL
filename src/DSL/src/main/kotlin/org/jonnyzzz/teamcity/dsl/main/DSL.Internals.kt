@@ -16,6 +16,7 @@ import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import java.io.File
 import java.lang.reflect.Modifier
+import java.util.*
 
 /**
  * @author Eugene Petrenko (eugene.petrenko@gmail.com)
@@ -44,7 +45,7 @@ object DSLRegistry : DSLRegistryFacade {
 
   override fun addCompletedProject(p : TCProject) : Unit {
     val clazz = inferCalleeClass()
-    val map = projects.getOrPut(clazz) { linkedListOf() }
+    val map = projects.getOrPut(clazz) { LinkedList() }
 
     map.add(p)
     println("Registered project: ${p.id}")
@@ -58,7 +59,7 @@ object DSLRegistry : DSLRegistryFacade {
 
   override fun addOnCompletedUUIDCallback(callback : (TCUUID) -> Unit) {
     val clazz = inferCalleeClass()
-    callbacks.getOrPut(clazz) {linkedListOf()}.add(OnCompleteCallback(callback))
+    callbacks.getOrPut(clazz) { LinkedList() }.add(OnCompleteCallback(callback))
   }
 
   private fun ensureClassesInitialized(parts : Collection<Class<Any>>) {
