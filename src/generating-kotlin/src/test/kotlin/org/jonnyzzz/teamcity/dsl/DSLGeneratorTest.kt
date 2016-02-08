@@ -7,9 +7,6 @@ import org.jonnyzzz.teamcity.dsl.util.dumpFiles
 import org.jonnyzzz.teamcity.dsl.util.runUnderTempDirectory
 import org.junit.Assert
 import org.junit.Test
-import kotlin.collections.arrayListOf
-import kotlin.collections.listOf
-import kotlin.text.*
 
 class ModelToDSLGeneratorTest {
 

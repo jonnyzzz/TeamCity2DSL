@@ -9,13 +9,9 @@ dependencies {
   compile project(':src:generating-xml')
   compile project(':src:generating-kotlin')
   compile project(':src:util')
-  testCompile project(':src:test-helper')
 
   compile "org.reflections:reflections:0.9.10"
-
   compile "com.google.guava:guava:18.0"
-
   compile "org.apache.commons:commons-lang3:3.3.2"
-
   compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }

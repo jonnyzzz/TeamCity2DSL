@@ -14,9 +14,6 @@ import org.jonnyzzz.teamcity.dsl.model.TCSettingsRunner
 import org.junit.Assert
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.collections.arrayListOf
-import kotlin.collections.map
-import kotlin.collections.toList
 
 
 class ParametersClusteringTest {

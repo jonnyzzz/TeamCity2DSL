@@ -3,5 +3,7 @@ dependencies {
   compile project(':src:model-dsl')
   compile project(':src:util')
 
+  testCompile project(':src:test-helper')
+
   compile "org.apache.commons:commons-lang3:3.3.2"
 }
