@@ -32,7 +32,7 @@ class PluginTest {
   @Test
   fun `exposes task xml2dsl`() {
     Assert.assertTrue(
-            project.tasks.any { it.name == "xml2dsl" }
+      project.tasks.any { it.name == "xml2dsl" }
     )
   }
 }
