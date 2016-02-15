@@ -1,15 +1,10 @@
 buildscript {
-  ext.kotlin_version = '1.0.0-rc-1036'
-  ext.kotlin_xml_dsl_version = '0.1.4'
-  ext.kotlin_xml_bind_version = '0.1.5'
-
-  ext.local_maven_repo = "$rootProject.buildDir.canonicalPath/repo"
+  ext.kotlin_version = '1.0.0'
+  ext.kotlin_xml_dsl_version = '0.1.5'
+  ext.kotlin_xml_bind_version = '0.1.6'
 
   repositories {
     mavenCentral()
-    maven {
-      url uri(local_maven_repo)
-    }
   }
 
   dependencies {
