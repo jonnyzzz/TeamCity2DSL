@@ -3,11 +3,6 @@ package org.jonnyzzz.teamcity.dsl
 import java.io.*
 import kotlin.reflect.KMutableProperty1
 
-inline fun <T> having(t : T, builder : T.() -> Unit) : T {
-  t.builder()
-  return t
-}
-
 inline fun <R, T : Any> R.setIfNull(p: KMutableProperty1<R, T?>, value: () -> T): T {
   val v = p.get(this)
   if (v == null) {

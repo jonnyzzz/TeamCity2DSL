@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCMetaRunner
 import org.jonnyzzz.teamcity.dsl.model.TCMetaRunnerRef
 import org.jonnyzzz.teamcity.dsl.model.TCProjectRef
@@ -38,6 +37,6 @@ fun TCProjectRef.metaRunner(id : String, builder : TCMetaRunner.() -> Unit = {})
   if (this is TCProjectRefOnReady) this.onReady { this.metaRunners += result }
 
   return object: TCMetaRunnerBuilder, TCMetaRunnerRef by result {
-    operator override fun plus(builder: TCMetaRunner.() -> Unit): TCMetaRunnerBuilder = having(this) { builders.add(builder) }
+    operator override fun plus(builder: TCMetaRunner.() -> Unit): TCMetaRunnerBuilder = this.apply { builders.add(builder) }
   }
 }

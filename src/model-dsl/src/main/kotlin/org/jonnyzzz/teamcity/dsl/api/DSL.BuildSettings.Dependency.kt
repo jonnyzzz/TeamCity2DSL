@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.*
 
 
@@ -14,7 +13,7 @@ fun TCWithSettings.dependency(build : TCBuildTypeRef, builder : TCBuildSettingsD
   object : TCBuildSettingsDependencyBuilder {
     override fun artifact(builder: TCSettingsArtifactDependency.() -> Unit) {
       settings {
-        artifactDependencies = (artifactDependencies ?: listOf()) + having(TCSettingsArtifactDependency()) {
+        artifactDependencies = (artifactDependencies ?: listOf()) + TCSettingsArtifactDependency().apply {
           this.buildTypeId = buildTypeId
           this.builder()
         }
@@ -22,7 +21,7 @@ fun TCWithSettings.dependency(build : TCBuildTypeRef, builder : TCBuildSettingsD
     }
     override fun snapshot(builder: TCSettingsSnapshotDependency.() -> Unit) {
       settings {
-        snapshotDependencies = (snapshotDependencies ?: listOf()) + having(TCSettingsSnapshotDependency()) {
+        snapshotDependencies = (snapshotDependencies ?: listOf()) + TCSettingsSnapshotDependency().apply {
           this.buildTypeId = buildTypeId
           this.builder()
         }
@@ -53,7 +52,7 @@ fun TCSettingsSnapshotDependency.param(name : String, value : String) {
   val opts = options ?: TCSettingsOptions()
   options = opts
 
-  opts.options = (opts.options ?: listOf()) + having(TCSettingsOption()) {
+  opts.options = (opts.options ?: listOf()) + TCSettingsOption().apply {
     this.name = name
     this.value = value
   }

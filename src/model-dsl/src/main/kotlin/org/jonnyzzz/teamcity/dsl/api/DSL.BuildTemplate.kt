@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCBuildTemplate
 import org.jonnyzzz.teamcity.dsl.model.TCBuildTemplateRef
 import org.jonnyzzz.teamcity.dsl.model.TCProjectRef
@@ -42,6 +41,6 @@ fun TCProjectRef.template(id : String, builder : TCBuildTemplate.() -> Unit = {}
   if (this is TCProjectRefOnReady) this.onReady { this.buildTemplates += result }
 
   return object: TCTemplateBuilder, TCBuildTemplateRef by result  {
-    operator override fun plus(builder: TCBuildTemplate.() -> Unit): TCTemplateBuilder = having(this) { builders.add(builder) }
+    operator override fun plus(builder: TCBuildTemplate.() -> Unit): TCTemplateBuilder = this.apply { builders.add(builder) }
   }
 }

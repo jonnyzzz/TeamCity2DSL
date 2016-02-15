@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsVCSRef
 import org.jonnyzzz.teamcity.dsl.model.TCVCSRootRef
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
@@ -14,7 +13,7 @@ interface VCSRefBuilder {
 
 fun TCWithSettings.vcs(rootId : TCVCSRootRef, builder : VCSRefBuilder.() -> Unit = {}) {
   settings {
-    vcs = (vcs ?: listOf()) + having(TCSettingsVCSRef()) {
+    vcs = (vcs ?: listOf()) + TCSettingsVCSRef().apply {
       this.rootId = rootId.id!!
 
       val rules = arrayListOf<String>()

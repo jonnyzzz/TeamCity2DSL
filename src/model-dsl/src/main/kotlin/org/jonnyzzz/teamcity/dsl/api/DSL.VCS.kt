@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCProjectRef
 import org.jonnyzzz.teamcity.dsl.model.TCVCSRoot
 import org.jonnyzzz.teamcity.dsl.model.TCVCSRootRef
@@ -48,8 +47,8 @@ fun TCProjectRef.vcsRoot(id : String, builder : TCVCSRoot.() -> Unit = {}) : TCV
   if (this is TCProjectRefOnReady) this.onReady { this.vcsRoots += result }
 
   return object: TCVCSRootBuilder, TCVCSRootRef by result  {
-    operator override fun plus(builder: TCVCSRoot.() -> Unit): TCVCSRootBuilder = having(this) { builders.add(builder) }
+    operator override fun plus(builder: TCVCSRoot.() -> Unit): TCVCSRootBuilder = this.apply { builders.add(builder) }
   }
 }
 
-fun UnknownVCSRoot(id: String): TCVCSRootRef = having(TCVCSRoot()) { this.id = id }
+fun UnknownVCSRoot(id: String): TCVCSRootRef = TCVCSRoot().apply { this.id = id }

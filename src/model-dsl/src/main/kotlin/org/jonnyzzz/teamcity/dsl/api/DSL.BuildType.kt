@@ -1,10 +1,9 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.*
 
 fun TCBuildType.runner(id: String, runnerType : String? = null, builder: TCSettingsRunner.() -> Unit = {}): TCRunnerBuilder {
-  return having((this as TCWithSettings).runner(id, runnerType, builder)) {
+  return (this as TCWithSettings).runner(id, runnerType, builder).apply {
     runnerRef(id)
   }
 }
@@ -54,6 +53,6 @@ fun TCProjectRef.build(id : String, builder : TCBuildType.() -> Unit = {}) : TCB
   if (this is TCProjectRefOnReady) this.onReady { this.buildTypes += result }
 
   return object: TCBuildTypeBuilder, TCBuildTypeRef by result  {
-    operator override fun plus(builder: TCBuildType.() -> Unit): TCBuildTypeBuilder = having(this) { builders.add(builder) }
+    operator override fun plus(builder: TCBuildType.() -> Unit): TCBuildTypeBuilder = this.apply { builders.add(builder) }
   }
 }

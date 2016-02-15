@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsTrigger
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsTriggerRef
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
@@ -28,7 +27,7 @@ fun triggerMixin(builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerM
 }
 
 fun TCWithSettings.trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerBuilder {
-  val trigger = having(TCSettingsTrigger()) {
+  val trigger = TCSettingsTrigger().apply {
     this.id = triggerId
     this.triggerType = triggerType
   }
@@ -38,7 +37,7 @@ fun TCWithSettings.trigger(triggerId: String, triggerType: String, builder: TCSe
   }
 
   return object : TCSettingsTriggerBuilder, TCSettingsTriggerRef by trigger {
-    operator override fun plus(builder: TCSettingsTrigger.() -> Unit): TCSettingsTriggerBuilder = having(this) { trigger.builder() }
+    operator override fun plus(builder: TCSettingsTrigger.() -> Unit): TCSettingsTriggerBuilder = this.apply { trigger.builder() }
 
   } + builder
 }

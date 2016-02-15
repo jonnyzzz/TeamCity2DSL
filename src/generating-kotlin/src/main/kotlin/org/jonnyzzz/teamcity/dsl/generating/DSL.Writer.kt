@@ -1,7 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
-import org.jonnyzzz.teamcity.dsl.having
-
 interface KotlinWriter {
   fun appendln(line : String = "")
 
@@ -25,5 +23,5 @@ fun kotlinWriter(builder: KotlinWriter.() -> Unit): String {
     override fun toString() : String = writer.toString()
   }
 
-  return having(KotlinWriterImpl()) { builder() }.toString()
+  return KotlinWriterImpl().apply { builder() }.toString()
 }

@@ -8,7 +8,6 @@ import org.jdom2.output.XMLOutputter
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
-import org.jonnyzzz.teamcity.dsl.having
 import java.io.Writer
 
 /**
@@ -18,7 +17,7 @@ import java.io.Writer
 fun xmlOutputter() : XMLOutputter {
   val format = Format.getPrettyFormat()!!;
   format.setLineSeparator(System.getProperty("teamcity.dsl.lineSeparator.xml", "\n"));
-  format.setEncoding("UTF-8");
+  format.encoding = "UTF-8";
 
   val out = XMLOutputter(format)
   out.xmlOutputProcessor = object: AbstractXMLOutputProcessor() {
@@ -43,8 +42,8 @@ fun generateXMLString(root : Element) : String {
 }
 
 fun Element.toDocument(postProcess: Document.() -> Unit = {}): Document = let { it ->
-  having(Document()) {
-    setRootElement(it)
+  Document().apply {
+    rootElement = it
     postProcess()
   }
 }

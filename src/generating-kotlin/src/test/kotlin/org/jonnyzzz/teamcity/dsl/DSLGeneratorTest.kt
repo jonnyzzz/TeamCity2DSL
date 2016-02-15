@@ -12,13 +12,13 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_for_simple_project() {
-    val p = having(TCProject()) {
+    val p = TCProject().apply {
       id = "p"
       name = "foo"
       description = "bar"
       parameters = arrayListOf(
-              having(TCParameterWithSpec()) { name = "aaa"; value = "bbb" },
-              having(TCParameterWithSpec()) { name = "ccc"; value = "ddd" })
+              TCParameterWithSpec().apply { name = "aaa"; value = "bbb" },
+              TCParameterWithSpec().apply { name = "ccc"; value = "ddd" })
     }
     runUnderTempDirectory { tmp ->
       DSLGenerating.generate(arrayListOf(p), tmp)
@@ -49,7 +49,7 @@ class ModelToDSLGeneratorTest {
   @Test
   fun should_use_constant_for_requirements() {
 
-    val r = having(TCRequirement()) {
+    val r = TCRequirement().apply {
       name = "aaa"
       value = "bbb"
       type = "equals"
@@ -64,7 +64,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_use_predefined_runner_mixin() {
-    val r = having(TCSettingsRunner()) {
+    val r = TCSettingsRunner().apply {
       id = "555"
       runnerType = "zzz"
       coverageIDEA.asBuilder()()
@@ -82,7 +82,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_use_predefined_runner_mixin_in_mixin() {
-    val r1 = having(TCSettingsRunner()) {
+    val r1 = TCSettingsRunner().apply {
       id = "555"
       runnerType = "zzz"
       coverageIDEA.asBuilder()()
@@ -90,7 +90,7 @@ class ModelToDSLGeneratorTest {
       param("z", "x")
       param("q", "x")
     }
-    val r2 = having(TCSettingsRunner()) {
+    val r2 = TCSettingsRunner().apply {
       id = "777"
       runnerType = "zzz"
       coverageIDEA.asBuilder()()
@@ -114,7 +114,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_nice_options() {
-    val input = having(TCSettingsOptions()) {
+    val input = TCSettingsOptions().apply {
         option("artifactRules", "worker/worker-server/logs => %logs%.zip")
         option("buildNumberPattern", "${ref("dep.VCS_GitHostingTrunk_BuildNumber.build.number")}-${ref("build.counter")}")
         option("executionTimeoutMin", "60")
@@ -133,7 +133,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_nice_options_artifact_newlines() {
-    val input = having(TCSettingsOptions()) {
+    val input = TCSettingsOptions().apply {
         option("artifactRules", "\nworker/worker-server/logs => %logs%.zip\n")
     }
 
@@ -147,7 +147,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_nice_param_newlines() {
-    val input = having(TCBuildType()) {
+    val input = TCBuildType().apply {
         param("artifactRules", "\nworker/worker-server/logs => %logs%.zip\n")
     }
 
@@ -161,7 +161,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_new_dependency_newlines() {
-    val input = having(TCBuildType()) {
+    val input = TCBuildType().apply {
       dependency(UnknownBuild("x")) {
         artifact {
           artifactPattern = "a\r\nb\r\nc\r\n"

@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsExtension
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsExtensionRef
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
@@ -31,7 +30,7 @@ fun extensionMixin(extensionType : String? = null, builder: TCSettingsExtension.
 }
 
 fun TCWithSettings.extension(id : String, extensionType : String, builder : TCSettingsExtension.() -> Unit = {}) : TCSettingsExtensionBuilder {
-  val extension = having(TCSettingsExtension()) {
+  val extension = TCSettingsExtension().apply {
     this.id = id
     this.extensionType = extensionType
   }
@@ -41,6 +40,6 @@ fun TCWithSettings.extension(id : String, extensionType : String, builder : TCSe
   }
 
   return object : TCSettingsExtensionBuilder, TCSettingsExtensionRef by extension {
-    override fun plus(builder: TCSettingsExtension.() -> Unit) = having(this) { extension.builder() }
+    override fun plus(builder: TCSettingsExtension.() -> Unit) = this.apply { extension.builder() }
   } + builder
 }

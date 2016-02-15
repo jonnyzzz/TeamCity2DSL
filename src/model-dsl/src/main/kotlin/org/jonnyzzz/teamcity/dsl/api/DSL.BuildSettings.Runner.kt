@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsRunner
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsRunnerRef
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
@@ -22,7 +21,7 @@ interface TCRunnerBuilder : TCSettingsRunnerRef {
 fun TCWithSettings.runner(id: String?, runnerType: String? = null, builder: TCSettingsRunner.() -> Unit = {}): TCRunnerBuilder {
   val runner = TCSettingsRunner()
   val result = object : TCRunnerBuilder, TCSettingsRunnerRef by runner {
-    operator override fun plus(builder: TCSettingsRunner.() -> Unit): TCRunnerBuilder = having(this) { runner.builder() }
+    operator override fun plus(builder: TCSettingsRunner.() -> Unit): TCRunnerBuilder = this.apply { runner.builder() }
   } + {
     this.id = id
   } + {

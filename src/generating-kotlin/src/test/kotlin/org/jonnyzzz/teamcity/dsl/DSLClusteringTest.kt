@@ -178,26 +178,26 @@ class ParametersClusteringTest {
     val result = arrayListOf<TCSettingsRunner>()
     object : RunnersBuilder {
       override fun runner(builder: TCSettingsRunner.() -> Unit) {
-        result.add(having(TCSettingsRunner()) { this.id = "${idGenerator.incrementAndGet()}"; builder() })
+        result.add(TCSettingsRunner().apply { this.id = "${idGenerator.incrementAndGet()}"; builder() })
       }
     }.builder()
     return result
   }
 
   private fun doClusterTest(input: List<TCSettingsRunner>, clusters: List<TCSettingsRunner>) {
-    fun Element.toText() = XMLOutputter(having(Format.getPrettyFormat()) { setIndent("  ") }).outputString(this)
+    fun Element.toText() = XMLOutputter(Format.getPrettyFormat().apply { indent = "  " }).outputString(this)
     @XRoot("a") class V {
       var X by JXML / XElements("r") / XSub(TCSettingsRunner::class.java)
     }
 
     fun save(x: List<TCSettingsRunner>) = JDOM.save(
-            having(V()) {
-              X = x.map { having(JDOM.clone(it)) { id = null } }.toList()
+            V().apply {
+              X = x.map { JDOM.clone(it).apply { id = null } }.toList()
             }
     ).toText()
 
     val gold = save(clusters)
-    val actual = save(clusteringRunnersByParameters(input).map { having(TCSettingsRunner(), it) })
+    val actual = save(clusteringRunnersByParameters(input).map { TCSettingsRunner().apply(it) })
 
     println("Collected groups:\n$actual\n")
     Assert.assertEquals(gold, actual)

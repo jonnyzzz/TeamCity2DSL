@@ -7,16 +7,14 @@ import org.jdom2.output.XMLOutputter
 import org.jonnyzzz.kotlin.xml.bind.jdom.JDOM
 import org.jonnyzzz.teamcity.dsl.generating.KotlinWriter
 import org.jonnyzzz.teamcity.dsl.generating.block
-import org.jonnyzzz.teamcity.dsl.having
 import java.util.*
-import kotlin.collections.*
-import kotlin.comparisons.*
+import kotlin.comparisons.compareByDescending
 
 fun <T : Any> mixinIncluded(runner: T, mixin: T.() -> Unit): Boolean {
   fun Element.toText() = XMLOutputter().outputString(this) ?: ""
   fun T.saveToText() = JDOM.save(this).toText()
 
-  return runner.saveToText() == having(JDOM.clone(runner), mixin).saveToText()
+  return runner.saveToText() == JDOM.clone(runner).apply(mixin).saveToText()
 }
 
 abstract class DSLClustering<D : Any, G : Any, P : Any, R : Any> {
@@ -75,7 +73,7 @@ abstract class DSLClustering<D : Any, G : Any, P : Any, R : Any> {
       reportResult()
     }
 
-    having(Iterators.peekingIterator(parameters.iterator())) {
+    Iterators.peekingIterator(parameters.iterator()).apply {
       while (hasNext()) collectGroup(this)
     }
 
@@ -128,7 +126,7 @@ abstract class DSLClusteringGenerator<D : Any> {
     val blocks = detectMixins(runners)
 
     blocks.forEach { block ->
-      val runner = having(newD(), block)
+      val runner = newD().apply(block)
       val mix = nameDMixin(runner) + "${cnt++}"
       val funMixin = funDMixin(runner)
 

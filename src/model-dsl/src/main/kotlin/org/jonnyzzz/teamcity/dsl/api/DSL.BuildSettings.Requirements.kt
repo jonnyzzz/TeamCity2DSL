@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCRequirement
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 import kotlin.collections.listOf
@@ -65,7 +64,7 @@ fun TCWithSettings.requirements(builder : TCRequirementsBuilder.() -> Unit) {
       override fun ref(param: String): TCRequirementsBuilderRequirement {
         return object : TCRequirementsBuilderRequirement {
           override fun minus(type: String): TCRequirementsBuilderRequirementValue {
-            val r = having(TCRequirement()) {
+            val r = TCRequirement().apply {
               this.type = type
               this.name = param
               requirements = (requirements ?: listOf()) + this

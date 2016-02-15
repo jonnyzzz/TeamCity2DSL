@@ -1,7 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.api
 
 import org.jonnyzzz.teamcity.dsl.api.internal.DSLRegistry
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCPluginSettings
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCProjectRef
@@ -72,7 +71,7 @@ fun TCProjectRef.project(id : String, builder : TCProject.() -> Unit = {}) : TCP
   DSLRegistry.addCompletedProject(result)
 
   return object: TCProjectBuilder, TCProjectRef by result, TCProjectRefOnReady {
-    override fun plus(builder: TCProject.() -> Unit): TCProjectBuilder = having(this) { builders.add(builder) }
+    override fun plus(builder: TCProject.() -> Unit): TCProjectBuilder = this.apply { builders.add(builder) }
 
     override fun onReady(builder: TCProject.() -> Unit) {
       this + builder

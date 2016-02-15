@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.xml.generateXMLString
 import kotlin.comparisons.compareBy
@@ -62,7 +61,7 @@ fun <T, P : TCAbstractParam> T.addAbstractParameterImpl(parameters: KMutableProp
                                             newParameter: () -> P,
                                             builder: TCAbstractParameterBuilder.(P) -> Unit) {
   val actualParameter = parameters.get(this)?.firstOrNull { it.name == name }
-  val p = actualParameter ?: having(newParameter()) { this.name = name }
+  val p = actualParameter ?: newParameter().apply { this.name = name }
   p.value = value
 
   class XMLValue(var text : String) : TCParameterBuilderXMLValue

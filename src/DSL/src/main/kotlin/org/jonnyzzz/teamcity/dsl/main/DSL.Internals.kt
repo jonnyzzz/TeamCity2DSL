@@ -6,7 +6,6 @@ import org.jonnyzzz.teamcity.dsl.api.internal.DSLRegistryFacade
 import org.jonnyzzz.teamcity.dsl.deleteAll
 import org.jonnyzzz.teamcity.dsl.generating.DSLGenerating
 import org.jonnyzzz.teamcity.dsl.generating.DSLOptions
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCUUID
 import org.jonnyzzz.teamcity.dsl.suppressing
@@ -250,7 +249,7 @@ fun importProjects(xmlRoot : File, pkg : String, destRoot : File) : Unit {
   dest.deleteAll()
   dest.mkdirs()
 
-  var options = having(DSLOptions()) {
+  var options = DSLOptions().apply {
     packageName = pkg
   }
   DSLGenerating.generate(model, dest, options)

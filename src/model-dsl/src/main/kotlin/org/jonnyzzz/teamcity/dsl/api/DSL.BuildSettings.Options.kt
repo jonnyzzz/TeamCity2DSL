@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.api
 
-import org.jonnyzzz.teamcity.dsl.having
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsOptions
 import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 
@@ -32,7 +31,7 @@ fun TCWithSettings.options(builder : TCSettingsOptions.() -> Unit = {}) : TCSett
   settings.options = opts
 
   return object:TCSettingsOptionsBuilder {
-    operator override fun plus(builder: TCSettingsOptions.() -> Unit): TCSettingsOptionsBuilder = having(this) { opts.builder() }
+    operator override fun plus(builder: TCSettingsOptions.() -> Unit): TCSettingsOptionsBuilder = this.apply { opts.builder() }
   } + builder
 }
 
