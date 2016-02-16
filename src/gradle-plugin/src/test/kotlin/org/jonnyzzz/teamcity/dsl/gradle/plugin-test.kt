@@ -12,9 +12,7 @@ class PluginTest {
   @Before
   fun setup() {
     project = ProjectBuilder.builder().build()
-    project.apply {
-      it.plugin(GeneratorPlugin::class.java)
-    }
+    project.plugins.apply(GeneratorPlugin::class.java)
   }
 
   @Test
@@ -25,14 +23,14 @@ class PluginTest {
   @Test
   fun `exposes task dsl2xml`() {
     Assert.assertTrue(
-      project.tasks.any { it.name == "dsl2xml"}
+            project.tasks.any { it.name == "dsl2xml"}
     )
   }
 
   @Test
   fun `exposes task xml2dsl`() {
     Assert.assertTrue(
-      project.tasks.any { it.name == "xml2dsl" }
+            project.tasks.any { it.name == "xml2dsl" }
     )
   }
 }
