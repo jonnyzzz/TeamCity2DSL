@@ -4,5 +4,7 @@ apply plugin: 'maven'
 dependencies {
   compile gradleApi()
   compile project(':src:DSL')
+
+  testCompile gradleTestKit()
 }
 
