@@ -11,7 +11,6 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.*
 
 object Paths {
   fun path(name : String) : File =
@@ -39,30 +38,27 @@ abstract class PluginTest(val testName : String) {
   val temp = TemporaryFolder()
 
 
-  fun runPlugin(vararg argz : String): GradleRunner {
+  @Before
+  fun setup() {
     home = temp.newFolder()
 
     Files.copy(Paths.path(testName).toPath(), home.toPath(), StandardCopyOption.REPLACE_EXISTING)
 
-    val az = ArrayList<String>()
-
-    az.add("-PDSL_PLUGIN_CLASSPATH=" + System.getProperty("TEST_PLUGIN_NAME"))
-    az.add("-Pext.DSL_PLUGIN_NAME=WTF")
-    az.addAll(argz)
-
-    return GradleRunner.create().withProjectDir(home).withArguments(*argz)
+    project = ProjectBuilder.builder().withName(testName).withProjectDir(home).build()
+    project.extensions.add("ext.DSL_PLUGIN_CLASSPATH", System.getProperty("TEST_PLUGIN_NAME"))
+    project.extensions.add("ext.DSL_PLUGIN_NAME", "WTF")
   }
 
   @Test
-  fun exampleShouldWork() {
-    runPlugin().buildAndFail()
+  fun `apply plugin works`() {
+    //NOP
   }
 
-/*  @Test
+  @Test
   fun `exposes task dsl2xml`() {
-    project.afterEvaluate {  }
+project.afterEvaluate {  }
     Assert.assertTrue(
-            runPlugin().buildAndFail().tasks.any { it.name == "dsl2xml"}
+            project.tasks.any { it.name == "dsl2xml"}
     )
   }
 
@@ -71,10 +67,10 @@ abstract class PluginTest(val testName : String) {
     Assert.assertTrue(
             project.tasks.any { it.name == "xml2dsl" }
     )
-  }*/
+  }
 }
 
 
-class Gradle001 : PluginTest("gradle-001") {
+abstract class `Gradle001` : PluginTest("gradle-001") {
 
 }
