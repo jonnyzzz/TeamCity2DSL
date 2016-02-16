@@ -1,0 +1,16 @@
+buildScript {
+
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+
+
+  dependencies {
+    classpath "$DSL_PLUGIN_CLASSPATH"
+  }
+}
+
+
+apply plugin: "$DSL_PLUGIN_NAME"
+

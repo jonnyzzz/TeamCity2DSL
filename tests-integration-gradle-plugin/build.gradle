@@ -1,0 +1,23 @@
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+dependencies {
+  compile gradleTestKit()
+  compile gradleApi()
+
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  compile project(':src:test-helper')
+}
+
+test {
+  useJUnit()
+
+  systemProperty "TEST_DATA_HOME", "$projectDir"
+  systemProperty "TEST_PLUGIN_NAME", "$group:gradle-plugin:$version"
+
+  dependsOn project(':src:gradle-plugin').tasks.publishToMavenLocal
+
+}
+
