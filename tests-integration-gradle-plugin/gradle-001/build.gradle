@@ -1,16 +1,15 @@
-buildScript {
+buildscript {
 
   repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
   }
 
-
   dependencies {
-    classpath "$DSL_PLUGIN_CLASSPATH"
+    classpath "${DSL_PLUGIN_CLASSPATH}"
   }
 }
 
 
-apply plugin: "$DSL_PLUGIN_NAME"
+apply plugin: "${DSL_PLUGIN_NAME}"
 

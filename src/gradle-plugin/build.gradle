@@ -1,5 +1,4 @@
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'maven'
 
 dependencies {
   compile gradleApi()

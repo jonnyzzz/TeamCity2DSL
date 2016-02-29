@@ -9,7 +9,6 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    //classpath "org.jonnyzzz.teamcity.dsl:gradle-plugin:SNAPSHOT"
   }
 }
 
@@ -20,6 +19,7 @@ plugins {
 subprojects {
   apply plugin: 'java'
   apply plugin: 'kotlin'
+  apply plugin: 'maven'
   apply plugin: 'maven-publish'
 
   group = 'org.jonnyzzz.teamcity.dsl'
@@ -32,7 +32,15 @@ subprojects {
     maven { url "http://dl.bintray.com/jonnyzzz/maven" }
   }
 
-  version = project.hasProperty('teamcity') ? project['teamcity']['build.number'] : 'SNAPSHOT'
+  version = rootProject.hasProperty('teamcity') ? rootProject['teamcity']['build.number'] : 'SNAPSHOT'
+
+  afterEvaluate {
+    configurations.all.each {
+      it.allDependencies.withType(ProjectDependency).each {
+        publishToMavenLocal.dependsOn it.dependencyProject.tasks.publishToMavenLocal
+      }
+    }
+  }
 }
 
 task wrapper(type: Wrapper) {
