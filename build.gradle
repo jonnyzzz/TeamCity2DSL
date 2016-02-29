@@ -37,7 +37,7 @@ subprojects {
   afterEvaluate {
     configurations.all.each {
       it.allDependencies.withType(ProjectDependency).each {
-        publishToMavenLocal.dependsOn it.dependencyProject.tasks.classes
+        publishToMavenLocal.dependsOn it.dependencyProject.tasks.jar
         publishToMavenLocal.dependsOn it.dependencyProject.tasks.publishToMavenLocal
       }
     }
