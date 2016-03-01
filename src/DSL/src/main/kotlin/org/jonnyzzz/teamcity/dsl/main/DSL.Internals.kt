@@ -121,7 +121,7 @@ object DSLRegistry : DSLRegistryFacade {
     val parts =
             result
                     .filter {
-                      val p = it.getPackage()?.getName()
+                      val p = it.`package`?.name
                       when {
                         p == null -> false
                         p.equals(pkg) -> true
@@ -141,6 +141,9 @@ object DSLRegistry : DSLRegistryFacade {
     val parts = getAllClassesFromPackage(pkg, clazzLoader)
 
     println("Detected ${parts.size} parts...")
+    parts.map { it.simpleName }.toSortedSet().forEach {
+      println("  $it")
+    }
 
     ensureClassesInitialized(parts)
 
@@ -162,7 +165,7 @@ object DSLRegistry : DSLRegistryFacade {
     val partsNames = parts.map { it.name }.toSet()
 
     return  object : ClassesMapFilter {
-      override fun <T> filter(m: Map<String, T>): List<T> = m.filter { partsNames.contains(it.key) }.map { it.value }
+      override fun <T> filter(m: Map<String, T>): List<T> = m.filter { partsNames.contains( it.key.split("$")[0] ) }.map { it.value }
     }
   }
 
@@ -208,9 +211,13 @@ object DSLRegistry : DSLRegistryFacade {
   }
 
   fun initializeUUIDs(objects: List<Any?>, callbacks: List<OnCompleteCallback>) {
+    println("Total callbacks: ${callbacks.size}")
+
     val uuids = objects.filterNotNull()
             .filter { it is TCUUID }
             .map { it as TCUUID }
+
+    println("Total uuids: ${uuids.size}")
 
     callbacks.forEach {
       try {
