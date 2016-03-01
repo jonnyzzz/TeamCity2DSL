@@ -3,6 +3,7 @@ apply plugin: 'java-gradle-plugin'
 dependencies {
   compile gradleApi()
   compile project(':src:DSL')
+  compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
   testCompile gradleTestKit()
 }

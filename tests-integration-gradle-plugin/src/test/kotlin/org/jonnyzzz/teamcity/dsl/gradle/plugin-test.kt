@@ -8,6 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import java.nio.file.Files
 
 class IntegrationPluginTest {
   @Rule
@@ -39,6 +40,8 @@ class IntegrationPluginTest {
   interface RunSetup {
     val home : File
     fun args(vararg s : String)
+
+    fun assert(action : () -> Unit)
   }
 
   private fun runSuccessfulBuild(setup : RunSetup.() -> Unit): BuildResult {
@@ -47,8 +50,13 @@ class IntegrationPluginTest {
 
     var build_gradle = scriptHeader
     val args = mutableListOf<String>()
+    val assertTasks = mutableListOf<() -> Unit>()
 
     object : RunSetup {
+      override fun assert(action: () -> Unit) {
+        assertTasks.add(action)
+      }
+
       override val home: File
         get() = home
 
@@ -62,15 +70,15 @@ class IntegrationPluginTest {
       writeText(build_gradle)
     }
 
-    return GradleRunner.create()
+    val result = GradleRunner.create()
             .withDebug(true)
             .withProjectDir(home)
             .forwardOutput()
             .withArguments(args.toList())
             .build()
-            .apply {
-              println("Build output: ${this.output}\n\n")
-            }
+
+    assertTasks.forEach { it() }
+    return result
   }
 
   @Test
@@ -83,5 +91,23 @@ class IntegrationPluginTest {
     Assert.assertThat(text, StringContains.containsString("TeamCity2DSL"))
     Assert.assertThat(text, StringContains.containsString("dsl2xml"))
     Assert.assertThat(text, StringContains.containsString("xml2dsl"))
+  }
+
+  @Test
+  fun `it should generate DSL_001`() {
+    runSuccessfulBuild {
+      val toHome = home / ".teamcity"
+      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-001"), toHome)
+
+      Files.walk(toHome.toPath()).forEach {
+        println( ".teamcity: $it")
+      }
+
+      args("xml2dsl", "--stacktrace")
+
+      assert {
+        Assert.assertTrue( (home / "dsl.generated").isDirectory)
+      }
+    }
   }
 }

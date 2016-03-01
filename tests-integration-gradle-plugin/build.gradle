@@ -2,17 +2,24 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
+configurations {
+  plugin_binaries
+}
+
 dependencies {
   testCompile gradleTestKit()
 
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   compile project(':src:test-helper')
+
+  plugin_binaries project(':src:gradle-plugin')
 }
 
 def pluginProject = project(':src:gradle-plugin')
 test {
   dependsOn pluginProject.tasks.publishToMavenLocal
+  dependsOn configurations.plugin_binaries
 
   useJUnit()
 

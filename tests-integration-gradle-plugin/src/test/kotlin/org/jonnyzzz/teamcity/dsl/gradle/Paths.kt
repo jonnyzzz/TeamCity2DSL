@@ -17,19 +17,23 @@ object Paths {
     testData
   }
 
+  fun teamcityProjectTestDataPath(name : String) : File {
+    val path = (testDataPath / ".." / "tests-integration" / name / "teamcity").canonicalFile
+    println("Path: $path")
+    Assert.assertTrue("Test data dir $path should exist", path.isDirectory)
+    return path
+  }
+
   fun path(name : String) : File {
     val result = testDataPath / name
     Assert.assertTrue("File $this should exist", result.exists())
     return result
   }
 
-  fun copyTestData(name : String, toHome : File) {
+  fun copyRec(testCase : File, toHome : File) {
     val homePath = toHome.toPath()
 
-
-    val testCase = path(name)
     println("TestCase: ${testCase}")
-
     val testDataPath = testCase.toPath()
     Files.walk(testDataPath).forEach {
       println("TestCase Files: " + it)
