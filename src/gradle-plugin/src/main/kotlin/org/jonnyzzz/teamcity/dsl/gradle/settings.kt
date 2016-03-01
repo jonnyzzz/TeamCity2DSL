@@ -2,7 +2,6 @@ package org.jonnyzzz.teamcity.dsl.gradle
 
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.jonnyzzz.teamcity.dsl.div
 import java.io.File
 
 

@@ -3,12 +3,18 @@ package org.jonnyzzz.teamcity.dsl.gradle
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
-import org.jonnyzzz.teamcity.dsl.main.importProjects
+import java.io.File
+import java.net.URLClassLoader
 
 abstract class BaseDSLTask : DefaultTask() {
   init {
     group = "TeamCity2DSL"
     outputs.upToDateWhen { false }
+  }
+
+  protected val dslClasses by lazy {
+    val config = project.configurations.getByName(TEAMCITY_RUNNER_CONFIGURATION) ?: throw failTask("Failed to find internal configuration")
+    URLClassLoader(config.files.map{ it.toURI().toURL() }.toTypedArray(), URLClassLoader(arrayOf(), null))
   }
 
   @TaskAction
@@ -39,10 +45,13 @@ abstract class BaseDSLTask : DefaultTask() {
 
 open class Xml2Dsl : BaseDSLTask() {
   override fun executeTaskImpl(settings: ResolvedDSLSettings) {
-    importProjects(settings.xmlPath, settings.pkg, settings.dslPath)
+    dslClasses.context {
+      loadClass("org.jonnyzzz.teamcity.dsl.main.DSLRunner")
+              .getMethod("importProjects", File::class.java, String::class.java, File::class.java)
+              .invoke(null, settings.xmlPath, settings.pkg, settings.dslPath)
+    }
   }
 }
-
 
 open class Dsl2Xml : BaseDSLTask() {
   override fun executeTaskImpl(settings: ResolvedDSLSettings) {

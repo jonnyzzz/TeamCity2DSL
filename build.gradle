@@ -44,6 +44,10 @@ subprojects {
     }
   }
   publishToMavenLocal.inputs.file project.buildFile
+
+  test {
+    outputs.upToDateWhen { false }
+  }
 }
 
 task wrapper(type: Wrapper) {

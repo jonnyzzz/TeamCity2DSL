@@ -1,10 +1,14 @@
 apply plugin: 'java-gradle-plugin'
 
+configurations {
+  used_implicitly_by_plugin
+}
+
 dependencies {
   compile gradleApi()
-  compile project(':src:DSL')
   compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
+  used_implicitly_by_plugin project(':src:DSL')
   testCompile gradleTestKit()
 }
 

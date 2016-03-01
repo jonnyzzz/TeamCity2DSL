@@ -31,6 +31,11 @@ class IntegrationPluginTest {
       }
     }
 
+    repositories {
+      mavenLocal()
+      mavenCentral()
+    }
+
 
     apply plugin: '${DSL_PLUGIN_NAME}'
 
@@ -107,6 +112,7 @@ class IntegrationPluginTest {
 
       assert {
         Assert.assertTrue( (home / "dsl.generated").isDirectory)
+        Assert.assertTrue( (home / "dsl.generated").listFiles().size > 0)
       }
     }
   }

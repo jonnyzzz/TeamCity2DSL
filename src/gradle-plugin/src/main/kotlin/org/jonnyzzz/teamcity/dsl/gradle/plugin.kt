@@ -1,15 +1,10 @@
 package org.jonnyzzz.teamcity.dsl.gradle
 
-import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.TaskExecutionException
-import org.gradle.tooling.BuildException
-import org.jonnyzzz.teamcity.dsl.div
-import org.jonnyzzz.teamcity.dsl.main.importProjects
-import java.io.File
+
+val TEAMCITY_RUNNER_CONFIGURATION = "teamcity_runner"
+
 
 class GeneratorPlugin : Plugin<Project> {
   override fun apply(project: Project?) {
@@ -18,6 +13,12 @@ class GeneratorPlugin : Plugin<Project> {
     project.apply { config ->
       config.plugin("java")
       config.plugin("kotlin")
+    }
+
+    val renamer = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
+
+    project.dependencies.apply {
+      add(renamer.name, "org.jonnyzzz.teamcity.dsl:DSL:SNAPSHOT") //TODO: generate version and names from gradle build
     }
 
     val x = project.DSLSettings
