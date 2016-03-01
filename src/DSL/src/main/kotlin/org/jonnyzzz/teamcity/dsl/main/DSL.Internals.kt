@@ -34,12 +34,12 @@ object DSLRegistry : DSLRegistryFacade {
   fun inferCalleeClass() : String {
     val clazz = Thread
             .currentThread()
-            .getStackTrace()
+            .stackTrace
             .asSequence()
             .drop(3)
-            .firstOrNull { !it.getClassName().startsWith("org.jonnyzzz.teamcity.dsl.") && !it.getClassName().startsWith("kotlin.") }
+            .firstOrNull { !it.className.startsWith("org.jonnyzzz.teamcity.dsl.") && !it.className.startsWith("kotlin.") && !it.className.startsWith("sun.") }
             ?: throw Error("Failed to resolve callee package. Incorrect/empty package was used?")
-    return clazz.getClassName()
+    return clazz.className
   }
 
   override fun addCompletedProject(p : TCProject) : Unit {
@@ -66,19 +66,19 @@ object DSLRegistry : DSLRegistryFacade {
       println("Loading part: $it...")
       suppressing {
         with(it.getField("INSTANCE$")){
-          setAccessible(true)
+          isAccessible = true
           get(null)?.toString()
         }
       }
       suppressing {
         with(it.getField("INSTANCE")){
-          setAccessible(true)
+          isAccessible = true
           get(null)?.toString()
         }
       }
       suppressing {
         with(it.getField("instance$")){
-          setAccessible(true)
+          isAccessible = true
           get(null)?.toString()
         }
       }
@@ -86,9 +86,9 @@ object DSLRegistry : DSLRegistryFacade {
         it.newInstance().toString()
       }
       suppressing {
-        it.getDeclaredMethods()
+        it.declaredMethods
                 .asSequence()
-                .filter { it.getParameterTypes().isEmpty() && it.getModifiers().let { Modifier.isStatic(it) } }
+                .filter { it.parameterTypes.isEmpty() && it.modifiers.let { Modifier.isStatic(it) } }
                 .take(3)
                 .forEach { suppressing { it.invoke(null)?.toString() } }
       }
@@ -96,7 +96,7 @@ object DSLRegistry : DSLRegistryFacade {
   }
 
   fun <T> allTypes(clazz : Class<T>) : Set<Class<Any>>
-          = (listOf(clazz as Class<Any>) + (listOf(clazz.getSuperclass()) + clazz.getInterfaces().toList()).filterNotNull().flatMap { allTypes(it as Class<Any>) }).toSet()
+          = (listOf(clazz as Class<Any>) + (listOf(clazz.superclass) + clazz.interfaces.toList()).filterNotNull().flatMap { allTypes(it as Class<Any>) }).toSet()
 
   fun getAllClassesFromPackage(pkg : String,
                                clazzLoader : ClassLoader) : Set<Class<Any>> {
@@ -156,7 +156,7 @@ object DSLRegistry : DSLRegistryFacade {
     }
     println()
 
-    val partsNames = parts.map { it.getName() }.toSet()
+    val partsNames = parts.map { it.name }.toSet()
 
     return  object : ClassesMapFilter {
       override fun <T> filter(m: Map<String, T>): List<T> = m.filter { partsNames.contains(it.key) }.map { it.value }
@@ -235,7 +235,7 @@ private class M
 
 fun generateProjects(root : File,
                             pkg : String = "org.jonnyzzz.teamcity.autodsl",
-                            clazzLoader : ClassLoader = M::class.java.getClassLoader()!!) : Unit {
+                            clazzLoader : ClassLoader = M::class.java.classLoader!!) : Unit {
   DSLRegistry.generateProjects(root, clazzLoader, pkg)
 }
 

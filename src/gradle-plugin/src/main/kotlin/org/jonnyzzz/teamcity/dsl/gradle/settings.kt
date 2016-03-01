@@ -12,7 +12,7 @@ val Project.DSLSettings: DSLSettings
 
 
 open class DSLSettings(private val baseDir : File) {
-  var `package` : String? = "org.jonnyzzz.teamcity.dsl.generated"
+  var `package` : String? = "org.jonnyzzz.teamcity.dsl_generated"
 
   var dslPath : File? = baseDir / "dsl.generated"
   var xmlPath : File? = baseDir / ".teamcity"
