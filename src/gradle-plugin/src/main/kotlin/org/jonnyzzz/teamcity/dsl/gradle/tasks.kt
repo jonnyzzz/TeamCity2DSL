@@ -12,11 +12,6 @@ abstract class BaseDSLTask : DefaultTask() {
     outputs.upToDateWhen { false }
   }
 
-  protected val dslClasses by lazy {
-    val config = project.configurations.getByName(TEAMCITY_RUNNER_CONFIGURATION) ?: throw failTask("Failed to find internal configuration")
-    URLClassLoader(config.files.map{ it.toURI().toURL() }.toTypedArray(), URLClassLoader(arrayOf(), null))
-  }
-
   @TaskAction
   fun `action!`() {
     val extension = project.DSLSettings
@@ -26,10 +21,13 @@ abstract class BaseDSLTask : DefaultTask() {
     println("  dslPath: ${extension.dslPath}")
     println("  xmlPath: ${extension.xmlPath}")
 
+    val config = project.configurations.getByName(TEAMCITY_RUNNER_CONFIGURATION) ?: throw failTask("Failed to find internal configuration")
+    val dslClasses = URLClassLoader(config.files.map{ it.toURI().toURL() }.toTypedArray(), URLClassLoader(arrayOf(), null))
+
     //TODO: use API not stdout
     standardOutputCapture.start()
     try {
-      executeTaskImpl(extension.toResolvedSettings)
+      executeTaskImpl(dslClasses, extension.toResolvedSettings)
     } finally {
       standardOutputCapture.stop()
     }
@@ -39,12 +37,11 @@ abstract class BaseDSLTask : DefaultTask() {
     throw GradleException(message)
   }
 
-  protected abstract fun executeTaskImpl(settings : ResolvedDSLSettings)
-
+  protected abstract fun executeTaskImpl(dslClasses : ClassLoader, settings : ResolvedDSLSettings)
 }
 
 open class Xml2Dsl : BaseDSLTask() {
-  override fun executeTaskImpl(settings: ResolvedDSLSettings) {
+  override fun executeTaskImpl(dslClasses : ClassLoader, settings: ResolvedDSLSettings) {
     dslClasses.context {
       loadClass("org.jonnyzzz.teamcity.dsl.main.DSLRunner")
               .getMethod("importProjects", File::class.java, String::class.java, File::class.java)
@@ -54,7 +51,7 @@ open class Xml2Dsl : BaseDSLTask() {
 }
 
 open class Dsl2Xml : BaseDSLTask() {
-  override fun executeTaskImpl(settings: ResolvedDSLSettings) {
+  override fun executeTaskImpl(dslClasses : ClassLoader, settings: ResolvedDSLSettings) {
     println("Hohoho!")
   }
 }
