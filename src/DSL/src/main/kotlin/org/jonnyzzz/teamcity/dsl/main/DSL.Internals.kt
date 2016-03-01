@@ -173,7 +173,7 @@ object DSLRegistry : DSLRegistryFacade {
     partsFilter.filterAll(projects).forEach {
       val projectId = it.id
       if (result.containsKey(projectId)) {
-        throw RuntimeException("Project ${it.id} has already beed registered")
+        throw RuntimeException("Project ${it.id} has already been registered")
       }
       result[projectId] = it
     }
