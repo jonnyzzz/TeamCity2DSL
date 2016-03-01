@@ -30,11 +30,11 @@ object XmlGenerating {
     when {
       uuid.uuid == null && uuid is TCProject -> {
         // TeamCity 8.1.x & older integration tests
-        setDocType(DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../project-config.dtd"))
+        docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../project-config.dtd")
       }
       uuid.uuid == null && uuid !is TCProject -> {
         // TeamCity 8.1.x & older integration tests
-        setDocType(DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../../project-config.dtd"))
+        docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../../project-config.dtd")
       }
       else -> {
         val rootElement = rootElement
