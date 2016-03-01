@@ -2,6 +2,7 @@ package org.jonnyzzz.teamcity.dsl.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginConvention
 
 val TEAMCITY_RUNNER_CONFIGURATION = "teamcity_runner"
 
@@ -19,12 +20,19 @@ class GeneratorPlugin : Plugin<Project> {
 
     project.dependencies.apply {
       add(renamer.name, "org.jonnyzzz.teamcity.dsl:DSL:SNAPSHOT") //TODO: generate version and names from gradle build
+      add("compile", "org.jonnyzzz.teamcity.dsl:DSL:SNAPSHOT") //TODO: use API module here!
     }
 
-    val x = project.DSLSettings
-    x.toString()
+    val settings = project.DSLSettings
 
     project.tasks.create("xml2dsl", Xml2Dsl::class.java)
-    project.tasks.create("dsl2xml", Dsl2Xml::class.java)
+
+    val dsl2xml = project.tasks.create("dsl2xml", Dsl2Xml::class.java)
+    dsl2xml.dependsOn(project.tasks.getByName("classes"))
+
+    project.afterEvaluate {
+      project.logger.info("Adding DSL path to Kotlin source set: ${settings.dslPath}")
+      project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets.getByName("main").java.srcDirs.add( settings.dslPath )
+    }
   }
 }

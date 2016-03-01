@@ -54,7 +54,7 @@ class IntegrationPluginTest {
     home.mkdirs()
 
     var build_gradle = scriptHeader
-    val args = mutableListOf<String>()
+    val args = mutableListOf("--stacktrace")
     val assertTasks = mutableListOf<() -> Unit>()
 
     object : RunSetup {
@@ -108,7 +108,26 @@ class IntegrationPluginTest {
         println( ".teamcity: $it")
       }
 
-      args("xml2dsl", "--stacktrace")
+      args("xml2dsl")
+
+      assert {
+        Assert.assertTrue( (home / "dsl.generated").isDirectory)
+        Assert.assertTrue( (home / "dsl.generated").listFiles().size > 0)
+      }
+    }
+  }
+
+  @Test
+  fun `it should generate DSL and kompile_001`() {
+    runSuccessfulBuild {
+      val toHome = home / ".teamcity"
+      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-001"), toHome)
+
+      Files.walk(toHome.toPath()).forEach {
+        println( ".teamcity: $it")
+      }
+
+      args("xml2dsl", "dsl2xml")
 
       assert {
         Assert.assertTrue( (home / "dsl.generated").isDirectory)
