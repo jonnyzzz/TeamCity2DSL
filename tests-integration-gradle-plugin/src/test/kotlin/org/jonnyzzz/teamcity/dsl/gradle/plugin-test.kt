@@ -114,12 +114,12 @@ class IntegrationPluginTest {
       assert {
         val gen = home / "dsl.generated"
 
-        Files.walk(gen.toPath()).forEach {
+        val dslFiles = Files.walk(gen.toPath()).toArray()
+        dslFiles.forEach {
           println( "generated: $it")
         }
 
-        Assert.assertTrue( gen.isDirectory)
-        Assert.assertTrue( gen.listFiles().size > 0)
+        Assert.assertTrue( gen.isDirectory && dslFiles.size > 4)
       }
     }
   }
@@ -139,9 +139,18 @@ class IntegrationPluginTest {
       assert {
         val gen = home / "dsl.generated"
 
-        Files.walk(gen.toPath()).forEach {
+        val dslFiles = Files.walk(gen.toPath()).toArray()
+        dslFiles.forEach {
           println( "generated: $it")
         }
+        Assert.assertTrue(gen.isDirectory && dslFiles.size > 4)
+
+        val classes = home / "build" / "classes" / "main"
+        val classFiles = Files.walk(classes.toPath()).toArray()
+        classFiles.forEach {
+          println("classes: $it")
+        }
+        Assert.assertTrue(classes.isDirectory && classFiles.size > 4)
       }
     }
   }

@@ -31,9 +31,10 @@ class GeneratorPlugin : Plugin<Project> {
     val dsl2xml = project.tasks.create("dsl2xml", Dsl2Xml::class.java)
     dsl2xml.dependsOn(project.tasks.getByName("classes"))
 
-    project.afterEvaluate {
-      println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
-      project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets.getByName("main").java.srcDir( settings.dslPath )
-    }
+    println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
+    val sourceSets = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+
+    println("Source sets: ${sourceSets.names}")
+    sourceSets.getByName("main").java.srcDir( settings.dslPath!!.path )
   }
 }

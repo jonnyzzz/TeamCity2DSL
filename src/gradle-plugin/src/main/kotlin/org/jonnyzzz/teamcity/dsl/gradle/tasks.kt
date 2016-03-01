@@ -52,14 +52,17 @@ open class Xml2Dsl : BaseDSLTask() {
 open class Dsl2Xml : BaseDSLTask() {
   override fun executeTaskImpl(dslClasses : ClassLoader, settings: ResolvedDSLSettings) {
 
-    val classpath = project.convention.getPlugin(JavaPluginConvention::class.java)
+    val sourceSet = project.convention.getPlugin(JavaPluginConvention::class.java)
             .sourceSets
             .getByName("main")
-            .output
-            .dirs
+
+    val classpath = sourceSet.runtimeClasspath.files.filter { it.isDirectory }
             .map { it.toURI().toURL() }
             .toTypedArray()
 
+
+    sourceSet.java.srcDirs.forEach { println("  DSL Sources: " + it) }
+    classpath.forEach { println("  DSL Classpath: " + it) }
 
     val loader = URLClassLoader(classpath, dslClasses)
 
