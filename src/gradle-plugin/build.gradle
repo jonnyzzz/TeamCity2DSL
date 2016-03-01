@@ -12,3 +12,44 @@ dependencies {
   testCompile gradleTestKit()
 }
 
+def genMain = file("$projectDir/generated/kotlin")
+def moduleGroupId = project.group.toString()
+def moduleName_THIS = project.name.toString()
+def moduleName_DSL = project(':src:DSL').name.toString()
+def moduleVersion = project.version.toString()
+def packageName = "${moduleGroupId}.gradle.generated"
+def targetFile = file("$genMain/${packageName.replace(".", "/")}/generated.kt")
+
+sourceSets.main.kotlin.srcDirs += genMain
+
+task generateStaticParameters {
+  inputs.file project.buildFile
+  inputs.file rootProject.buildFile
+
+  inputs.property "groupId", moduleGroupId
+  inputs.property "nameTHIS", moduleName_THIS
+  inputs.property "nameDSL", moduleName_DSL
+  inputs.property "version", moduleVersion
+
+  outputs.file targetFile
+
+  doLast {
+    delete targetFile
+    targetFile.parentFile.mkdirs()
+
+    def source = """package ${packageName}
+    ///This is generated file. Do not touch!
+    object GradlePluginBuildConstants {
+      val group : String = "${moduleGroupId}"
+      val name_PLUGIN : String = "${moduleName_THIS}"
+      val name_DSL : String = "${moduleName_DSL}"
+      val version : String = "${moduleVersion}"
+    }
+
+    """
+
+    targetFile.text = source
+  }
+}
+
+compileKotlin.dependsOn generateStaticParameters

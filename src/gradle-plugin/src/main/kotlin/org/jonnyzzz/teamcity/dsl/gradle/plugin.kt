@@ -3,6 +3,7 @@ package org.jonnyzzz.teamcity.dsl.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
+import org.jonnyzzz.teamcity.dsl.gradle.generated.GradlePluginBuildConstants
 
 val TEAMCITY_RUNNER_CONFIGURATION = "teamcity_runner"
 
@@ -19,8 +20,8 @@ class GeneratorPlugin : Plugin<Project> {
     val renamer = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
 
     project.dependencies.apply {
-      add(renamer.name, "org.jonnyzzz.teamcity.dsl:DSL:SNAPSHOT") //TODO: generate version and names from gradle build
-      add("compile", "org.jonnyzzz.teamcity.dsl:DSL:SNAPSHOT") //TODO: use API module here!
+      add(renamer.name, GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version)
+      add("compile",    GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version) //TODO: use API module here!
     }
 
     val settings = project.DSLSettings
