@@ -24,6 +24,7 @@ class IntegrationPluginTest {
       repositories {
         mavenLocal()
         mavenCentral()
+        maven { url "http://dl.bintray.com/jonnyzzz/maven" }
       }
 
       dependencies {
@@ -34,8 +35,8 @@ class IntegrationPluginTest {
     repositories {
       mavenLocal()
       mavenCentral()
+      maven { url "http://dl.bintray.com/jonnyzzz/maven" }
     }
-
 
     apply plugin: '${DSL_PLUGIN_NAME}'
 
