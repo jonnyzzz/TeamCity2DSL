@@ -9,6 +9,7 @@ import org.jonnyzzz.teamcity.dsl.generating.DSLOptions
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCUUID
 import org.jonnyzzz.teamcity.dsl.model.TeamCityModel
+import org.jonnyzzz.teamcity.dsl.model.TeamCityVersion
 import org.jonnyzzz.teamcity.dsl.suppressing
 import org.jonnyzzz.teamcity.dsl.xml.XmlGenerating
 import org.jonnyzzz.teamcity.dsl.xml.XmlParsing
@@ -189,7 +190,7 @@ object DSLRegistry : DSLRegistryFacade {
             partsFilter.filterAll(callbacks)
             )
 
-    return TeamCityModel(actualProjects)
+    return TeamCityModel(TeamCityVersion.v9/*TODO*/, actualProjects)
   }
 
   fun initializeLazy(objects: List<Any?>) {

@@ -7,10 +7,7 @@ import org.jonnyzzz.kotlin.xml.bind.XRoot
 import org.jonnyzzz.kotlin.xml.bind.jdom.JDOM
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.getAnnotationRec
-import org.jonnyzzz.teamcity.dsl.model.TCBuildOrTemplate
-import org.jonnyzzz.teamcity.dsl.model.TCProject
-import org.jonnyzzz.teamcity.dsl.model.TCUUID
-import org.jonnyzzz.teamcity.dsl.model.TeamCityModel
+import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.using
 import java.io.File
 import java.io.FileOutputStream
@@ -23,48 +20,50 @@ object XmlGenerating {
     if (!file.isDirectory) throw Error("Failed to cleanup destination folder")
 
     for (project in model.projects) {
-      generateProject(file, project)
+      generateProject(model, file, project)
     }
   }
 
-  private fun Document.initializeDocument(uuid : TCUUID) {
-    when {
-      uuid.uuid == null && uuid is TCProject -> {
-        // TeamCity 8.1.x & older integration tests
-        docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../project-config.dtd")
+  private fun Document.initializeDocument(model : TeamCityModel, uuid : TCUUID) {
+    val teamCityVersion = model.version
+    if (teamCityVersion !is TeamCityVersion.XSDTarget) {
+      when(uuid) {
+        is TCProject -> {
+          // TeamCity 8.1.x & older integration tests
+          docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../project-config.dtd")
+        }
+        else -> {
+          // TeamCity 8.1.x & older integration tests
+          docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../../project-config.dtd")
+        }
       }
-      uuid.uuid == null && uuid !is TCProject -> {
-        // TeamCity 8.1.x & older integration tests
-        docType = DocType(uuid.javaClass.getAnnotationRec(XRoot::class.java)!!.name, "../../../project-config.dtd")
-      }
-      else -> {
-        val rootElement = rootElement
-        val xsiNs = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    } else {
+      val rootElement = rootElement
+      val xsiNs = Namespace.getNamespace(TeamCityVersion.XSDTarget.namespacePrefix, TeamCityVersion.XSDTarget.namespaceURI)
 
-        rootElement.addNamespaceDeclaration(xsiNs);
-        rootElement.setAttribute("noNamespaceSchemaLocation", "http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd", xsiNs);
-      }
+      rootElement.addNamespaceDeclaration(xsiNs);
+      rootElement.setAttribute(TeamCityVersion.XSDTarget.namespaceAttribute, teamCityVersion.schemaLocation, xsiNs);
     }
   }
 
-  private fun generateProject(root: File, project : TCProject) {
+  private fun generateProject(model : TeamCityModel, root: File, project : TCProject) {
     val projectId = project.id ?: throw Error("Project should have an id")
 
     val home = root / projectId
-    generateXML(home, "project-config.xml", project) { initializeDocument(project)}
+    generateXML(home, "project-config.xml", project) { initializeDocument(model, project)}
 
     val buildAndTemplates : List<TCBuildOrTemplate> = project.buildTypes + project.buildTemplates
     if (buildAndTemplates.any()) {
       val buildTypesHome = home / "buildTypes"
       buildAndTemplates.forEach {
-        generateXML(buildTypesHome, it.id + ".xml", it) { initializeDocument(it) }
+        generateXML(buildTypesHome, it.id + ".xml", it) { initializeDocument(model, it) }
       }
     }
 
     if (project.vcsRoots.any()) {
       val buildTypesHome = home / "vcsRoots"
       project.vcsRoots.forEach {
-        generateXML(buildTypesHome, it.id + ".xml", it) { initializeDocument(it) }
+        generateXML(buildTypesHome, it.id + ".xml", it) { initializeDocument(model, it) }
       }
     }
 

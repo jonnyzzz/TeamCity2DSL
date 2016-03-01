@@ -1,6 +1,8 @@
 package org.jonnyzzz.teamcity.dsl.xml
 
 import org.jdom2.Document
+import org.jdom2.Element
+import org.jdom2.Namespace
 import org.jdom2.input.SAXBuilder
 import org.jdom2.input.sax.XMLReaders
 import org.jonnyzzz.kotlin.xml.bind.XRoot
@@ -15,7 +17,7 @@ object XmlParsing {
   fun parse(projectsDir : File) : TeamCityModel {
     val projects = projectsDir.listFiles { it ->
       it.isDirectory && !it.name.startsWith(".") && !it.name.startsWith("_")
-    } ?: return TeamCityModel(listOf())
+    } ?: arrayOf()
 
     val modelProjects = projects
             .asSequence()
@@ -29,10 +31,37 @@ object XmlParsing {
             .filterNotNull()
             .toList()
 
-    return TeamCityModel(modelProjects)
+    if (modelProjects.isEmpty()) {
+       return TeamCityModel(TeamCityVersion.latest, listOf())
+    }
+
+    val versions = modelProjects.map { it.version }.distinct()
+    if (versions.size != 1) {
+      throw Error("Only one version of files is allowed, but were: ${versions}")
+    }
+
+    return TeamCityModel(versions.single(), modelProjects.map { it.project }.toList())
   }
 
-  private fun parseProject(id : String, file : File) : TCProject {
+  private fun parseTeamCityTargetVersion(rootElement: Element) : TeamCityVersion {
+    val schema = rootElement.getAttribute(
+            TeamCityVersion.XSDTarget.namespaceAttribute,
+            Namespace.getNamespace(TeamCityVersion.XSDTarget.namespaceURI))
+            ?.value
+            ?: return TeamCityVersion.v8
+
+    return TeamCityVersion.XSDTarget.values.firstOrNull { it.schemaLocation == schema }
+            ?: throw Error("Failed to resolve TeamCity target verison from scheme: ${schema}")
+  }
+
+  private fun assertTeamCityTargetVersion(version : TeamCityVersion, rootElement: Element) {
+    val thisFileVersion = parseTeamCityTargetVersion(rootElement)
+    if (version != thisFileVersion) {
+      throw Error("Expected version $version but was $thisFileVersion")
+    }
+  }
+
+  private fun parseProject(id : String, file : File) : TCProjectAndVersion {
     try {
       return parseProjectImpl(id, file)
     } catch (t : Throwable) {
@@ -40,14 +69,18 @@ object XmlParsing {
     }
   }
 
-  private fun parseProjectImpl(id : String, file : File) : TCProject {
-    val raw = JDOM.load(file.loadJDOM().rootElement!!, TCProject::class.java)
+  private data class TCProjectAndVersion(val version : TeamCityVersion, val project : TCProject)
+
+  private fun parseProjectImpl(id : String, file : File) : TCProjectAndVersion {
+    val rootElement = file.loadJDOM().rootElement!!
+    val version = parseTeamCityTargetVersion(rootElement)
+    val raw = JDOM.load(rootElement, TCProject::class.java)
     raw.id = id
 
     val buildsOrTemplates = (file.parentFile / "buildTypes")
             .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
             ?.sorted()
-            ?.map { parseBuildTypeOrTemplate( it.name.substring(0, it.name.length - 4), it)}
+            ?.map { parseBuildTypeOrTemplate( version, it.name.substring(0, it.name.length - 4), it)}
             ?: listOf()
 
     raw.buildTypes = buildsOrTemplates.map{it.buildType}.filterNotNull()
@@ -56,7 +89,7 @@ object XmlParsing {
     raw.vcsRoots = (file.parentFile / "vcsRoots")
             .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
             ?.sorted()
-            ?.map { parseVCSRoot( it.name.substring(0, it.name.length - 4), it)}
+            ?.map { parseVCSRoot( version,  it.name.substring(0, it.name.length - 4), it)}
             ?: listOf()
     val pluginSettings = file.parentFile / "pluginData" / "plugin-settings.xml"
     raw.pluginSettings = if (pluginSettings.isFile) parsePluginSettings(pluginSettings) else null
@@ -66,21 +99,23 @@ object XmlParsing {
             ?.map { parseMetaRunner(it.name.substring(0, it.name.length -4), it) }
             ?: listOf()
 
-    return raw
+    return TCProjectAndVersion(version, raw)
   }
 
   private data class BuildTypeOrTemplate(val buildType : TCBuildType? = null, val buildTemplate: TCBuildTemplate? = null)
 
-  private fun parseBuildTypeOrTemplate(id : String, file : File) : BuildTypeOrTemplate {
+  private fun parseBuildTypeOrTemplate(version : TeamCityVersion, id : String, file : File) : BuildTypeOrTemplate {
     try {
-      return parseBuildTypeOrTemplateImpl(id, file)
+      return parseBuildTypeOrTemplateImpl(version, id, file)
     } catch (t : Throwable) {
       throw RuntimeException("Failed to parse $file for buildType|buildTemplate=$id. ${t.message}", t)
     }
   }
 
-  private fun parseBuildTypeOrTemplateImpl(id : String, file : File) : BuildTypeOrTemplate {
+  private fun parseBuildTypeOrTemplateImpl(version : TeamCityVersion, id : String, file : File) : BuildTypeOrTemplate {
     val root = file.loadJDOM().rootElement!!
+
+    assertTeamCityTargetVersion(version, root)
 
     if (root.name == TCBuildType::class.java.getAnnotationRec(XRoot::class.java)!!.name) {
       val raw = JDOM.load(root, TCBuildType::class.java)
@@ -105,9 +140,13 @@ object XmlParsing {
     }
   }
 
-  private fun parseVCSRoot(id : String, file : File) : TCVCSRoot {
+  private fun parseVCSRoot(version : TeamCityVersion, id : String, file : File) : TCVCSRoot {
     try {
-      val raw = JDOM.load(file.loadJDOM().rootElement!!, TCVCSRoot::class.java)
+      val rootElement = file.loadJDOM().rootElement!!
+
+      assertTeamCityTargetVersion(version, rootElement)
+
+      val raw = JDOM.load(rootElement, TCVCSRoot::class.java)
       raw.id = id
       return raw
     } catch (t : Throwable) {
