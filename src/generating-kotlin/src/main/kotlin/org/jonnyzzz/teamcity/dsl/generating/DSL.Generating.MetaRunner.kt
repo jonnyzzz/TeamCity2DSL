@@ -18,7 +18,7 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
   val mainFile = home / "meta_$templateId.tcdsl.kt"
 
   mainFile.writeUTF {
-    generateKotlinDSL(context.options.packageName) {
+    generateKotlinDSL(context.options.packageName, "meta_${templateId}") {
       block("val ${runner.variableName} = ${project.nameOrRef(context)}.metaRunner(${runner.id?.quote()})") {
         setter("name", runner.name)
         setter("description", runner.description)

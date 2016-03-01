@@ -58,7 +58,7 @@ object DSLGenerating {
 
     if (project.vcsRoots.any()) {
       (home / "vcs_roots.tcdsl.kt").writeUTF {
-        generateKotlinDSL(options.packageName) {
+        generateKotlinDSL(options.packageName, "project_${projectId}_vcs_roots") {
           generateVCSRoots(context, project, project.vcsRoots)
         }
       }

@@ -19,7 +19,7 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
   val mainFile = home / "build_$buildId.tcdsl.kt"
 
   mainFile.writeUTF {
-    generateKotlinDSL(context.options.packageName) {
+    generateKotlinDSL(context.options.packageName, "build_$buildId") {
 
       fun generateTemplateIdRef() : String {
         val templateId = build.settings.templateId ?: return ""

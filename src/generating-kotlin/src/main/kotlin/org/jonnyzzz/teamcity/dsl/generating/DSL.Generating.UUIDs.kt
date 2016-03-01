@@ -22,7 +22,7 @@ fun generateUUIDsMap(context : GenerationContext, root : File, projects : List<T
 
   root.mkdirs()
   (root / "uuids.kt").writeUTF {
-    generateKotlinDSL(options.packageName) {
+    generateKotlinDSL(options.packageName, "uuids") {
       block2("object UUIDs : ${TCUUIDs::class.java.getSimpleName()}()") {
 
         appendln()

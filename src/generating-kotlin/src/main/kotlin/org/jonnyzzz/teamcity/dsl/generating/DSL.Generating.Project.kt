@@ -20,7 +20,7 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
   val projectId = project.id!!
 
   (home / "project_$projectId.tcdsl.kt").writeUTF {
-    generateKotlinDSL(context.options.packageName) {
+    generateKotlinDSL(context.options.packageName, "project_$projectId") {
 
       fun generateParentProjectRef() : String {
         val parentId = project.parentId ?: return "RootProject"

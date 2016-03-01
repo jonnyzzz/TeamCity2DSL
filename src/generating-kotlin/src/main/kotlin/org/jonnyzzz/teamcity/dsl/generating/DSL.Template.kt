@@ -8,22 +8,22 @@ import kotlin.collections.forEach
 import kotlin.text.isEmpty
 import kotlin.text.replace
 
-fun generateKotlinDSL(pkg: String, builder : KotlinWriter.() -> Unit) : String {
+fun generateKotlinDSL(pkg: String, jvmFileName : String, builder : KotlinWriter.() -> Unit) : String {
   return kotlinWriter {
-    generateKotlinDSLFileHeader(pkg)
+    generateKotlinDSLFileHeader(pkg, jvmFileName)
 
     builder()
     appendln()
   }
 }
 
-fun KotlinWriter.generateKotlinDSLFileHeader(pkg: String)  {
+fun KotlinWriter.generateKotlinDSLFileHeader(pkg: String, jvmFileName : String)  {
   appendln("///////////////////////////////////////////")
   appendln("/// THIS IS AUTO GENERATED FILE")
   appendln("/// YOU MAY EDIT IT ON YOUR OWN RISK")
   appendln("/// TeamCity.DSL VERSION=${version}")
   appendln("///////////////////////////////////////////")
-  appendln("@file:JvmName(\"" + "jonnyzzz_" + UUID.randomUUID().toString().replace("-", "") + "\")   ")
+  appendln("@file:JvmName(\"jonnyzzz_${jvmFileName.replace(Regex("[^a-zA-Z0-9\\-]"), "_")}\")   ")
   appendln()
   appendln("package $pkg")
   appendln()
@@ -38,8 +38,8 @@ fun KotlinWriter.generateTCDSL(className : String, action : KotlinWriter.() -> U
   }
 }
 
-fun generateKotlinDSL(pkg:String, className : String, action : KotlinWriter.() -> Unit) : String {
-  return generateKotlinDSL(pkg) {
+fun generateKotlinDSL(pkg:String, jvmFileName : String, className : String, action : KotlinWriter.() -> Unit) : String {
+  return generateKotlinDSL(pkg, jvmFileName) {
     generateTCDSL(className){
       action()
     }

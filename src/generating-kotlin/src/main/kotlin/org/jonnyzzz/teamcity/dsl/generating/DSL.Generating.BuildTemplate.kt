@@ -18,7 +18,7 @@ fun generateTemplate(context: GenerationContext, home: File, project : TCProject
   val mainFile = home / "template_$templateId.tcdsl.kt"
 
   mainFile.writeUTF {
-    generateKotlinDSL(context.options.packageName) {
+    generateKotlinDSL(context.options.packageName, "template_$templateId") {
       block("val ${template.variableName} = ${project.nameOrRef(context)}.template(${template.id?.quote()})") {
         setter("name", template.name)
         setter("description", template.description)
