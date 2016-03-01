@@ -47,8 +47,12 @@ subprojects {
   }
   publishToMavenLocal.inputs.file project.buildFile
 
-  test {
-    outputs.upToDateWhen { false }
+  tasks.withType(Test).each { test ->
+    test.outputs.upToDateWhen { false }
+
+    if (System.getenv("TRAVIS_CI") != null) {
+      test.testLogging.showStandardStreams = true
+    }
   }
 }
 

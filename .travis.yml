@@ -1,4 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-
+env:
+  global:
+    TRAVIS_CI=1
