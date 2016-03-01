@@ -16,7 +16,7 @@ import java.io.Writer
 
 fun xmlOutputter() : XMLOutputter {
   val format = Format.getPrettyFormat()!!;
-  format.setLineSeparator(System.getProperty("teamcity.dsl.lineSeparator.xml", "\n"));
+  format.lineSeparator = System.getProperty("teamcity.dsl.lineSeparator.xml", "\n");
   format.encoding = "UTF-8";
 
   val out = XMLOutputter(format)
