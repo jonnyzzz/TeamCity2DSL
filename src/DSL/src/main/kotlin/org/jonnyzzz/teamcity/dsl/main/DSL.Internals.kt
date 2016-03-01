@@ -49,7 +49,7 @@ object DSLRegistry : DSLRegistryFacade {
     val map = projects.getOrPut(clazz) { LinkedList() }
 
     map.add(p)
-    println("Registered project: ${p.id}")
+    println("Registered project: ${p.id} from $clazz")
   }
 
   class OnCompleteCallback(val callback : (TCUUID) -> Unit) {
@@ -61,6 +61,7 @@ object DSLRegistry : DSLRegistryFacade {
   override fun addOnCompletedUUIDCallback(callback : (TCUUID) -> Unit) {
     val clazz = inferCalleeClass()
     callbacks.getOrPut(clazz) { LinkedList() }.add(OnCompleteCallback(callback))
+    println("Registered callback from $clazz")
   }
 
   private fun ensureClassesInitialized(parts : Collection<Class<Any>>) {
