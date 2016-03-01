@@ -27,7 +27,9 @@ interface GenerationContext {
 
 
 object DSLGenerating {
-  fun generate(projects: List<TCProject>, file: File, options: DSLOptions = DSLOptions()) {
+  fun generate(model : TeamCityModel, file: File, options: DSLOptions = DSLOptions()) {
+    val projects = model.projects
+
     file.mkdirs()
 
     if (!file.isDirectory) throw Error("Failed to cleanup destination folder")

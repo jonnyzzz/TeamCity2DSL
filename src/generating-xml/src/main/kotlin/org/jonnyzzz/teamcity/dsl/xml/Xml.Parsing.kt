@@ -10,15 +10,14 @@ import org.jonnyzzz.teamcity.dsl.getAnnotationRec
 import org.jonnyzzz.teamcity.dsl.model.*
 import java.io.File
 
-
 object XmlParsing {
 
-  fun parse(projectsDir : File) : List<TCProject> {
+  fun parse(projectsDir : File) : TeamCityModel {
     val projects = projectsDir.listFiles { it ->
       it.isDirectory && !it.name.startsWith(".") && !it.name.startsWith("_")
-    } ?: return listOf()
+    } ?: return TeamCityModel(listOf())
 
-    return projects
+    val modelProjects = projects
             .asSequence()
             .map{ dir ->
               val projectConfig = dir / "project-config.xml"
@@ -29,6 +28,8 @@ object XmlParsing {
             }
             .filterNotNull()
             .toList()
+
+    return TeamCityModel(modelProjects)
   }
 
   private fun parseProject(id : String, file : File) : TCProject {

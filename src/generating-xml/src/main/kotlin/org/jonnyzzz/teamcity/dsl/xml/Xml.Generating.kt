@@ -10,18 +10,19 @@ import org.jonnyzzz.teamcity.dsl.getAnnotationRec
 import org.jonnyzzz.teamcity.dsl.model.TCBuildOrTemplate
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCUUID
+import org.jonnyzzz.teamcity.dsl.model.TeamCityModel
 import org.jonnyzzz.teamcity.dsl.using
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 
 object XmlGenerating {
-  fun generate(projects : List<TCProject>, file : File) {
+  fun generate(model : TeamCityModel, file : File) {
     file.mkdirs()
 
     if (!file.isDirectory) throw Error("Failed to cleanup destination folder")
 
-    for (project in projects) {
+    for (project in model.projects) {
       generateProject(file, project)
     }
   }

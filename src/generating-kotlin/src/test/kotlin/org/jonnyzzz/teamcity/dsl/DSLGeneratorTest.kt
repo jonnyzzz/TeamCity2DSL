@@ -21,7 +21,7 @@ class ModelToDSLGeneratorTest {
               TCParameterWithSpec().apply { name = "ccc"; value = "ddd" })
     }
     runUnderTempDirectory { tmp ->
-      DSLGenerating.generate(arrayListOf(p), tmp)
+      DSLGenerating.generate(TeamCityModel(arrayListOf(p)), tmp)
 
       tmp.dumpFiles()
     }

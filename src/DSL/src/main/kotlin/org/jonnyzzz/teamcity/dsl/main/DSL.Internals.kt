@@ -8,6 +8,7 @@ import org.jonnyzzz.teamcity.dsl.generating.DSLGenerating
 import org.jonnyzzz.teamcity.dsl.generating.DSLOptions
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCUUID
+import org.jonnyzzz.teamcity.dsl.model.TeamCityModel
 import org.jonnyzzz.teamcity.dsl.suppressing
 import org.jonnyzzz.teamcity.dsl.xml.XmlGenerating
 import org.jonnyzzz.teamcity.dsl.xml.XmlParsing
@@ -164,7 +165,7 @@ object DSLRegistry : DSLRegistryFacade {
   }
 
   fun loadAll(pkg : String,
-              clazzLoader : ClassLoader) : List<TCProject> {
+              clazzLoader : ClassLoader) : TeamCityModel {
     println("Scanning classes for DSL...")
 
     val partsFilter = classesMapFiler(pkg, clazzLoader)
@@ -188,7 +189,7 @@ object DSLRegistry : DSLRegistryFacade {
             partsFilter.filterAll(callbacks)
             )
 
-    return actualProjects
+    return TeamCityModel(actualProjects)
   }
 
   fun initializeLazy(objects: List<Any?>) {
@@ -227,7 +228,7 @@ object DSLRegistry : DSLRegistryFacade {
     val projects = loadAll(pkg, clazzLoader)
     println("Generating TeamCity .xml files for the model of ${projects.size} project(s)")
     println("Generate files to $root")
-    XmlGenerating.generate(projects.toList(), root)
+    XmlGenerating.generate(projects, root)
     println("Completed")
   }
 }
