@@ -111,8 +111,14 @@ class IntegrationPluginTest {
       args("xml2dsl")
 
       assert {
-        Assert.assertTrue( (home / "dsl.generated").isDirectory)
-        Assert.assertTrue( (home / "dsl.generated").listFiles().size > 0)
+        val gen = home / "dsl.generated"
+
+        Files.walk(gen.toPath()).forEach {
+          println( "generated: $it")
+        }
+
+        Assert.assertTrue( gen.isDirectory)
+        Assert.assertTrue( gen.listFiles().size > 0)
       }
     }
   }
@@ -130,8 +136,11 @@ class IntegrationPluginTest {
       args("xml2dsl", "dsl2xml")
 
       assert {
-        Assert.assertTrue( (home / "dsl.generated").isDirectory)
-        Assert.assertTrue( (home / "dsl.generated").listFiles().size > 0)
+        val gen = home / "dsl.generated"
+
+        Files.walk(gen.toPath()).forEach {
+          println( "generated: $it")
+        }
       }
     }
   }
