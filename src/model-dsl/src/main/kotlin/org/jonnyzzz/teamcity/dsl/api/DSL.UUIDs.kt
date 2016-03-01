@@ -21,3 +21,5 @@ open class TCUUIDs {
   operator fun TCBuildTypeRef.plusAssign(uuid : String) { this to uuid }
   operator fun TCBuildTemplateRef.plusAssign(uuid : String) { this to uuid }
 }
+
+inline fun uuids(builder : TCUUIDs.() -> Unit) : TCUUIDs = object : TCUUIDs() {}.apply { builder() }

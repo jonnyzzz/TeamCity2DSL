@@ -1,6 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
-import org.jonnyzzz.teamcity.dsl.api.TCUUIDs
+import org.jonnyzzz.teamcity.dsl.api.uuids
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.writeUTF
@@ -23,7 +23,8 @@ fun generateUUIDsMap(context : GenerationContext, root : File, projects : List<T
   root.mkdirs()
   (root / "uuids.kt").writeUTF {
     generateKotlinDSL(options.packageName, "uuids") {
-      block2("object UUIDs : ${TCUUIDs::class.java.getSimpleName()}()") {
+      appendln("@Suppress(\"unused\")")
+      block("val UUIDs = ${::uuids.name}") {
 
         appendln()
         allProjects.filter { it.uuid != null }.sortedBy { it.variableName.toLowerCase() }.forEach { appendln("${it.variableName} += ${it.uuid!!.quote()}") }
