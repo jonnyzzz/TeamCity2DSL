@@ -59,7 +59,24 @@ class ModelToDSLGeneratorTest {
       generateRequirement(r)
     }.trim()
 
-    Assert.assertEquals("ref(\"aaa\") - `equals` - \"bbb\"", x)
+    Assert.assertEquals("rule {\n  ref(\"aaa\") - `equals` - \"bbb\"\n}", x)
+  }
+
+  @Test
+  fun should_use_constant_for_requirements_id() {
+
+    val r = TCRequirement().apply {
+      id = "bb"
+      name = "aaa"
+      value = "bbb"
+      type = "equals"
+    }
+
+    val x = kotlinWriter {
+      generateRequirement(r)
+    }.trim()
+
+    Assert.assertEquals("rule(\"bb\") {\n  ref(\"aaa\") - `equals` - \"bbb\"\n}", x)
   }
 
   @Test
