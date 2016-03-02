@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="cca9ca8c-7ea1-41f2-8166-8dd6105e8dd6" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>BB</name>
+  <description />
+  <settings ref="Test005_T1">
+    <disabled-settings>
+      <setting-ref ref="ARTIFACT_DEPENDENCY_6" />
+      <setting-ref ref="RQ_11" />
+    </disabled-settings>
+    <parameters />
+    <build-runners order="" />
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

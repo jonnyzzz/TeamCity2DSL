@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="438eee04-9c86-4e18-9c33-87b56598e45f" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>T1</name>
+  <settings>
+    <parameters />
+    <build-runners />
+    <vcs-settings />
+    <requirements>
+      <exists id="RQ_11" name="R1" />
+    </requirements>
+    <build-triggers />
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_6" sourceBuildTypeId="Test001_Build" cleanDestination="true">
+        <revisionRule name="lastSuccessful" revision="latest.lastSuccessful" />
+        <artifact sourcePath="**" />
+      </dependency>
+    </artifact-dependencies>
+    <cleanup />
+  </settings>
+</template>
+
