@@ -89,8 +89,9 @@ var TCSettingsOptions.maximumParallelBuilds: Int?
 interface TCSettingsOptionsArtifactsBuilder {
   operator fun String.unaryPlus() : TCSettingsOptionsArtifactsBuilderDestination
 }
+
 interface TCSettingsOptionsArtifactsBuilderDestination {
-  fun to(destination : String)
+  infix fun to(destination : String)
 }
 
 fun TCSettingsOptions.publishArtifacts(builder: TCSettingsOptionsArtifactsBuilder.() -> Unit) {
