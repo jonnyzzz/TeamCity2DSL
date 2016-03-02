@@ -31,7 +31,9 @@ fun KotlinWriter.generateDependencies(context : GenerationContext, settings : TC
 
     block("dependency(${dependencyRef()})") {
       dep.artifacts.forEach { artifact ->
-        block("artifact") {
+
+        val blockParams = artifact.id?.let { "(${it.quote()})"} ?: ""
+        block("artifact$blockParams") {
           setter("cleanDestination", artifact.cleanDestination)
           setter("cleanDestinationAfterBuild", artifact.cleanDestinationAfterBuild)
           setter("revision", artifact.revision)

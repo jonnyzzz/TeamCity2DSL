@@ -4,16 +4,17 @@ import org.jonnyzzz.teamcity.dsl.model.*
 
 
 interface TCBuildSettingsDependencyBuilder {
-  fun artifact(builder : TCSettingsArtifactDependency.() -> Unit)
+  fun artifact(id : String? = null, builder : TCSettingsArtifactDependency.() -> Unit)
   fun snapshot(builder : TCSettingsSnapshotDependency.() -> Unit)
 }
 
 fun TCWithSettings.dependency(build : TCBuildTypeRef, builder : TCBuildSettingsDependencyBuilder.() -> Unit) {
   val buildTypeId = build.id!!
   object : TCBuildSettingsDependencyBuilder {
-    override fun artifact(builder: TCSettingsArtifactDependency.() -> Unit) {
+    override fun artifact(id : String?, builder: TCSettingsArtifactDependency.() -> Unit) {
       settings {
         artifactDependencies = (artifactDependencies ?: listOf()) + TCSettingsArtifactDependency().apply {
+          this.id = id
           this.buildTypeId = buildTypeId
           this.builder()
         }
