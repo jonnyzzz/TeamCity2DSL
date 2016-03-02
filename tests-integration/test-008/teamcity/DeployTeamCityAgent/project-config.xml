@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="3ad585e8-0b6b-4934-b67f-f6557cb93295" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>CodeDeploy Demo</name>
+  <parameters />
+  <cleanup />
+</project>
+

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="188ec697-2a36-499b-add5-3a4b33864a73" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>Deploy TeamCity Agent</name>
+  <description />
+  <settings>
+    <options>
+      <option name="cleanBuild" value="true" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_6" name="Download and unzip TeamCity agent" type="Ant">
+        <parameters>
+          <param name="build-file"><![CDATA[<project>
+
+    <target name="download.teamcity.agent">
+        <mkdir dir="downloads"/>
+        <get src="http://teamcity.jetbrains.com/update/buildAgent.zip" dest="downloads"/>
+        <unzip src="downloads/buildAgent.zip" dest="."/>
+        <delete dir="downloads"/>
+    </target>
+
+</project>]]></param>
+          <param name="build-file-path" value="build.xml" />
+          <param name="target" value="download.teamcity.agent" />
+          <param name="teamcity.coverage.emma.include.source" value="true" />
+          <param name="teamcity.coverage.emma.instr.parameters" value="-ix -*Test*" />
+          <param name="teamcity.coverage.idea.includePatterns" value="*" />
+          <param name="teamcity.coverage.jacoco.patterns" value="+:*" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use-custom-build-file" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_10" name="Prepare buildAgent.properties" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[#!/bin/bash
+set -e -x -u
+
+cd conf
+cat >buildAgent.properties <<EOL
+serverUrl=http://teamcity.jetbrains.com/
+name=CodeDeployDemoAgent
+ownPort=9090
+teamcity.agent.communicationProtocols=polling
+EOL]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_9" name="Prepare appspec.yml" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[#!/bin/bash
+
+rm -r ./scripts
+mkdir scripts
+
+cd scripts
+
+cat >install_dependencies.sh <<EOL
+#!/bin/bash
+yum install -y java-1.8.0-openjdk
+rm -r /opt/buildAgent
+EOL
+
+
+cat >stop_server.sh <<EOL
+#!/bin/bash
+/opt/buildAgent/bin/agent.sh stop
+EOL
+
+
+cat >start_server.sh <<EOL
+#!/bin/bash
+/opt/buildAgent/bin/agent.sh start
+EOL
+
+
+cat >change_permissions.sh <<EOL
+#!/bin/bash
+chmod -R 755 /opt/buildAgent
+EOL
+cat change_permissions.sh
+
+cd ..
+
+chmod +x scripts/*
+
+cat >appspec.yml <<EOL
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /opt/buildAgent
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/change_permissions.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 300
+      runas: root
+EOL
+
+zip -r buildAgent.zip .]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_11" name="Deploy TeamCity agent" type="codedeploy">
+        <parameters>
+          <param name="codedeploy_access_key_id" value="ABC" />
+          <param name="codedeploy_application_name" value="TeamCityBuildAgent" />
+          <param name="codedeploy_credentials_type" value="codedeploy_access_keys" />
+          <param name="codedeploy_deployment_group_name" value="TeamCityBuildAgentDeploymentGroup" />
+          <param name="codedeploy_external_id" value="8be829e3-c9ef-45ea-a932-e884e4562453" />
+          <param name="codedeploy_ready_revision_path" value="buildAgent.zip" />
+          <param name="codedeploy_region_name" value="eu-west-1" />
+          <param name="codedeploy_s3_bucket_name" value="codedeploy.test.bucket" />
+          <param name="codedeploy_secret_access_key" value="XYZ" />
+          <param name="codedeploy_wait" value="true" />
+          <param name="codedeploy_wait_poll_interval_sec" value="20" />
+          <param name="codedeploy_wait_timeout_sec" value="1800" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+
