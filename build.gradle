@@ -16,7 +16,11 @@ plugins {
   id "com.jfrog.bintray" version "1.5"
 }
 
-version = rootProject.hasProperty('teamcity') ? rootProject['teamcity']['build.number'] : 'SNAPSHOT'
+if (System.getenv("TRAVIS_BUILD_NUMBER") != null) {
+  version = "0.1." + System.getenv("TRAVIS_BUILD_NUMBER")
+} else {
+  version = rootProject.hasProperty('teamcity') ? rootProject['teamcity']['build.number'] : 'SNAPSHOT'
+}
 
 subprojects {
   apply plugin: 'java'
