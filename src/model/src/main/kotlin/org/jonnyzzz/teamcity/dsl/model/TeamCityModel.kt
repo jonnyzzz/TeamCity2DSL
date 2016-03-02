@@ -10,10 +10,10 @@ data class TeamCityModel(
     get() = projects.size
 }
 
-sealed class TeamCityVersion(val version : String) {
-  object v8 : TeamCityVersion("8.0")
+sealed class TeamCityVersion(val fieldName: String, val version : String) {
+  object v8 : TeamCityVersion("v8", "8.0")
 
-  abstract class XSDTarget(version : String, val schemaLocation : String) : TeamCityVersion(version) {
+  abstract class XSDTarget(fieldName : String, version : String, val schemaLocation : String) : TeamCityVersion(fieldName, version) {
     companion object {
       val namespaceURI = "http://www.w3.org/2001/XMLSchema-instance"
       val namespacePrefix = "xsi"
@@ -24,8 +24,8 @@ sealed class TeamCityVersion(val version : String) {
     }
   }
 
-  object v9 : XSDTarget("9.0", "http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd")
-  object v10 : XSDTarget("10.0", "http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd")
+  object v9 : XSDTarget("v9", "9.0", "http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd")
+  object v10 : XSDTarget("v10", "10.0", "http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd")
 
   companion object {
     val latest : TeamCityVersion

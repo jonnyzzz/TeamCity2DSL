@@ -1,5 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.api.internal
 
+import org.jonnyzzz.teamcity.dsl.api.GlobalSettingsBuilder
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCUUID
 import java.util.*
@@ -7,6 +8,7 @@ import java.util.*
 interface DSLRegistryFacade {
   fun addCompletedProject(p: TCProject)
   fun addOnCompletedUUIDCallback(callback: (TCUUID) -> Unit)
+  fun addOnGlobalCallback(callback: GlobalSettingsBuilder.() -> Unit)
 }
 
 internal object DSLRegistry : DSLRegistryFacade  {
@@ -33,9 +35,13 @@ internal object DSLRegistry : DSLRegistryFacade  {
     call { addCompletedProject(p) }
   }
 
-
   override fun addOnCompletedUUIDCallback(callback: (TCUUID) -> Unit) {
     println("Registered uuids callback")
     call { addOnCompletedUUIDCallback(callback) }
+  }
+
+  override fun addOnGlobalCallback(callback: GlobalSettingsBuilder.() -> Unit) {
+    println("Registered global settings callback")
+    call { addOnGlobalCallback(callback) }
   }
 }

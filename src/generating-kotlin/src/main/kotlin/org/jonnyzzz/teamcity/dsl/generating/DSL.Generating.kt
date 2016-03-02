@@ -50,6 +50,8 @@ object DSLGenerating {
     }
 
     generateUUIDsMap(context, file, projects, options)
+
+    generateGlobal(context, file, model, options)
   }
 
   private fun generateProject(context : GenerationContext, root : File, project : TCProject, options : DSLOptions) {

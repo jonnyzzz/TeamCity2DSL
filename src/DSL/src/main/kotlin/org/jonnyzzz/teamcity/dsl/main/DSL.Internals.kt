@@ -1,5 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.main
 
+import org.jonnyzzz.teamcity.dsl.api.GlobalSettingsBuilder
 import org.jonnyzzz.teamcity.dsl.api.TCDSLLazy
 import org.jonnyzzz.teamcity.dsl.api.TCUUIDs
 import org.jonnyzzz.teamcity.dsl.api.internal.DSLRegistryFacade
@@ -32,6 +33,7 @@ class DSLRegistryFacadeProxy : DSLRegistryFacade by DSLRegistry
 object DSLRegistry : DSLRegistryFacade {
   val projects : MutableMap<String, MutableList<TCProject>> = linkedMapOf()
   val callbacks : MutableMap<String, MutableList<OnCompleteCallback>> = linkedMapOf()
+  val globals : MutableMap<String, MutableList<GlobalSettingsBuilder.() -> Unit>> = linkedMapOf()
 
   fun inferCalleeClass() : String {
     val clazz = Thread
@@ -42,6 +44,14 @@ object DSLRegistry : DSLRegistryFacade {
             .firstOrNull { !it.className.startsWith("org.jonnyzzz.teamcity.dsl.") && !it.className.startsWith("kotlin.") && !it.className.startsWith("sun.") }
             ?: throw Error("Failed to resolve callee package. Incorrect/empty package was used?")
     return clazz.className
+  }
+
+  override fun addOnGlobalCallback(callback: GlobalSettingsBuilder.() -> Unit) {
+    val clazz = inferCalleeClass()
+    val map = globals.getOrPut(clazz) { LinkedList() }
+
+    map.add(callback)
+    println("Registered global callback from $clazz")
   }
 
   override fun addCompletedProject(p : TCProject) : Unit {
@@ -194,7 +204,20 @@ object DSLRegistry : DSLRegistryFacade {
             partsFilter.filterAll(callbacks)
             )
 
-    return TeamCityModel(TeamCityVersion.v9/*TODO*/, actualProjects)
+    var theVersion : TeamCityVersion = TeamCityVersion.v9
+
+    partsFilter.filterAll(globals).forEach {
+      object : GlobalSettingsBuilder {
+        override var TeamCityVersion: TeamCityVersion
+          get() = theVersion
+          set(value) {
+            theVersion = value
+            println("Selected target version : $theVersion")
+          }
+      }.it()
+    }
+
+    return TeamCityModel(theVersion, actualProjects)
   }
 
   fun initializeLazy(objects: List<Any?>) {
