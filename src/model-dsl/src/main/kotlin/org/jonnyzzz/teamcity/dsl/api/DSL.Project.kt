@@ -1,10 +1,28 @@
 package org.jonnyzzz.teamcity.dsl.api
 
 import org.jonnyzzz.teamcity.dsl.api.internal.DSLRegistry
-import org.jonnyzzz.teamcity.dsl.model.TCPluginSettings
-import org.jonnyzzz.teamcity.dsl.model.TCProject
-import org.jonnyzzz.teamcity.dsl.model.TCProjectRef
+import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.setIfNull
+
+interface TCProjectOrderingBuilder {
+  operator fun TCProjectRef.unaryPlus()
+  operator fun TCBuildTypeRef.unaryPlus()
+}
+
+fun TCProject.ordering(builder : TCProjectOrderingBuilder.() -> Unit) {
+  val o = ordering ?: TCProjectOrdering()
+  ordering = o
+
+  object : TCProjectOrderingBuilder {
+    override fun TCProjectRef.unaryPlus() {
+      o.projectsOrder = (o.projectsOrder ?: listOf()) + this.id!!
+    }
+
+    override fun TCBuildTypeRef.unaryPlus() {
+      o.buildsOrder = (o.buildsOrder ?: listOf()) + this.id!!
+    }
+  }.builder()
+}
 
 fun TCProject.cleanup(builder : TCUnknownBuilder.() -> Unit) {
   cleanup = elementImpl("cleanup", builder)

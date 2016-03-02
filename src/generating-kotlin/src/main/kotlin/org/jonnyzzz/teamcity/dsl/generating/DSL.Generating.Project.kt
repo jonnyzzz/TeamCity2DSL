@@ -3,6 +3,7 @@ package org.jonnyzzz.teamcity.dsl.generating
 import org.jonnyzzz.teamcity.dsl.api.projectMixin
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCProject
+import org.jonnyzzz.teamcity.dsl.model.isEmpty
 import org.jonnyzzz.teamcity.dsl.writeUTF
 import java.io.File
 import kotlin.collections.forEach
@@ -26,13 +27,16 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
   (home / "project_$projectId.tcdsl.kt").writeUTF {
     generateKotlinDSL(context.options.packageName, "project_$projectId") {
 
-      fun generateParentProjectRef() : String {
-        val parentId = project.parentId ?: return "RootProject"
-
+      fun generateProjectRef(parentId : String) : String {
         val base = context.findProject(parentId)
         if (base != null) return "${base.variableName}"
 
         return "UnknownProject(${parentId.quote()})"
+      }
+
+      fun generateParentProjectRef() : String {
+        val parentId = project.parentId ?: return "RootProject"
+        return generateProjectRef(parentId)
       }
 
       block("object ${project.className}") {
@@ -58,6 +62,22 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
             block("plugins") {
               plugins.settings?.forEach {
                 element(it)
+              }
+            }
+          }
+
+          val ordering = project.ordering
+          if (!ordering.isEmpty()) {
+
+            block("ordering") {
+              ordering?.projectsOrder?.forEach {
+                appendln("+ ${ context.findProject( it )!!.variableName }")
+              }
+
+              appendln()
+
+              ordering?.buildsOrder?.forEach {
+                appendln("+ ${ context.findBuild( it )!!.variableName }")
               }
             }
           }
