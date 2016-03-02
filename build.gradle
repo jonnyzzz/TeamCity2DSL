@@ -16,6 +16,8 @@ plugins {
   id "com.jfrog.bintray" version "1.5"
 }
 
+version = rootProject.hasProperty('teamcity') ? rootProject['teamcity']['build.number'] : 'SNAPSHOT'
+
 subprojects {
   apply plugin: 'java'
   apply plugin: 'kotlin'
@@ -32,8 +34,6 @@ subprojects {
     maven { url "http://dl.bintray.com/jonnyzzz/maven" }
   }
 
-  version = rootProject.hasProperty('teamcity') ? rootProject['teamcity']['build.number'] : 'SNAPSHOT'
-
   afterEvaluate {
     configurations.all.each {
       publishToMavenLocal.dependsOn it
@@ -42,6 +42,14 @@ subprojects {
         publishToMavenLocal.dependsOn it.dependencyProject.tasks.classes
         publishToMavenLocal.dependsOn it.dependencyProject.tasks.jar
         publishToMavenLocal.dependsOn it.dependencyProject.tasks.publishToMavenLocal
+      }
+    }
+
+    configurations.all.each {
+      bintrayUpload.dependsOn it
+
+      it.allDependencies.withType(ProjectDependency).each {
+        bintrayUpload.dependsOn it.dependencyProject.tasks.bintrayUpload
       }
     }
   }
@@ -61,9 +69,9 @@ task wrapper(type: Wrapper) {
 }
 
 task bintrayUploadEx {
-  dependsOn ':DSL:bintrayUpload'
+  dependsOn ':src:gradle-plugin:bintrayUpload'
 }
 
 task localUploadEx {
-  dependsOn ':DSL:publishToLocalMaven'
+  dependsOn ':src:gradle-plugin:publishToMavenLocal'
 }
