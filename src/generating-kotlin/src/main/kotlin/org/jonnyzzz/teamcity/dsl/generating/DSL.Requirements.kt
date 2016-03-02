@@ -1,6 +1,7 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilder
+import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilderNames
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilderRequirement
 import org.jonnyzzz.teamcity.dsl.model.TCRequirement
 import org.jonnyzzz.teamcity.dsl.suppressing
@@ -10,11 +11,7 @@ import kotlin.collections.isEmpty
 import kotlin.collections.toSortedSet
 
 val wellknownRequirementNames = {
-  val r = object : TCRequirementsBuilder {
-    override fun ref(param: String): TCRequirementsBuilderRequirement {
-      throw UnsupportedOperationException()
-    }
-  }
+  val r = object : TCRequirementsBuilderNames { }
 
   val names = TreeSet<String>()
   r.javaClass.methods.forEach {
@@ -37,32 +34,29 @@ fun KotlinWriter.generateRequirements(requirements : List<TCRequirement>?) {
 }
 
 fun KotlinWriter.generateRequirement(req: TCRequirement) {
+  val id = req.id
   val type = req.type!!
   val name = req.name!!
   val value = req.value
 
-  appendln(
-          StringBuilder().apply {
+  val args = id?.let { "(${it.quote()})"} ?: ""
+
+  block("rule$args") {
+    appendln(
+            StringBuilder().apply {
               append("ref(${name.quote()}) - ")
 
-              fun findMethod() : String? {
-                  try {
-                      TCRequirementsBuilder::class.java.getMethod(type)
-                      return type
-                  } catch (t: Throwable) {
-                      return null
-                  }
-              }
-
               if (wellknownRequirementNames.contains(type)) {
-                  append("`$type`")
+                append("`$type`")
               } else {
-                  append("${type.quote()}")
+                append("${type.quote()}")
               }
 
               if (value != null) {
-                  append(" - ${value.quote()}")
+                append(" - ${value.quote()}")
               }
-          }.toString()
-  )
+            }.toString()
+
+    )
+  }
 }

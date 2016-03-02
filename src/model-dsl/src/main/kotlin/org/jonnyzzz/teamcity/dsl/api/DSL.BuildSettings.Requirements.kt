@@ -14,10 +14,15 @@ interface TCRequirementsBuilderRequirement {
   operator fun minus(type: String): TCRequirementsBuilderRequirementValue
 }
 
-interface TCRequirementsBuilder {
+interface TCRequirementsBuilderRequirementRef {
   fun ref(param : String) : TCRequirementsBuilderRequirement
+}
 
+interface TCRequirementsBuilder : TCRequirementsBuilderNames {
+  fun rule(id: String? = null, builder : TCRequirementsBuilderRequirementRef.() -> Unit)
+}
 
+interface TCRequirementsBuilderNames {
   val any: String
     get() = "any"
   val exists: String
@@ -61,21 +66,31 @@ interface TCRequirementsBuilder {
 fun TCWithSettings.requirements(builder : TCRequirementsBuilder.() -> Unit) {
   settings {
     object : TCRequirementsBuilder {
-      override fun ref(param: String): TCRequirementsBuilderRequirement {
-        return object : TCRequirementsBuilderRequirement {
-          override fun minus(type: String): TCRequirementsBuilderRequirementValue {
-            val r = TCRequirement().apply {
-              this.type = type
-              this.name = param
-              requirements = (requirements ?: listOf()) + this
-            }
-            return object:TCRequirementsBuilderRequirementValue {
-              override fun minus(value: String?) {
-                r.value = value
+      override fun rule(id: String?, builder: TCRequirementsBuilderRequirementRef.() -> Unit) {
+        object : TCRequirementsBuilderRequirementRef {
+          var hasRule = false
+          override fun ref(param: String): TCRequirementsBuilderRequirement {
+            return object : TCRequirementsBuilderRequirement {
+              override fun minus(type: String): TCRequirementsBuilderRequirementValue {
+                if (hasRule) throw Error("Only one requirement is allowed in rule block")
+                hasRule = true
+
+                val r = TCRequirement().apply {
+                  this.id = id
+                  this.type = type
+                  this.name = param
+                  requirements = (requirements ?: listOf()) + this
+                }
+
+                return object:TCRequirementsBuilderRequirementValue {
+                  override fun minus(value: String?) {
+                    r.value = value
+                  }
+                }
               }
             }
           }
-        }
+        }.apply { builder() }
       }
     }.builder()
   }
