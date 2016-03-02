@@ -25,6 +25,7 @@ subprojects {
   apply plugin: 'maven-publish'
 
   group = 'org.jonnyzzz.teamcity.dsl'
+  version = rootProject.version
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8

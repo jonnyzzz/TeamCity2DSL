@@ -2,3 +2,36 @@ dependencies {
   compile "com.google.guava:guava:18.0"
 }
 
+
+def genMain = file("$projectDir/generated/kotlin")
+def moduleGroupId = project.group.toString()
+def moduleVersion = project.version.toString()
+def packageName = "${moduleGroupId}.api"
+def targetFile = file("$genMain/${packageName.replace(".", "/")}/generated.kt")
+
+sourceSets.main.kotlin.srcDirs += genMain
+
+task generateStaticParameters {
+  inputs.file project.buildFile
+  inputs.file rootProject.buildFile
+
+  inputs.property "version", moduleVersion
+
+  outputs.file targetFile
+
+  doLast {
+    delete targetFile
+    targetFile.parentFile.mkdirs()
+
+    def source = """package ${packageName}
+    ///This is generated file. Do not touch!
+
+    val version = "${moduleVersion}"
+
+    """
+
+    targetFile.text = source
+  }
+}
+
+compileKotlin.dependsOn generateStaticParameters
