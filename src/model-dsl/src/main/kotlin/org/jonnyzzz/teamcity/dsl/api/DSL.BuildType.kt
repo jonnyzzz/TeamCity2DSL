@@ -31,6 +31,7 @@ interface  TCBuildTypeMixinBuilder : TCBuildTypeMixin {
 interface  TCBuildTypeBuilder : TCBuildTypeRef {
   operator fun plus(mixin : TCBuildTemplateRef) : TCBuildTypeBuilder = this + {settings.templateId = mixin.id }
   operator fun plus(mixin : TCBuildTypeMixin) : TCBuildTypeBuilder = this + mixin.asBuilder()
+  operator fun plusAssign(mixin : TCBuildTypeMixin) : Unit { this + mixin }
   operator fun plus(builder : TCBuildType.() -> Unit) : TCBuildTypeBuilder
 }
 

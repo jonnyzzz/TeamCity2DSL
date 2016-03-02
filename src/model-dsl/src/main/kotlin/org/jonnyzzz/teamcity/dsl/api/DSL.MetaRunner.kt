@@ -15,6 +15,7 @@ interface TCMetaRunnerBuilderMixin : TCMetaRunnerMixin {
 
 interface TCMetaRunnerBuilder : TCMetaRunnerRef {
   operator fun plus(mixin : TCMetaRunnerMixin) : TCMetaRunnerBuilder = this + mixin.asBuilder()
+  operator fun plusAssign(mixin : TCMetaRunnerMixin) : Unit { this + mixin }
   operator fun plus(builder : TCMetaRunner.() -> Unit) : TCMetaRunnerBuilder
 }
 

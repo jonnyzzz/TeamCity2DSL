@@ -19,6 +19,7 @@ interface  TCTemplateMixinBuilder : TCTemplateMixin {
 
 interface  TCTemplateBuilder : TCBuildTemplateRef {
   operator fun plus(mixin : TCTemplateMixin) : TCTemplateBuilder = this + mixin.asBuilder()
+  operator fun plusAssign(mixin : TCTemplateMixin) : Unit { this + mixin }
   operator fun plus(builder : TCBuildTemplate.() -> Unit) : TCTemplateBuilder
 }
 

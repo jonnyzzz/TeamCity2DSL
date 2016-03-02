@@ -1,5 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
+import org.jonnyzzz.teamcity.dsl.api.metaRunnerMixin
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCMetaRunner
 import org.jonnyzzz.teamcity.dsl.model.TCProject
@@ -8,8 +9,11 @@ import java.io.File
 import kotlin.collections.forEach
 
 
-private val TCMetaRunner.variableName: String
+private val TCMetaRunner.className: String
   get() = "Meta_" + id!!
+
+private val TCMetaRunner.variableName: String
+  get() = className + ".id"
 
 
 fun generateMetaRunner(context: GenerationContext, home: File, project : TCProject, runner: TCMetaRunner) {
@@ -19,16 +23,26 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
 
   mainFile.writeUTF {
     generateKotlinDSL(context.options.packageName, "meta_${templateId}") {
-      block("val ${runner.variableName} = ${project.nameOrRef(context)}.metaRunner(${runner.id?.quote()})") {
-        setter("name", runner.name)
-        setter("description", runner.description)
 
-        val settings = runner.settings
-        paramsWithSpec(settings.parameters)
+      block("object ${runner.className}") {
+        appendln("val id = ${project.nameOrRef(context)}.metaRunner(${runner.id?.quote()})")
+        appendln()
+        block("val mixin = ${::metaRunnerMixin.name}") {
+          setter("name", runner.name)
+          setter("description", runner.description)
 
-        generateSettings(context, settings) {
-          val generateRunner = generateRunners(settings.runners)
-          settings.runners?.forEach { generateRunner(it) }
+          val settings = runner.settings
+          paramsWithSpec(settings.parameters)
+
+          generateSettings(context, settings) {
+            val generateRunner = generateRunners(settings.runners)
+            settings.runners?.forEach { generateRunner(it) }
+          }
+        }
+
+        appendln()
+        block("init") {
+          appendln("id += mixin")
         }
       }
     }

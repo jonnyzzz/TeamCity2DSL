@@ -1,5 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
+import org.jonnyzzz.teamcity.dsl.api.buildMixin
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCBuildType
 import org.jonnyzzz.teamcity.dsl.model.TCBuildTypeSettings
@@ -9,8 +10,11 @@ import java.io.File
 import kotlin.collections.*
 
 
-val TCBuildType.variableName: String
+val TCBuildType.className: String
   get() = "Build_" + id!!
+
+val TCBuildType.variableName: String
+  get() = className + ".id"
 
 
 fun generateBuildType(context: GenerationContext, home: File, project : TCProject, build: TCBuildType) {
@@ -26,22 +30,32 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
 
         val baseTemplate = context.findTemplate(templateId)
         if (baseTemplate != null) {
-          return " + ${baseTemplate.variableName} +"
+          return " + ${baseTemplate.variableName}"
         }
 
-        return " + UnknownTemplate(${templateId.quote()}) +"
+        return " + UnknownTemplate(${templateId.quote()})"
       }
 
-      block("val ${build.variableName} = ${project.nameOrRef(context)}.build(${build.id?.quote()})" + generateTemplateIdRef()) {
-        setter("paused", build.paused)
+      block("object ${build.className}") {
+        appendln("val id = ${project.nameOrRef(context)}.build(${build.id?.quote()})" + generateTemplateIdRef())
+        appendln()
 
-        setter("name", build.name)
-        setter("description", build.description)
+        block("val mixin = ${::buildMixin.name}") {
+          setter("paused", build.paused)
 
-        val settings = build.settings
-        paramsWithSpec(settings.parameters)
-        generateSettings(context, settings) {
-          generateSettingsRunners(settings)
+          setter("name", build.name)
+          setter("description", build.description)
+
+          val settings = build.settings
+          paramsWithSpec(settings.parameters)
+          generateSettings(context, settings) {
+            generateSettingsRunners(settings)
+          }
+        }
+
+        appendln()
+        block("init") {
+          appendln("id += mixin")
         }
       }
     }

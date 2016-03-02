@@ -46,6 +46,7 @@ interface  TCProjectMixinBuilder : TCProjectMixin {
 
 interface  TCProjectBuilder : TCProjectRef {
   operator fun plus(mixin : TCProjectMixin) : TCProjectBuilder = this + mixin.asBuilder()
+  operator fun plusAssign(mixin : TCProjectMixin) : Unit { this + mixin }
   operator fun plus(builder : TCProject.() -> Unit) : TCProjectBuilder
 }
 

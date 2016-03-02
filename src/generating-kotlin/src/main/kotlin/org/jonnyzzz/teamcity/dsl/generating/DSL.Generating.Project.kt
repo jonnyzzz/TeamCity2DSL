@@ -1,13 +1,17 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
+import org.jonnyzzz.teamcity.dsl.api.projectMixin
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.writeUTF
 import java.io.File
 import kotlin.collections.forEach
 
-val TCProject.variableName: String
+val TCProject.className: String
   get() = "Project_" + id!!
+
+val TCProject.variableName: String
+  get() = className + ".id"
 
 fun TCProject.nameOrRef(context: GenerationContext): String {
   return when (context.isDeclared(this)) {
@@ -31,27 +35,37 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
         return "UnknownProject(${parentId.quote()})"
       }
 
-      block("val ${project.variableName} = ${generateParentProjectRef()}.project(${project.id?.quote()})") {
-        setter("archived", project.archived)
-        setter("name", project.name)
-        setter("description", project.description)
+      block("object ${project.className}") {
+        appendln("val id = ${generateParentProjectRef()}.project(${project.id?.quote()})")
+        appendln()
 
-        paramsWithSpec(project.parameters)
+        block("val mixin = ${::projectMixin.name}") {
+          setter("archived", project.archived)
+          setter("name", project.name)
+          setter("description", project.description)
 
-        val cleanup = project.cleanup
-        if (cleanup != null) {
-          block("cleanup") {
-            elementInternals(cleanup)
+          paramsWithSpec(project.parameters)
+
+          val cleanup = project.cleanup
+          if (cleanup != null) {
+            block("cleanup") {
+              elementInternals(cleanup)
+            }
+          }
+
+          val plugins = project.pluginSettings
+          if (plugins != null) {
+            block("plugins") {
+              plugins.settings?.forEach {
+                element(it)
+              }
+            }
           }
         }
 
-        val plugins = project.pluginSettings
-        if (plugins != null) {
-          block("plugins") {
-            plugins.settings?.forEach {
-              element(it)
-            }
-          }
+        appendln()
+        block("init") {
+          appendln("id += mixin")
         }
       }
     }
