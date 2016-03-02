@@ -5,6 +5,7 @@ import org.jonnyzzz.kotlin.xml.bind.XSub
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
 
 class TCSettingsArtifactDependency {
+  var id by JXML / XAttribute("id") - null
   var buildTypeId by JXML / XAttribute("sourceBuildTypeId")
   var cleanDestination by JXML / XAttribute("cleanDestination")
   var cleanDestinationAfterBuild by JXML / XAttribute("cleanDestinationAfterBuild")
