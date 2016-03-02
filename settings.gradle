@@ -20,6 +20,7 @@ include ':src:DSL',
         ':tests-integration:test-006',
         ':tests-integration:test-007',
         ':tests-integration:test-008',
+        ':tests-integration:test-009',
 
 
         ':tests-integration-gradle-plugin'
