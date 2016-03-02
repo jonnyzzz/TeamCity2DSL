@@ -17,6 +17,8 @@ include ':src:DSL',
         ':tests-integration:test-003',
         ':tests-integration:test-004',
         ':tests-integration:test-005',
+        ':tests-integration:test-006',
+        ':tests-integration:test-007',
 
 
         ':tests-integration-gradle-plugin'

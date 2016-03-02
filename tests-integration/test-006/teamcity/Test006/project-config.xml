@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="61f5801d-093b-4f62-ae88-19fc091c7aed" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>test-006</name>
+  <parameters />
+  <cleanup />
+  <subprojectsOrder order="Test006_P1,Test006_P3,Test006_P2" />
+  <buildTypesOrder order="Test006_B1,Test006_B3,Test006_B2" />
+</project>
+

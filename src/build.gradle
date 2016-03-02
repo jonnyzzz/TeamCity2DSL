@@ -43,10 +43,10 @@ subprojects {
       publications = ['mavenJava']
       pkg {
         repo = 'maven'
-        name = 'kotlin.xml.bind'
+        name = 'teamcity2dsl'
         userOrg = getProperty('bintrayUser')
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/jonnyzzz/kotlin.xml.bind.git'
+        vcsUrl = 'https://github.com/jonnyzzz/TeamCity2DSL'
       }
     }
   }
