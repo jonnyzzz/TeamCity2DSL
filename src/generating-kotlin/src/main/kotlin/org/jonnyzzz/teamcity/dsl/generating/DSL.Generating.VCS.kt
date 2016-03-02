@@ -1,6 +1,7 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
 import org.jonnyzzz.teamcity.dsl.api.gitRoot
+import org.jonnyzzz.teamcity.dsl.api.vcsRootMixin
 import org.jonnyzzz.teamcity.dsl.clustering.DSLClusteringGenerator
 import org.jonnyzzz.teamcity.dsl.clustering.clusteringVCS
 import org.jonnyzzz.teamcity.dsl.model.TCProject
@@ -46,8 +47,8 @@ fun KotlinWriter.generateBuildSettingsVcsRoot(context : GenerationContext, it : 
 fun KotlinWriter.generateVCSRoots(context : GenerationContext, project : TCProject, roots : List<TCVCSRoot>) {
   val that = this
   with(object : DSLClusteringGenerator<TCVCSRoot>() {
-    override fun nameDMixin(d: TCVCSRoot): String = "${project.variableName}_vcsMixin"
-    override fun funDMixin(d: TCVCSRoot): String = "vcsRootMixin()"
+    override fun nameDMixin(d: TCVCSRoot): String = "${project.className}_vcsMixin"
+    override fun funDMixin(d: TCVCSRoot): String = ::vcsRootMixin.name
     override fun funD(d: TCVCSRoot): String = "val ${d.variableName} = ${project.nameOrRef(context)}.vcsRoot(${d.id?.quote()})"
     override fun newD(): TCVCSRoot = TCVCSRoot()
 
