@@ -19,6 +19,8 @@ class GeneratorPlugin : Plugin<Project> {
 
     val renamer = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
 
+    project.buildscript.repositories.forEach { project.repositories.add(it) }
+
     project.dependencies.apply {
       add(renamer.name, GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version)
       add("compile",    GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version) //TODO: use API module here!
