@@ -16,10 +16,8 @@ plugins {
   id "com.jfrog.bintray" version "1.5"
 }
 
-if (hasProperty("version")) {
-  version = getProperty("version")
-} else if (project.extensions.hasProperty("version")) {
-  version = "${ext.version}"
+if (rootProject.getProperties().containsKey("publish_version")) {
+  version = rootProject.getProperties()["publish_version"]
 } else if (System.getenv("TRAVIS_BUILD_NUMBER") != null) {
   version = "0.1." + System.getenv("TRAVIS_BUILD_NUMBER")
 } else if (rootProject.hasProperty('teamcity')) {
@@ -28,7 +26,7 @@ if (hasProperty("version")) {
   version = 'SNAPSHOT'
 }
 
-println "Version = ${version}"
+println "Actual Target Version = ${rootProject.version}"
 
 subprojects {
   apply plugin: 'java'
