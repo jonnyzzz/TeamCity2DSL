@@ -12,7 +12,7 @@
     <requirements />
     <build-triggers />
     <artifact-dependencies>
-      <dependency id="ARTIFACT_DEPENDENCY_4" sourceBuildTypeId="Test007_B2" cleanDestination="false">
+      <dependency id="ARTIFACT_DEPENDENCY_4" sourceBuildTypeId="Test007_B1" cleanDestination="false">
         <revisionRule name="lastSuccessful" revision="latest.lastSuccessful" />
         <artifact sourcePath="aaa/*** =&gt; ccc&#xD;&#xA;-: aaa/zzz" />
       </dependency>
