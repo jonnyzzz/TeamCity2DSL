@@ -66,21 +66,7 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
             }
           }
 
-          val ordering = project.ordering
-          if (!ordering.isEmpty()) {
-
-            block("ordering") {
-              ordering?.projectsOrder?.forEach {
-                appendln("+ ${ context.findProject( it )!!.variableName }")
-              }
-
-              appendln()
-
-              ordering?.buildsOrder?.forEach {
-                appendln("+ ${ context.findBuild( it )!!.variableName }")
-              }
-            }
-          }
+          generateOrdering(context, project)
         }
 
         appendln()
@@ -88,6 +74,26 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
           appendln("id += mixin")
         }
       }
+    }
+  }
+}
+
+fun KotlinWriter.generateOrdering(context: GenerationContext, project : TCProject) {
+  val ordering = project.ordering
+  if (ordering.isEmpty()) return
+
+  block("ordering") {
+    val projectsOrder = ordering?.projectsOrder
+    val buildsOrder = ordering?.buildsOrder
+
+    projectsOrder?.forEach {
+      appendln("+ ${ context.findProject( it )!!.variableName }")
+    }
+
+    if (projectsOrder?.any() ?: false && buildsOrder?.any() ?: false) appendln()
+
+    buildsOrder?.forEach {
+      appendln("+ ${ context.findBuild( it )!!.variableName }")
     }
   }
 }

@@ -11,6 +11,73 @@ import org.junit.Test
 class ModelToDSLGeneratorTest {
 
   @Test
+  fun should_generate_no_extra_spaces_in_ordering_1() {
+    val p = TCProject().apply {
+      ordering {
+        + UnknownBuild("p1")
+        + UnknownBuild("p2")
+      }
+    }
+
+    val x = kotlinWriter {
+      generateOrdering(contextWithLookup, p)
+    }.trim()
+
+
+    Assert.assertEquals("ordering {\n  + Build_p1.id\n  + Build_p2.id\n}", x)
+  }
+
+  @Test
+  fun should_generate_no_extra_spaces_in_ordering_2() {
+    val p = TCProject().apply {
+      ordering {
+        + UnknownProject("p1")
+        + UnknownProject("p2")
+      }
+    }
+
+    val x = kotlinWriter {
+      generateOrdering(contextWithLookup, p)
+    }.trim()
+
+
+    Assert.assertEquals("ordering {\n  + Project_p1.id\n  + Project_p2.id\n}", x)
+  }
+
+  @Test
+  fun should_generate_no_extra_spaces_in_ordering_3() {
+    val p = TCProject().apply {
+      ordering { }
+    }
+
+    val x = kotlinWriter {
+      generateOrdering(contextWithLookup, p)
+    }.trim()
+
+
+    Assert.assertEquals("", x)
+  }
+
+  @Test
+  fun should_generate_no_extra_spaces_in_ordering_4() {
+    val p = TCProject().apply {
+      ordering {
+        + UnknownProject("p1")
+        + UnknownProject("p2")
+        + UnknownBuild("b1")
+        + UnknownBuild("b2")
+      }
+    }
+
+    val x = kotlinWriter {
+      generateOrdering(contextWithLookup, p)
+    }.trim()
+
+
+    Assert.assertEquals("ordering {\n  + Project_p1.id\n  + Project_p2.id\n\n  + Build_b1.id\n  + Build_b2.id\n}", x)
+  }
+
+  @Test
   fun should_generate_for_simple_project() {
     val p = TCProject().apply {
       id = "p"
@@ -209,6 +276,11 @@ class ModelToDSLGeneratorTest {
     override fun findBuild(buildId: String?): TCBuildType? = null
     override fun findTemplate(templateId: String?): TCBuildTemplate? = null
     override fun findProject(projectId: String?): TCProject? = null
+  }
+
+  private val contextWithLookup = object:GenerationContext by context {
+    override fun findBuild(buildId: String?): TCBuildType? = TCBuildType().apply { id = buildId }
+    override fun findProject(projectId: String?): TCProject? = TCProject().apply { id = projectId }
   }
 }
 
