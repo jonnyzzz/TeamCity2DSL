@@ -26,11 +26,7 @@ fun KotlinWriter.generateBuildSettingsVcsRoot(context : GenerationContext, it : 
     true -> "vcs(${it.variableName})"
     else -> "vcs(UnknownVCSRoot(${it.rootId?.quote()}))"
   }) {
-    it.checkoutRule?.forEach { rule ->
-      rule
-              .split("[\r\n]+".toRegex()).toTypedArray()
-              .map { it.trim() }
-              .forEach {
+    it.checkoutRule?.forEach {
                 ///TODO: split '+: a => b' into   '+ "a" to "b"' expr
                 if (it.startsWith("+:")) {
                   appendln("+ ${it.substring(2).quote()}")
@@ -40,7 +36,6 @@ fun KotlinWriter.generateBuildSettingsVcsRoot(context : GenerationContext, it : 
                   appendln("rule(${it.quote()})")
                 }
               }
-    }
   }
 }
 
