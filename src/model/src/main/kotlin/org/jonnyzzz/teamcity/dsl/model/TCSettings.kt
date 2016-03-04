@@ -54,7 +54,7 @@ open class TCBuildSettings {
   var disabledSettings by JXML[0x200] / "disabled-settings" / XElements("setting-ref") / XAttribute("ref")
   var parameters by JXML[0x300] / "parameters" / XElements("param") / XSub(TCParameterWithSpec::class.java) - listOf()
   var runners by JXML[0x400] / "build-runners" / XElements("runner") / XSub(TCSettingsRunner::class.java) - listOf()
-  var vcs by JXML[0x500] / "vcs-settings" / XElements("vcs-entry-ref") / XSub(TCSettingsVCSRef::class.java) - listOf()
+  var vcs by JXML[0x500] / "vcs-settings" / XElements("vcs-entry-ref") / XSub(TCSettingsVCSRef::class.java)
   var requirements by JXML[0x600] / "requirements" / XAnyElements / XSub(TCRequirement::class.java) - listOf()
   var buildTriggers by JXML[0x700] / "build-triggers" / XElements("build-trigger") / XSub(TCSettingsTrigger::class.java)
   var extensions by JXML[0x800] / "build-extensions" / XElements("extension") / XSub(TCSettingsExtension::class.java)

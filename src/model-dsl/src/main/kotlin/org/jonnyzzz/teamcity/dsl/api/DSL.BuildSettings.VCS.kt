@@ -11,18 +11,32 @@ interface VCSRefBuilder {
   fun rule(rule : String)
 }
 
-fun TCWithSettings.vcs(rootId : TCVCSRootRef, builder : VCSRefBuilder.() -> Unit = {}) {
-  settings {
-    vcs = (vcs ?: listOf()) + TCSettingsVCSRef().apply {
-      this.rootId = rootId.id!!
 
-      val rules = arrayListOf<String>()
-      object : VCSRefBuilder {
-        override fun rule(rule: String) {
-          rules.add(rule)
-        }
-      }.builder()
-      this.checkoutRule = if (rules.any()) rules else null
-    }
+interface TCCheckoutBuilder {
+  fun vcs(rootId: TCVCSRootRef, builder: VCSRefBuilder.() -> Unit = {})
+}
+
+fun TCWithSettings.checkout(builder : TCCheckoutBuilder.() -> Unit) {
+  settings {
+    vcs = vcs ?: listOf()
   }
+
+  object : TCCheckoutBuilder {
+    override fun vcs(rootId : TCVCSRootRef, builder : VCSRefBuilder.() -> Unit) {
+      settings {
+        vcs = (vcs ?: listOf()) + TCSettingsVCSRef().apply {
+          this.rootId = rootId.id!!
+
+          val rules = arrayListOf<String>()
+          object : VCSRefBuilder {
+            override fun rule(rule: String) {
+              rules.add(rule)
+            }
+          }.builder()
+          this.checkoutRule = if (rules.any()) rules else null
+        }
+      }
+    }
+
+  }.builder()
 }
