@@ -2,13 +2,11 @@ package org.jonnyzzz.teamcity.dsl.generating
 
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilder
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilderNames
-import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilderRequirement
+import org.jonnyzzz.teamcity.dsl.api.requirements
 import org.jonnyzzz.teamcity.dsl.model.TCRequirement
+import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 import org.jonnyzzz.teamcity.dsl.suppressing
 import java.util.*
-import kotlin.collections.forEach
-import kotlin.collections.isEmpty
-import kotlin.collections.toSortedSet
 
 val wellknownRequirementNames = {
   val r = object : TCRequirementsBuilderNames { }
@@ -28,7 +26,7 @@ val wellknownRequirementNames = {
 fun KotlinWriter.generateRequirements(requirements : List<TCRequirement>?) {
   if (requirements == null) return
 
-  block("requirements") {
+  block("${TCWithSettings::requirements.name}") {
     requirements.forEach { generateRequirement(it) }
   }
 }
@@ -41,7 +39,7 @@ fun KotlinWriter.generateRequirement(req: TCRequirement) {
 
   val args = id?.let { "(${it.quote()})"} ?: ""
 
-  block("rule$args") {
+  block("${TCRequirementsBuilder::rule.name}$args") {
     appendln(
             StringBuilder().apply {
               append("ref(${name.quote()}) - ")

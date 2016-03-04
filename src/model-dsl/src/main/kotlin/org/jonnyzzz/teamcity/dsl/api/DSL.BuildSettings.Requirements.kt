@@ -65,6 +65,10 @@ interface TCRequirementsBuilderNames {
 
 fun TCWithSettings.requirements(builder : TCRequirementsBuilder.() -> Unit) {
   settings {
+    requirements = requirements ?: listOf()
+  }
+
+  settings {
     object : TCRequirementsBuilder {
       override fun rule(id: String?, builder: TCRequirementsBuilderRequirementRef.() -> Unit) {
         object : TCRequirementsBuilderRequirementRef {
