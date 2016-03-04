@@ -260,6 +260,10 @@ object DSLRegistry : DSLRegistryFacade {
     val projects = loadAll(pkg, clazzLoader)
     println("Generating TeamCity .xml files for the model of ${projects.size} project(s)")
     println("Generate files to $root")
+
+    root.deleteAll()
+    root.mkdirs()
+
     XmlGenerating.generate(projects, root)
     println("Completed")
   }

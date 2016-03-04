@@ -148,4 +148,28 @@ class IntegrationPluginTest {
       }
     }
   }
+
+  @Test
+  fun `it should wipe output_001`() {
+    runSuccessfulBuild {
+      val toHome = home / ".teamcity"
+      val gen = home / "dsl.generated"
+
+      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-001"), toHome)
+
+      val tcMarker = (toHome / "marker.1").apply { parentFile.mkdirs(); writeText("aaa") }
+      val dslMarker = (gen / "marker.2").apply { parentFile.mkdirs(); writeText("bbb") }
+
+      Files.walk(toHome.toPath()).forEach {
+        println( ".teamcity: $it")
+      }
+
+      args("xml2dsl", "dsl2xml")
+
+      assert {
+        Assert.assertFalse(tcMarker.exists())
+        Assert.assertFalse(dslMarker.exists())
+      }
+    }
+  }
 }
