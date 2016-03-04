@@ -26,18 +26,30 @@ fun triggerMixin(builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerM
   return TCSettingsTriggerMixinBuilderImpl() + builder
 }
 
-fun TCWithSettings.trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerBuilder {
-  val trigger = TCSettingsTrigger().apply {
-    this.id = triggerId
-    this.triggerType = triggerType
-  }
+interface TriggersBuilder {
+  fun trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerBuilder
+}
 
+fun TCWithSettings.triggers(builder : TriggersBuilder.() -> Unit) {
   settings {
-    buildTriggers = (buildTriggers ?: listOf()) + trigger
+    buildTriggers = (buildTriggers ?: listOf())
   }
 
-  return object : TCSettingsTriggerBuilder, TCSettingsTriggerRef by trigger {
-    operator override fun plus(builder: TCSettingsTrigger.() -> Unit): TCSettingsTriggerBuilder = this.apply { trigger.builder() }
+  object:TriggersBuilder {
+    override fun trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit) : TCSettingsTriggerBuilder{
+      val trigger = TCSettingsTrigger().apply {
+        this.id = triggerId
+        this.triggerType = triggerType
+      }
 
-  } + builder
+      settings {
+        buildTriggers = (buildTriggers ?: listOf()) + trigger
+      }
+
+      return object : TCSettingsTriggerBuilder, TCSettingsTriggerRef by trigger {
+        operator override fun plus(builder: TCSettingsTrigger.() -> Unit): TCSettingsTriggerBuilder = this.apply { trigger.builder() }
+
+      } + builder
+    }
+  }.builder()
 }

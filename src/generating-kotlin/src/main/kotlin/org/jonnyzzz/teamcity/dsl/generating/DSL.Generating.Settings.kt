@@ -34,10 +34,15 @@ fun KotlinWriter.generateSettings(context : GenerationContext, settings : TCBuil
     }
   }
 
-  settings.buildTriggers?.forEach {
-    block("trigger(${it.id?.quote()}, ${it.triggerType?.quote()})") {
-      it.parameters?.forEach {
-        appendln("param(${it.name?.quote()}, ${it.value?.quote()})")
+  val buildTriggers = settings.buildTriggers
+  if (buildTriggers != null) {
+    block("triggers") {
+      buildTriggers.forEach {
+        block("trigger(${it.id?.quote()}, ${it.triggerType?.quote()})") {
+          it.parameters?.forEach {
+            appendln("param(${it.name?.quote()}, ${it.value?.quote()})")
+          }
+        }
       }
     }
   }

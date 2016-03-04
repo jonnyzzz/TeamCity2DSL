@@ -11,8 +11,6 @@
       </vcs-entry-ref>
     </vcs-settings>
     <requirements />
-    <build-triggers />
-    <cleanup />
   </settings>
 </build-type>
 
