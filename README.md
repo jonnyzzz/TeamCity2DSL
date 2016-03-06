@@ -26,7 +26,33 @@ The tool provides
 * An evaluator for the DSL to generate XML files
 
 By definition, a transition from XML -> DSL -> XML
-should not introduce any changes.
+should not introduce any changes
+
+Gradle integration
+==================
+
+We provide a Gradle plugin to export `xml to dsl` and `dsl to xml` tasks. 
+The plugin also takes care of all dependecnies, project configuration and all the stuff.
+
+Use the following Gradle script to start with an existing TeamCity project files
+```gradle
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "http://dl.bintray.com/jonnyzzz/maven" }
+  }
+
+  dependencies {
+    classpath 'org.jonnyzzz.teamcity.dsl:gradle-plugin:<PLUGIN VERISON>'
+  }
+}
+
+apply plugin: 'org.jonnyzzz.teamcity.dsl'
+```
+
+Next call `gradle xml2dsl` to have the DSL be generated for your XML project model. Next the 
+call to `gradle dsl2xml` will make Gradle to compile DSL with Kotlin and to run the generation task.
 
 Examples
 =========
@@ -85,7 +111,7 @@ your test data with me in any way you like.
 
 Further Work
 ============
-* Introduce Gradle plugin to simplify generations and to provide refactorings tool
+* (:+1:) Introduce Gradle plugin to simplify generations and to provide refactorings tool
 * Design and implement unification rules, so that generated DSL was re-using similar things
 * Introduce DSL extension plugins & APIs (to support build runner/features/vcs/... plugins presentation)
 * Document DSL and mixins
