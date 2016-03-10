@@ -9,7 +9,7 @@ import java.io.File
 import kotlin.collections.forEach
 
 val TCProject.className: String
-  get() = "Project_" + id!!
+  get() = "Project_" + id
 
 val TCProject.variableName: String
   get() = className + ".id"
@@ -22,7 +22,7 @@ fun TCProject.nameOrRef(context: GenerationContext): String {
 }
 
 fun generateProject(context: GenerationContext, home: File, project: TCProject) {
-  val projectId = project.id!!
+  val projectId = project.id
 
   (home / "project_$projectId.tcdsl.kt").writeUTF {
     generateKotlinDSL(context.options.packageName, "project_$projectId") {
@@ -40,7 +40,7 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
       }
 
       block("object ${project.className}") {
-        appendln("val id = ${generateParentProjectRef()}.project(${project.id?.quote()})")
+        appendln("val id = ${generateParentProjectRef()}.project(${project.id.quote()})")
         appendln()
 
         block("val mixin = ${::projectMixin.name}") {
