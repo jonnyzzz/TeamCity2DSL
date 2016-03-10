@@ -11,16 +11,9 @@ interface TCMetaRunnerRef {
 }
 
 @XRoot("meta-runner")
-abstract class TCMetaRunner(override val id : String) : TCID, TCWithSettings, TCMetaRunnerRef {
+abstract class TCMetaRunner(override val id : String) : TCMetaRunnerSettings(), TCID, TCWithSettings, TCMetaRunnerRef {
   var name by JXML[0x100] / XAttribute("name")
   var description by JXML[0x200] / "description" / XText - ""
 
-  private var _settings by JXML[0x300] / "settings" / XSub(TCMetaRunnerSettings::class.java) - TCMetaRunnerSettings()
-
-  override val settings: TCMetaRunnerSettings
-    get() {
-      val s = _settings ?: TCMetaRunnerSettings()
-      _settings = s
-      return s
-    }
+  override val settings = this
 }
