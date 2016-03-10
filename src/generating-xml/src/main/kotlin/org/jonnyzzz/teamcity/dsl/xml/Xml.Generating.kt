@@ -24,7 +24,7 @@ object XmlGenerating {
     }
   }
 
-  private fun Document.initializeDocument(model : TeamCityModel, uuid : ITCUUID) {
+  private fun Document.initializeDocument(model : TeamCityModel, uuid : TCUUID) {
     val teamCityVersion = model.version
     if (teamCityVersion !is TeamCityVersion.XSDTarget) {
       when(uuid) {

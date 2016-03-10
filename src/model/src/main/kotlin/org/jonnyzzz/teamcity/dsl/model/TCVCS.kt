@@ -13,7 +13,9 @@ interface TCVCSRootRef {
 }
 
 @XRoot("vcs-root")
-abstract class TCVCSRoot(override val id : String) : TCUUID(), TCVCSRootRef {
+abstract class TCVCSRoot(override val id : String) : TCUUID, TCVCSRootRef {
+  override var uuid by JXML[0x1000] / XAttribute("uuid") - null
+
   var vcsType by JXML[0x1100] / XAttribute("type")
   var modificationCheckInterval by JXML[0x1200] / XAttribute("modification-check-interval") - null
   var name by JXML / "name" / XText

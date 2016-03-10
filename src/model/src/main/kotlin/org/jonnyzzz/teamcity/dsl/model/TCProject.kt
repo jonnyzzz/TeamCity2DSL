@@ -9,7 +9,9 @@ interface TCProjectRef {
 }
 
 @XRoot("project")
-abstract class TCProject(override val id : String) : TCUUID(), TCProjectRef {
+abstract class TCProject(override val id : String) : TCUUID, TCProjectRef {
+  override var uuid by JXML[0x1000] / XAttribute("uuid") - null
+
   var buildTemplates = listOf<TCBuildTemplate>()
   var buildTypes = listOf<TCBuildType>()
   var vcsRoots = listOf<TCVCSRoot>()
