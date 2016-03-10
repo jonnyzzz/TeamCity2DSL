@@ -45,11 +45,7 @@ fun buildMixin(builder : TCBuildType.() -> Unit = {}) : TCBuildTypeMixinBuilder 
 
 fun TCProjectRef.build(id : String, builder : TCBuildType.() -> Unit = {}) : TCBuildTypeBuilder {
   val builders = LazyBuilders(builder)
-  val result = object : TCBuildType(), TCDSLLazy by builders{
-    init {
-      this.id = id
-    }
-  }
+  val result = object : TCBuildType(id), TCDSLLazy by builders { }
   builders.instance = result
   if (this is TCProjectRefOnReady) this.onReady { this.buildTypes += result }
 

@@ -12,7 +12,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_no_extra_spaces_in_ordering_1() {
-    val p = TCProject().apply {
+    val p = object:TCProject("q"){ }.apply {
       ordering {
         + UnknownBuild("p1")
         + UnknownBuild("p2")
@@ -29,7 +29,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_no_extra_spaces_in_ordering_2() {
-    val p = TCProject().apply {
+    val p = object:TCProject("q"){ }.apply {
       ordering {
         + UnknownProject("p1")
         + UnknownProject("p2")
@@ -46,7 +46,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_no_extra_spaces_in_ordering_3() {
-    val p = TCProject().apply {
+    val p = object:TCProject("q"){ }.apply {
       ordering { }
     }
 
@@ -60,7 +60,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_no_extra_spaces_in_ordering_4() {
-    val p = TCProject().apply {
+    val p = object:TCProject("q"){ }.apply {
       ordering {
         + UnknownProject("p1")
         + UnknownProject("p2")
@@ -79,8 +79,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_for_simple_project() {
-    val p = TCProject().apply {
-      id = "p"
+    val p = object:TCProject("p"){ }.apply {
       name = "foo"
       description = "bar"
       parameters = arrayListOf(
@@ -231,7 +230,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_nice_param_newlines() {
-    val input = TCBuildType().apply {
+    val input = object:TCBuildType("q"){ }.apply {
         param("artifactRules", "\nworker/worker-server/logs => %logs%.zip\n")
     }
 
@@ -245,7 +244,7 @@ class ModelToDSLGeneratorTest {
 
   @Test
   fun should_generate_new_dependency_newlines() {
-    val input = TCBuildType().apply {
+    val input = object:TCBuildType("q"){ }.apply {
       dependency(UnknownBuild("x")) {
         artifact {
           artifactPattern = "a\r\nb\r\nc\r\n"
@@ -279,8 +278,8 @@ class ModelToDSLGeneratorTest {
   }
 
   private val contextWithLookup = object:GenerationContext by context {
-    override fun findBuild(buildId: String?): TCBuildType? = TCBuildType().apply { id = buildId }
-    override fun findProject(projectId: String?): TCProject? = TCProject().apply { id = projectId }
+    override fun findBuild(buildId: String?): TCBuildType? = buildId?.let { object:TCBuildType(buildId) { } }
+    override fun findProject(projectId: String?): TCProject? = projectId?.let { object:TCProject(projectId) { } }
   }
 }
 

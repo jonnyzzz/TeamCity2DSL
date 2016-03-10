@@ -33,11 +33,7 @@ fun templateMixin(builder : TCBuildTemplate.() -> Unit = {}) : TCTemplateMixinBu
 
 fun TCProjectRef.template(id : String, builder : TCBuildTemplate.() -> Unit = {}) : TCTemplateBuilder {
   val builders = LazyBuilders(builder)
-  val result = object : TCBuildTemplate(), TCDSLLazy by builders {
-    init {
-      this.id = id
-    }
-  }
+  val result = object : TCBuildTemplate(id), TCDSLLazy by builders { }
   builders.instance = result
   if (this is TCProjectRefOnReady) this.onReady { this.buildTemplates += result }
 

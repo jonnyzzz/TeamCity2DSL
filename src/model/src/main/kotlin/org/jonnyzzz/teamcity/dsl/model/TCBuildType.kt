@@ -11,7 +11,7 @@ interface TCBuildTypeRef {
 }
 
 @XRoot("build-type")
-open class TCBuildType : TCUUID(), TCBuildOrTemplate, TCWithSettings, TCBuildTypeRef {
+abstract class TCBuildType(override val id : String) : TCUUID(), TCBuildOrTemplate, TCWithSettings, TCBuildTypeRef {
   var paused by JXML[0x1100] / XAttribute("paused")
 
   var name by JXML[0x100] / "name" / XText

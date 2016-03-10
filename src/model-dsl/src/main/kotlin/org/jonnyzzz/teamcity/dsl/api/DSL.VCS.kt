@@ -38,11 +38,7 @@ fun vcsRootMixin(builder : TCVCSRoot.() -> Unit = {}) : TCVCSRootMixinBuilder {
 
 fun TCProjectRef.vcsRoot(id : String, builder : TCVCSRoot.() -> Unit = {}) : TCVCSRootBuilder {
   val builders = LazyBuilders(builder)
-  val result = object : TCVCSRoot(), TCDSLLazy by builders {
-    init {
-      this.id = id
-    }
-  }
+  val result = object : TCVCSRoot(id), TCDSLLazy by builders { }
   builders.instance = result
   if (this is TCProjectRefOnReady) this.onReady { this.vcsRoots += result }
 
@@ -51,4 +47,4 @@ fun TCProjectRef.vcsRoot(id : String, builder : TCVCSRoot.() -> Unit = {}) : TCV
   }
 }
 
-fun UnknownVCSRoot(id: String): TCVCSRootRef = TCVCSRoot().apply { this.id = id }
+fun UnknownVCSRoot(id: String): TCVCSRootRef = object:TCVCSRoot(id) { }

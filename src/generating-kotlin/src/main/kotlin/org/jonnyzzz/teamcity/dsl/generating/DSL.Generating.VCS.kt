@@ -8,14 +8,9 @@ import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsVCSRef
 import org.jonnyzzz.teamcity.dsl.model.TCVCSRoot
 import java.util.*
-import kotlin.collections.forEach
-import kotlin.collections.linkedMapOf
-import kotlin.collections.map
-import kotlin.collections.toTypedArray
-import kotlin.text.*
 
 val TCVCSRoot.variableName : String
-  get() = "VCS_" + id!!
+  get() = "VCS_" + id
 
 val TCSettingsVCSRef.variableName : String
   get() = "VCS_" + rootId!!
@@ -44,8 +39,8 @@ fun KotlinWriter.generateVCSRoots(context : GenerationContext, project : TCProje
   with(object : DSLClusteringGenerator<TCVCSRoot>() {
     override fun nameDMixin(d: TCVCSRoot): String = "${project.className}_vcsMixin"
     override fun funDMixin(d: TCVCSRoot): String = ::vcsRootMixin.name
-    override fun funD(d: TCVCSRoot): String = "val ${d.variableName} = ${project.nameOrRef(context)}.vcsRoot(${d.id?.quote()})"
-    override fun newD(): TCVCSRoot = TCVCSRoot()
+    override fun funD(d: TCVCSRoot): String = "val ${d.variableName} = ${project.nameOrRef(context)}.vcsRoot(${d.id.quote()})"
+    override fun newD(): TCVCSRoot = object:TCVCSRoot("temp_id_to_solve_error") { }
 
 
     override fun predefinedMixins(): LinkedHashMap<String, TCVCSRoot.() -> Unit> = linkedMapOf(

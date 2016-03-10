@@ -9,7 +9,7 @@ interface TCProjectRef {
 }
 
 @XRoot("project")
-open class TCProject : TCUUID(), TCProjectRef {
+abstract class TCProject(override val id : String) : TCUUID(), TCProjectRef {
   var buildTemplates = listOf<TCBuildTemplate>()
   var buildTypes = listOf<TCBuildType>()
   var vcsRoots = listOf<TCVCSRoot>()

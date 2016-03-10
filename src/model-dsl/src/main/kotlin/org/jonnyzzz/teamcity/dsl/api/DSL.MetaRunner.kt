@@ -29,11 +29,7 @@ fun metaRunnerMixin(builder : TCMetaRunner.() -> Unit = {}) : TCMetaRunnerBuilde
 
 fun TCProjectRef.metaRunner(id : String, builder : TCMetaRunner.() -> Unit = {}) : TCMetaRunnerBuilder {
   val builders = LazyBuilders(builder)
-  val result = object : TCMetaRunner(), TCDSLLazy by builders {
-    init {
-      this.id = id
-    }
-  }
+  val result = object : TCMetaRunner(id), TCDSLLazy by builders { }
   builders.instance = result
   if (this is TCProjectRefOnReady) this.onReady { this.metaRunners += result }
 

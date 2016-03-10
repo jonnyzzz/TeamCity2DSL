@@ -79,9 +79,8 @@ fun projectMixin(builder : TCProject.() -> Unit = {}) : TCProjectMixinBuilder {
 fun TCProjectRef.project(id : String, builder : TCProject.() -> Unit = {}) : TCProjectBuilder {
   val parentId = this.id
   val builders = LazyBuilders(builder)
-  val result = object : TCProject(), TCDSLLazy by builders {
+  val result = object : TCProject(id), TCDSLLazy by builders {
     init {
-      this.id = id
       if (parentId != null) this.parentId = parentId
     }
   }

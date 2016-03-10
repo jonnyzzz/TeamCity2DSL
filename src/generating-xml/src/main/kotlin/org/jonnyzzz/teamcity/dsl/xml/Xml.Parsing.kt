@@ -37,7 +37,7 @@ object XmlParsing {
 
     val versions = modelProjects.map { it.version }.distinct()
     if (versions.size != 1) {
-      throw Error("Only one version of files is allowed, but were: ${versions}")
+      throw Error("Only one version of files is allowed, but were: $versions")
     }
 
     return TeamCityModel(versions.single(), modelProjects.map { it.project }.toList())
@@ -51,7 +51,7 @@ object XmlParsing {
             ?: return TeamCityVersion.v8
 
     return TeamCityVersion.XSDTarget.values.firstOrNull { it.schemaLocation == schema }
-            ?: throw Error("Failed to resolve TeamCity target verison from scheme: ${schema}")
+            ?: throw Error("Failed to resolve TeamCity target verison from scheme: $schema")
   }
 
   private fun assertTeamCityTargetVersion(version : TeamCityVersion, rootElement: Element) {
@@ -74,8 +74,7 @@ object XmlParsing {
   private fun parseProjectImpl(id : String, file : File) : TCProjectAndVersion {
     val rootElement = file.loadJDOM().rootElement!!
     val version = parseTeamCityTargetVersion(rootElement)
-    val raw = JDOM.load(rootElement, TCProject::class.java)
-    raw.id = id
+    val raw = object:TCProject(id) { }.bind(rootElement)
 
     val buildsOrTemplates = (file.parentFile / "buildTypes")
             .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
@@ -118,12 +117,10 @@ object XmlParsing {
     assertTeamCityTargetVersion(version, root)
 
     if (root.name == TCBuildType::class.java.getAnnotationRec(XRoot::class.java)!!.name) {
-      val raw = JDOM.load(root, TCBuildType::class.java)
-      raw.id = id
+      val raw = object:TCBuildType(id) { }.bind(root)
       return BuildTypeOrTemplate(raw, null)
     } else if (root.name == TCBuildTemplate::class.java.getAnnotationRec(XRoot::class.java)!!.name){
-      val raw = JDOM.load(root, TCBuildTemplate::class.java)
-      raw.id = id
+      val raw = object:TCBuildTemplate(id){ }.bind(root)
       return BuildTypeOrTemplate(null, raw)
     } else {
       throw RuntimeException("Unknown root element: " + root.name)
@@ -132,9 +129,7 @@ object XmlParsing {
 
   private fun parseMetaRunner(id : String, file : File) : TCMetaRunner {
     try {
-      val raw = JDOM.load(file.loadJDOM().rootElement!!, TCMetaRunner::class.java)
-      raw.id = id
-      return raw
+      return object:TCMetaRunner(id){ }.bind(file.loadJDOM().rootElement!!)
     } catch (t : Throwable) {
       throw RuntimeException("Failed to parse $file for meta-runner=$id. ${t.message}", t)
     }
@@ -146,9 +141,7 @@ object XmlParsing {
 
       assertTeamCityTargetVersion(version, rootElement)
 
-      val raw = JDOM.load(rootElement, TCVCSRoot::class.java)
-      raw.id = id
-      return raw
+      return object:TCVCSRoot(id){ }.bind(rootElement)
     } catch (t : Throwable) {
       throw RuntimeException("Failed to parse $file for vcsRoot=$id. ${t.message}", t)
     }

@@ -13,7 +13,7 @@ interface TCVCSRootRef {
 }
 
 @XRoot("vcs-root")
-open class TCVCSRoot : TCUUID(), TCVCSRootRef {
+abstract class TCVCSRoot(override val id : String) : TCUUID(), TCVCSRootRef {
   var vcsType by JXML[0x1100] / XAttribute("type")
   var modificationCheckInterval by JXML[0x1200] / XAttribute("modification-check-interval") - null
   var name by JXML / "name" / XText

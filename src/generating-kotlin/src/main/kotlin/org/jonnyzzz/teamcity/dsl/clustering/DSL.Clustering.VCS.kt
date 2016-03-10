@@ -30,7 +30,7 @@ fun clusteringVCSByParameters(runners : List<TCVCSRoot>) : List<TCVCSRoot.() -> 
 
   class R(val param : TCVCSRoot) {
     override fun equals(other: Any?): Boolean =  other is R && other.param.id == this.param.id
-    override fun hashCode(): Int = param.id?.hashCode() ?: 42
+    override fun hashCode(): Int = param.id.hashCode()
     override fun toString(): String = "R(${param.id})"
   }
 

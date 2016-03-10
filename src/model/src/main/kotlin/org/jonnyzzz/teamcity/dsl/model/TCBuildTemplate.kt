@@ -10,7 +10,7 @@ interface TCBuildTemplateRef {
 }
 
 @XRoot("template")
-open class TCBuildTemplate : TCUUID(), TCBuildOrTemplate, TCWithSettings, TCBuildTemplateRef {
+abstract class TCBuildTemplate(override val id : String) : TCUUID(), TCBuildOrTemplate, TCWithSettings, TCBuildTemplateRef {
   var name by JXML / "name" / XText
   var description by JXML / "description" / XText
   private var _settings by JXML / "settings" / XSub(TCBuildTemplateSettings::class.java) - TCBuildTemplateSettings()
