@@ -89,9 +89,9 @@ fun generateArtifactsRefs(opt: TCSettingsOption): (KotlinWriter.() -> Unit)? {
   return {
     block("publishArtifacts") {
       refs.forEach { ref ->
-        val sepd = ref.split(" => ".toRegex()).toTypedArray()
-        if (sepd.size == 2) {
-          appendln("+ ${sepd[0].quoteWithRefs()} to ${sepd[1].quoteWithRefs()}")
+        val seps = ref.split(" => ".toRegex()).toTypedArray()
+        if (seps.size == 2) {
+          appendln("+ ${seps[0].quoteWithRefs()} to ${seps[1].quoteWithRefs()}")
         } else {
           appendln("+ ${ref.quoteWithRefs()}")
         }
