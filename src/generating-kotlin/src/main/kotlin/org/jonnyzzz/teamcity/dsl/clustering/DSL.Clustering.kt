@@ -10,13 +10,6 @@ import org.jonnyzzz.teamcity.dsl.generating.block
 import java.util.*
 import kotlin.comparisons.compareByDescending
 
-fun <T : Any> mixinIncluded(runner: T, mixin: T.() -> Unit): Boolean {
-  fun Element.toText() = XMLOutputter().outputString(this) ?: ""
-  fun T.saveToText() = JDOM.save(this).toText()
-
-  return runner.saveToText() == JDOM.clone(runner).apply(mixin).saveToText()
-}
-
 abstract class DSLClustering<D : Any, G : Any, P : Any, R : Any> {
   protected abstract fun extractPs(r: D) : List<P>
   protected abstract fun extractRs(r: D) : R?
@@ -93,6 +86,13 @@ abstract class DSLClusteringGenerator<D : Any> {
 
   protected abstract fun KotlinWriter.generateImplementationBlock(item: D, baseItem: D)
   protected open fun KotlinWriter.generatePostBlock(item: D, baseItem: D) {}
+
+  private fun mixinIncluded(runner: D, mixin: D.() -> Unit): Boolean {
+    fun Element.toText() = XMLOutputter().outputString(this) ?: ""
+    fun D.saveToText() = JDOM.save(this).toText()
+
+    return runner.saveToText() == newD().apply { JDOM.copy(runner, this) }.apply(mixin).saveToText()
+  }
 
   private fun KotlinWriter.generateRunnerInternal(runner: D,
                                           runnerCall : String,
