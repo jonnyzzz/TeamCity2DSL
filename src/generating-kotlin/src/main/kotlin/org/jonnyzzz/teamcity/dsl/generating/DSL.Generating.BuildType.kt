@@ -11,14 +11,14 @@ import kotlin.collections.*
 
 
 val TCBuildType.className: String
-  get() = "Build_" + id!!
+  get() = "Build_" + id
 
 val TCBuildType.variableName: String
   get() = className + ".id"
 
 
 fun generateBuildType(context: GenerationContext, home: File, project : TCProject, build: TCBuildType) {
-  val buildId = build.id ?: throw Error("Build type should have an id")
+  val buildId = build.id
 
   val mainFile = home / "build_$buildId.tcdsl.kt"
 
@@ -37,7 +37,7 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
       }
 
       block("object ${build.className}") {
-        appendln("val id = ${project.nameOrRef(context)}.build(${build.id?.quote()})" + generateTemplateIdRef())
+        appendln("val id = ${project.nameOrRef(context)}.build(${build.id.quote()})" + generateTemplateIdRef())
         appendln()
 
         block("val mixin = ${::buildMixin.name}") {
