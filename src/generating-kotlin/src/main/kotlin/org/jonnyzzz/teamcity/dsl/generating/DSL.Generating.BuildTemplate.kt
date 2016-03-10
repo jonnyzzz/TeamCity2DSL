@@ -9,13 +9,13 @@ import java.io.File
 
 
 val TCBuildTemplate.className: String
-  get() = "Template_" + id!!
+  get() = "Template_" + id
 
 val TCBuildTemplate.variableName: String
   get() = className + ".id"
 
 fun generateTemplate(context: GenerationContext, home: File, project : TCProject, template: TCBuildTemplate) {
-  val templateId = template.id ?: throw Error("Build template should have an id")
+  val templateId = template.id
 
   val mainFile = home / "template_$templateId.tcdsl.kt"
 
@@ -23,7 +23,7 @@ fun generateTemplate(context: GenerationContext, home: File, project : TCProject
     generateKotlinDSL(context.options.packageName, "template_$templateId") {
 
       block("object ${template.className}") {
-        appendln("val id = ${project.nameOrRef(context)}.template(${template.id?.quote()})")
+        appendln("val id = ${project.nameOrRef(context)}.template(${template.id.quote()})")
         appendln()
         block("val mixin = ${::templateMixin.name}") {
           setter("name", template.name)
