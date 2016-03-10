@@ -51,7 +51,7 @@ object XmlParsing {
             ?: return TeamCityVersion.v8
 
     return TeamCityVersion.XSDTarget.values.firstOrNull { it.schemaLocation == schema }
-            ?: throw Error("Failed to resolve TeamCity target verison from scheme: $schema")
+            ?: throw Error("Failed to resolve TeamCity target version from scheme: $schema")
   }
 
   private fun assertTeamCityTargetVersion(version : TeamCityVersion, rootElement: Element) {
