@@ -10,14 +10,14 @@ import kotlin.collections.forEach
 
 
 private val TCMetaRunner.className: String
-  get() = "Meta_" + id!!
+  get() = "Meta_" + id
 
 private val TCMetaRunner.variableName: String
   get() = className + ".id"
 
 
 fun generateMetaRunner(context: GenerationContext, home: File, project : TCProject, runner: TCMetaRunner) {
-  val templateId = runner.id ?: throw Error("Meta runner should have an id")
+  val templateId = runner.id
 
   val mainFile = home / "meta_$templateId.tcdsl.kt"
 
@@ -25,7 +25,7 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
     generateKotlinDSL(context.options.packageName, "meta_${templateId}") {
 
       block("object ${runner.className}") {
-        appendln("val id = ${project.nameOrRef(context)}.metaRunner(${runner.id?.quote()})")
+        appendln("val id = ${project.nameOrRef(context)}.metaRunner(${runner.id.quote()})")
         appendln()
         block("val mixin = ${::metaRunnerMixin.name}") {
           setter("name", runner.name)
