@@ -55,7 +55,7 @@ object DSLGenerating {
   }
 
   private fun generateProject(context : GenerationContext, root : File, project : TCProject, options : DSLOptions) {
-    val projectId = project.id ?: throw Error("Project should have an id")
+    val projectId = project.id
 
     val home = root / projectId
     home.mkdirs()
