@@ -47,7 +47,7 @@ object XmlGenerating {
   }
 
   private fun generateProject(model : TeamCityModel, root: File, project : TCProject) {
-    val projectId = project.id ?: throw Error("Project should have an id")
+    val projectId = project.id
 
     val home = root / projectId
     generateXML(home, "project-config.xml", project) { initializeDocument(model, project)}
