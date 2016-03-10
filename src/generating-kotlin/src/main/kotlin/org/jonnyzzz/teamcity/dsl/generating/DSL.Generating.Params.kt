@@ -55,7 +55,7 @@ fun <T : TCAbstractParam> KotlinWriter.abstractParams(parameters: List<T>?,
               val expanded = expand(it)
 
               if (value.contains("\n") || expanded != null) {
-                block("$functionName(${qname})") {
+                block("$functionName($qname)") {
                   if (expanded != null) expanded()
 
                   value.splitNewLines().forEach {
@@ -63,7 +63,7 @@ fun <T : TCAbstractParam> KotlinWriter.abstractParams(parameters: List<T>?,
                   }
                 }
               } else {
-                appendln("$functionName(${qname}, ${it.value?.quoteWithRefs()})")
+                appendln("$functionName($qname, ${it.value?.quoteWithRefs()})")
               }
             }
           }
