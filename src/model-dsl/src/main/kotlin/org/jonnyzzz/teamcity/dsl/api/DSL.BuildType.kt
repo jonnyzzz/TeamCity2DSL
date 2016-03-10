@@ -3,15 +3,13 @@ package org.jonnyzzz.teamcity.dsl.api
 import org.jonnyzzz.teamcity.dsl.model.*
 
 fun TCBuildType.runner(id: String, runnerType : String? = null, builder: TCSettingsRunner.() -> Unit = {}): TCRunnerBuilder {
-  return (this as TCWithSettings).runner(id, runnerType, builder).apply {
+  return (this as TCBuildSettings).runner(id, runnerType, builder).apply {
     runnerRef(id)
   }
 }
 
 fun TCBuildType.runnerRef(id : String) {
-  with(settings) {
-    runnersOrder = (runnersOrder ?: listOf()) + id
-  }
+  runnersOrder = (runnersOrder ?: listOf()) + id
 }
 
 class UnknownBuild(buildId : String) : TCBuildTypeRef {
@@ -23,13 +21,13 @@ interface  TCBuildTypeMixin {
 }
 
 interface  TCBuildTypeMixinBuilder : TCBuildTypeMixin {
-  operator fun plus(mixin : TCBuildTemplateRef) : TCBuildTypeMixinBuilder = this + {settings.templateId = mixin.id }
+  operator fun plus(mixin : TCBuildTemplateRef) : TCBuildTypeMixinBuilder = this + {templateId = mixin.id }
   operator fun plus(mixin : TCBuildTypeMixin) : TCBuildTypeMixinBuilder = this + mixin.asBuilder()
   operator fun plus(builder : TCBuildType.() -> Unit) : TCBuildTypeMixinBuilder
 }
 
 interface  TCBuildTypeBuilder : TCBuildTypeRef {
-  operator fun plus(mixin : TCBuildTemplateRef) : TCBuildTypeBuilder = this + {settings.templateId = mixin.id }
+  operator fun plus(mixin : TCBuildTemplateRef) : TCBuildTypeBuilder = this + {templateId = mixin.id }
   operator fun plus(mixin : TCBuildTypeMixin) : TCBuildTypeBuilder = this + mixin.asBuilder()
   operator fun plusAssign(mixin : TCBuildTypeMixin) : Unit { this + mixin }
   operator fun plus(builder : TCBuildType.() -> Unit) : TCBuildTypeBuilder

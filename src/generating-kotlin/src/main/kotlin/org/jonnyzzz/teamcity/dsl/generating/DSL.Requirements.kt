@@ -2,9 +2,8 @@ package org.jonnyzzz.teamcity.dsl.generating
 
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilder
 import org.jonnyzzz.teamcity.dsl.api.TCRequirementsBuilderNames
-import org.jonnyzzz.teamcity.dsl.api.requirements
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCRequirement
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 import org.jonnyzzz.teamcity.dsl.suppressing
 import java.util.*
 
@@ -26,7 +25,7 @@ val wellknownRequirementNames = {
 fun KotlinWriter.generateRequirements(requirements : List<TCRequirement>?) {
   if (requirements == null) return
 
-  block("${TCWithSettings::requirements.name}") {
+  block("${TCBuildSettings::requirements.name}") {
     requirements.forEach { generateRequirement(it) }
   }
 }

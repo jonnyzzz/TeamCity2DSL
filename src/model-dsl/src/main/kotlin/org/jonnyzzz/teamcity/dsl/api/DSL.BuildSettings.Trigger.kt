@@ -1,8 +1,8 @@
 package org.jonnyzzz.teamcity.dsl.api
 
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsTrigger
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsTriggerRef
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 
 interface TCSettingsTriggerMixin {
   fun asBuilder(): TCSettingsTrigger.() -> Unit
@@ -30,10 +30,8 @@ interface TCSettingsTriggersBuilder {
   fun trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit = {}): TCSettingsTriggerBuilder
 }
 
-fun TCWithSettings.triggers(builder : TCSettingsTriggersBuilder.() -> Unit) {
-  settings {
-    buildTriggers = (buildTriggers ?: listOf())
-  }
+fun TCBuildSettings.triggers(builder : TCSettingsTriggersBuilder.() -> Unit) {
+  buildTriggers = (buildTriggers ?: listOf())
 
   object: TCSettingsTriggersBuilder {
     override fun trigger(triggerId: String, triggerType: String, builder: TCSettingsTrigger.() -> Unit) : TCSettingsTriggerBuilder{
@@ -42,9 +40,7 @@ fun TCWithSettings.triggers(builder : TCSettingsTriggersBuilder.() -> Unit) {
         this.triggerType = triggerType
       }
 
-      settings {
-        buildTriggers = (buildTriggers ?: listOf()) + trigger
-      }
+      buildTriggers = (buildTriggers ?: listOf()) + trigger
 
       return object : TCSettingsTriggerBuilder, TCSettingsTriggerRef by trigger {
         operator override fun plus(builder: TCSettingsTrigger.() -> Unit): TCSettingsTriggerBuilder = this.apply { trigger.builder() }

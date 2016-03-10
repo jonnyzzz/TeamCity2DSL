@@ -1,9 +1,8 @@
 package org.jonnyzzz.teamcity.dsl.api
 
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsExtension
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsExtensionRef
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
-
 
 interface TCSettingsExtensionMixin {
   fun asBuilder(): TCSettingsExtension.() -> Unit
@@ -29,15 +28,13 @@ fun extensionMixin(extensionType : String? = null, builder: TCSettingsExtension.
   } + builder
 }
 
-fun TCWithSettings.extension(id : String, extensionType : String, builder : TCSettingsExtension.() -> Unit = {}) : TCSettingsExtensionBuilder {
+fun TCBuildSettings.extension(id : String, extensionType : String, builder : TCSettingsExtension.() -> Unit = {}) : TCSettingsExtensionBuilder {
   val extension = TCSettingsExtension().apply {
     this.id = id
     this.extensionType = extensionType
   }
 
-  settings {
-    extensions = (extensions ?: listOf()) + extension
-  }
+  extensions = (extensions ?: listOf()) + extension
 
   return object : TCSettingsExtensionBuilder, TCSettingsExtensionRef by extension {
     override fun plus(builder: TCSettingsExtension.() -> Unit) = this.apply { extension.builder() }

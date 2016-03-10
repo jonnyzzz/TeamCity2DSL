@@ -62,7 +62,3 @@ abstract class TCBuildSettings {
   var snapshotDependencies by JXML[0xca00] / "settings" / "dependencies" / XElements("depend-on") / XSub(TCSettingsSnapshotDependency::class.java)
   var cleanup by JXML[0xcb00] / "settings" / "cleanup" / XUnknown
 }
-
-interface TCWithSettings {
-  val settings: TCBuildSettings
-}

@@ -235,7 +235,7 @@ class ModelToDSLGeneratorTest {
     }
 
     val x = kotlinWriter {
-      paramsWithSpec(input.settings.parameters)
+      paramsWithSpec(input.parameters)
     }
 
     println(x)
@@ -253,7 +253,7 @@ class ModelToDSLGeneratorTest {
     }
 
     val x = kotlinWriter {
-      generateDependencies(context, input.settings)
+      generateDependencies(context, input)
     }
 
     println(x)

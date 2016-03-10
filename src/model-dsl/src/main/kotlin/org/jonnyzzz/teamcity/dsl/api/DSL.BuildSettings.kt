@@ -1,20 +1,12 @@
 package org.jonnyzzz.teamcity.dsl.api
 
 import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 
-fun TCWithSettings.settings(builder : TCBuildSettings.() -> Unit) {
-  settings.builder()
-}
 
-fun TCWithSettings.disable(id : String) {
-  settings {
+fun TCBuildSettings.disable(id : String) {
     disabledSettings = (disabledSettings ?: listOf()) + id
-  }
 }
 
-fun TCWithSettings.cleanup(builder : TCUnknownBuilder.() -> Unit) {
-  settings {
+fun TCBuildSettings.cleanup(builder : TCUnknownBuilder.() -> Unit) {
     cleanup = elementImpl("cleanup", builder)
-  }
 }

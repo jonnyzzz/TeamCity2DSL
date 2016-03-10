@@ -10,7 +10,7 @@ interface TCBuildTypeRef {
 }
 
 @XRoot("build-type")
-abstract class TCBuildType(override val id : String) : TCBuildTypeSettings(), TCUUID, TCBuildOrTemplate, TCWithSettings, TCBuildTypeRef {
+abstract class TCBuildType(override val id : String) : TCBuildTypeSettings(), TCUUID, TCBuildOrTemplate, TCBuildTypeRef {
   override
   var uuid by JXML[0x1000] / XAttribute("uuid") - null
 
@@ -18,6 +18,4 @@ abstract class TCBuildType(override val id : String) : TCBuildTypeSettings(), TC
 
   var name by JXML[0x100] / "name" / XText
   var description by JXML[0x200] / "description" / XText - ""
-
-  override val settings = this
 }

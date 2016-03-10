@@ -3,7 +3,6 @@ package org.jonnyzzz.teamcity.dsl.generating
 import org.apache.commons.lang3.StringEscapeUtils
 import org.jdom2.Element
 import org.jonnyzzz.teamcity.dsl.api.version
-import java.util.*
 import kotlin.collections.forEach
 import kotlin.text.isEmpty
 import kotlin.text.replace

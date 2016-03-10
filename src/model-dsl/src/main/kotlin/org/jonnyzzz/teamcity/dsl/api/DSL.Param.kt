@@ -5,19 +5,6 @@ import org.jonnyzzz.teamcity.dsl.xml.generateXMLString
 import kotlin.comparisons.compareBy
 import kotlin.reflect.KMutableProperty1
 
-
-fun TCBuildType.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) {
-  settings { param(name, value, builder) }
-}
-
-fun TCBuildTemplate.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) {
-  settings { param(name, value, builder) }
-}
-
-fun TCMetaRunner.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) {
-  settings { param(name, value, builder) }
-}
-
 fun TCBuildSettings.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) {
   addParameterWithSpec(TCBuildSettings::parameters, name, value, builder)
 }

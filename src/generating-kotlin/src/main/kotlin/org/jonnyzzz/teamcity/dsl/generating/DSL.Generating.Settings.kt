@@ -4,7 +4,6 @@ import org.jonnyzzz.teamcity.dsl.api.TCSettingsTriggersBuilder
 import org.jonnyzzz.teamcity.dsl.api.checkout
 import org.jonnyzzz.teamcity.dsl.api.triggers
 import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 import kotlin.collections.forEach
 
 
@@ -29,7 +28,7 @@ fun KotlinWriter.generateSettings(context : GenerationContext, settings : TCBuil
 
   val vcs = settings.vcs
   if (vcs != null) {
-    block("${TCWithSettings::checkout.name}") {
+    block("${TCBuildSettings::checkout.name}") {
       vcs.forEach {
         generateBuildSettingsVcsRoot(context, it)
       }
@@ -47,7 +46,7 @@ fun KotlinWriter.generateSettings(context : GenerationContext, settings : TCBuil
 
   val buildTriggers = settings.buildTriggers
   if (buildTriggers != null) {
-    block("${TCWithSettings::triggers.name}") {
+    block("${TCBuildSettings::triggers.name}") {
       buildTriggers.forEach {
         block("${TCSettingsTriggersBuilder::trigger.name}(${it.id?.quote()}, ${it.triggerType?.quote()})") {
           it.parameters?.forEach {

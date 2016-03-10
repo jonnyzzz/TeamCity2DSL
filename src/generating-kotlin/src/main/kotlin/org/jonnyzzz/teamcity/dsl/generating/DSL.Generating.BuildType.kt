@@ -26,7 +26,7 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
     generateKotlinDSL(context.options.packageName, "build_$buildId") {
 
       fun generateTemplateIdRef() : String {
-        val templateId = build.settings.templateId ?: return ""
+        val templateId = build.templateId ?: return ""
 
         val baseTemplate = context.findTemplate(templateId)
         if (baseTemplate != null) {
@@ -46,10 +46,9 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
           setter("name", build.name)
           setter("description", build.description)
 
-          val settings = build.settings
-          paramsWithSpec(settings.parameters)
-          generateSettings(context, settings) {
-            generateSettingsRunners(settings)
+          paramsWithSpec(build.parameters)
+          generateSettings(context, build) {
+            generateSettingsRunners(build)
           }
         }
 

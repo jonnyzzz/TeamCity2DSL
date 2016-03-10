@@ -31,12 +31,11 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
           setter("name", runner.name)
           setter("description", runner.description)
 
-          val settings = runner.settings
-          paramsWithSpec(settings.parameters)
+          paramsWithSpec(runner.parameters)
 
-          generateSettings(context, settings) {
-            val generateRunner = generateRunners(settings.runners)
-            settings.runners?.forEach { generateRunner(it) }
+          generateSettings(context, runner) {
+            val generateRunner = generateRunners(runner.runners)
+            runner.runners?.forEach { generateRunner(it) }
           }
         }
 

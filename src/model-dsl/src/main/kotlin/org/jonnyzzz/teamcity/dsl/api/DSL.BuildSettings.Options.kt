@@ -1,7 +1,7 @@
 package org.jonnyzzz.teamcity.dsl.api
 
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsOptions
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 
 
 interface TCSettingsOptionsMixin {
@@ -26,9 +26,9 @@ fun optionsMixin(builder: TCSettingsOptions.() -> Unit = {}): TCSettingsOptionsM
   return TCSettingsOptionsMixinBuilderImpl() + builder
 }
 
-fun TCWithSettings.options(builder : TCSettingsOptions.() -> Unit = {}) : TCSettingsOptionsBuilder {
-  val opts = settings.options ?: TCSettingsOptions()
-  settings.options = opts
+fun TCBuildSettings.options(builder : TCSettingsOptions.() -> Unit = {}) : TCSettingsOptionsBuilder {
+  val opts = options ?: TCSettingsOptions()
+  options = opts
 
   return object:TCSettingsOptionsBuilder {
     operator override fun plus(builder: TCSettingsOptions.() -> Unit): TCSettingsOptionsBuilder = this.apply { opts.builder() }

@@ -1,8 +1,8 @@
 package org.jonnyzzz.teamcity.dsl.api
 
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsRunner
 import org.jonnyzzz.teamcity.dsl.model.TCSettingsRunnerRef
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 
 interface TCRunnerMixin {
   fun asBuilder(): TCSettingsRunner.() -> Unit
@@ -18,7 +18,7 @@ interface TCRunnerBuilder : TCSettingsRunnerRef {
   operator fun plus(builder: TCSettingsRunner.() -> Unit): TCRunnerBuilder
 }
 
-fun TCWithSettings.runner(id: String?, runnerType: String? = null, builder: TCSettingsRunner.() -> Unit = {}): TCRunnerBuilder {
+fun TCBuildSettings.runner(id: String?, runnerType: String? = null, builder: TCSettingsRunner.() -> Unit = {}): TCRunnerBuilder {
   val runner = TCSettingsRunner()
   val result = object : TCRunnerBuilder, TCSettingsRunnerRef by runner {
     operator override fun plus(builder: TCSettingsRunner.() -> Unit): TCRunnerBuilder = this.apply { runner.builder() }
@@ -28,9 +28,7 @@ fun TCWithSettings.runner(id: String?, runnerType: String? = null, builder: TCSe
     if (runnerType != null) this.runnerType = runnerType
   } + builder
 
-  settings {
     runners = (runners ?: listOf()) + runner
-  }
 
   return result
 }

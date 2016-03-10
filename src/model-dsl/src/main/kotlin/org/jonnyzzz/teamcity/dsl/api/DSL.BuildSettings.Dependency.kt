@@ -8,25 +8,21 @@ interface TCBuildSettingsDependencyBuilder {
   fun snapshot(builder : TCSettingsSnapshotDependency.() -> Unit)
 }
 
-fun TCWithSettings.dependency(build : TCBuildTypeRef, builder : TCBuildSettingsDependencyBuilder.() -> Unit) {
+fun TCBuildSettings.dependency(build : TCBuildTypeRef, builder : TCBuildSettingsDependencyBuilder.() -> Unit) {
   val buildTypeId = build.id!!
   object : TCBuildSettingsDependencyBuilder {
     override fun artifact(id : String?, builder: TCSettingsArtifactDependency.() -> Unit) {
-      settings {
         artifactDependencies = (artifactDependencies ?: listOf()) + TCSettingsArtifactDependency().apply {
           this.id = id
           this.buildTypeId = buildTypeId
           this.builder()
         }
-      }
     }
     override fun snapshot(builder: TCSettingsSnapshotDependency.() -> Unit) {
-      settings {
         snapshotDependencies = (snapshotDependencies ?: listOf()) + TCSettingsSnapshotDependency().apply {
           this.buildTypeId = buildTypeId
           this.builder()
         }
-      }
     }
   }.builder()
 }

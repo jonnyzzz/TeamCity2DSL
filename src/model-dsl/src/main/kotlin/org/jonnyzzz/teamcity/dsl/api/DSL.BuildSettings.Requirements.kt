@@ -1,7 +1,7 @@
 package org.jonnyzzz.teamcity.dsl.api
 
+import org.jonnyzzz.teamcity.dsl.model.TCBuildSettings
 import org.jonnyzzz.teamcity.dsl.model.TCRequirement
-import org.jonnyzzz.teamcity.dsl.model.TCWithSettings
 import kotlin.collections.listOf
 import kotlin.collections.plus
 
@@ -63,39 +63,35 @@ interface TCRequirementsBuilderNames {
     get() = "ver-no-less-than"
 }
 
-fun TCWithSettings.requirements(builder : TCRequirementsBuilder.() -> Unit) {
-  settings {
-    requirements = requirements ?: listOf()
-  }
+fun TCBuildSettings.requirements(builder: TCRequirementsBuilder.() -> Unit) {
+  requirements = requirements ?: listOf()
 
-  settings {
-    object : TCRequirementsBuilder {
-      override fun rule(id: String?, builder: TCRequirementsBuilderRequirementRef.() -> Unit) {
-        object : TCRequirementsBuilderRequirementRef {
-          var hasRule = false
-          override fun ref(param: String): TCRequirementsBuilderRequirement {
-            return object : TCRequirementsBuilderRequirement {
-              override fun minus(type: String): TCRequirementsBuilderRequirementValue {
-                if (hasRule) throw Error("Only one requirement is allowed in rule block")
-                hasRule = true
+  object : TCRequirementsBuilder {
+    override fun rule(id: String?, builder: TCRequirementsBuilderRequirementRef.() -> Unit) {
+      object : TCRequirementsBuilderRequirementRef {
+        var hasRule = false
+        override fun ref(param: String): TCRequirementsBuilderRequirement {
+          return object : TCRequirementsBuilderRequirement {
+            override fun minus(type: String): TCRequirementsBuilderRequirementValue {
+              if (hasRule) throw Error("Only one requirement is allowed in rule block")
+              hasRule = true
 
-                val r = TCRequirement().apply {
-                  this.id = id
-                  this.type = type
-                  this.name = param
-                  requirements = (requirements ?: listOf()) + this
-                }
+              val r = TCRequirement().apply {
+                this.id = id
+                this.type = type
+                this.name = param
+                requirements = (requirements ?: listOf()) + this
+              }
 
-                return object:TCRequirementsBuilderRequirementValue {
-                  override fun minus(value: String?) {
-                    r.value = value
-                  }
+              return object : TCRequirementsBuilderRequirementValue {
+                override fun minus(value: String?) {
+                  r.value = value
                 }
               }
             }
           }
-        }.apply { builder() }
-      }
-    }.builder()
-  }
+        }
+      }.apply { builder() }
+    }
+  }.builder()
 }
