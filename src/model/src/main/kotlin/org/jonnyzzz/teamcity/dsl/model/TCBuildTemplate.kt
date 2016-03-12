@@ -10,7 +10,7 @@ interface TCBuildTemplateRef {
 }
 
 @XRoot("template")
-abstract class TCBuildTemplate(override val id : String) : TCBuildTemplateSettings(), TCUUID, TCBuildOrTemplate, TCBuildTemplateRef {
+abstract class TCBuildTemplate(override val id : String) : TCBuildSettings(), TCUUID, TCBuildOrTemplate, TCBuildTemplateRef {
   override var uuid by JXML[0x1000] / XAttribute("uuid") - null
 
   var name by JXML / "name" / XText

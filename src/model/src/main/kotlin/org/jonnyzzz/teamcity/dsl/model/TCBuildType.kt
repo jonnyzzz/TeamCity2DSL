@@ -10,7 +10,7 @@ interface TCBuildTypeRef {
 }
 
 @XRoot("build-type")
-abstract class TCBuildType(override val id : String) : TCBuildTypeSettings(), TCUUID, TCBuildOrTemplate, TCBuildTypeRef {
+abstract class TCBuildType(override val id : String) : TCBuildSettings(), TCUUID, TCBuildOrTemplate, TCBuildTypeRef {
   override
   var uuid by JXML[0x1000] / XAttribute("uuid") - null
 
@@ -18,4 +18,30 @@ abstract class TCBuildType(override val id : String) : TCBuildTypeSettings(), TC
 
   var name by JXML[0x100] / "name" / XText
   var description by JXML[0x200] / "description" / XText - ""
+
+  var templateId : String?
+    get() = templateIdImpl
+    set(value) {
+      templateIdImpl = value
+      updateOrderAttribute()
+    }
+
+  var runnersOrder : List<String>?
+    get() = runnersOrderImpl?.let { it.split(", ".toRegex()).toTypedArray() }?.toList()
+    set(value) {
+      runnersOrderCache = value
+      updateOrderAttribute()
+    }
+
+  private fun updateOrderAttribute() {
+    if (templateId != null) {
+      runnersOrderImpl = runnersOrderCache?.joinToString(", ")
+    } else {
+      runnersOrderImpl = null
+    }
+  }
+
+  private var runnersOrderCache : List<String>? = null
+  private var runnersOrderImpl by JXML[0xc404] / "settings" / "build-runners" / XAttribute("order")
+  private var templateIdImpl by JXML[0xc400] / "settings" / XAttribute("ref")
 }

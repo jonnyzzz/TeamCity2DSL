@@ -4,51 +4,6 @@ import org.jonnyzzz.kotlin.xml.bind.*
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
 import org.jonnyzzz.kotlin.xml.bind.jdom.XUnknown
 
-
-abstract class TCBuildTypeSettings : TCBuildSettings() {
-  var templateId : String?
-    get() = templateIdImpl
-    set(value) {
-      templateIdImpl = value
-      updateOrderAttribute()
-    }
-
-  var runnersOrder : List<String>?
-    get() = runnersOrderImpl?.let { it.split(", ".toRegex()).toTypedArray() }?.toList()
-    set(value) {
-      runnersOrderCache = value
-      updateOrderAttribute()
-    }
-
-  private fun updateOrderAttribute() {
-    if (templateId != null) {
-      runnersOrderImpl = runnersOrderCache?.joinToString(", ")
-    } else {
-      runnersOrderImpl = null
-    }
-  }
-
-  private var runnersOrderCache : List<String>? = null
-  private var runnersOrderImpl by JXML[0xc404] / "settings" / "build-runners" / XAttribute("order")
-  private var templateIdImpl by JXML[0xc400] / "settings" / XAttribute("ref")
-}
-
-abstract class TCBuildTemplateSettings : TCBuildSettings()
-
-abstract class TCMetaRunnerSettings : TCBuildSettings() {
-  init {
-    buildTriggers = null
-    vcs = null
-  }
-}
-
-class TCRequirement {
-  var id by JXML / XAttribute("id") - null
-  var type by JXML / XName
-  var name by JXML / XAttribute("name")
-  var value by JXML / XAttribute("value")
-}
-
 abstract class TCBuildSettings {
   var options by JXML[0xc100] / "settings" / "options" / XSub(TCSettingsOptions::class.java)
   var disabledSettings by JXML[0xc200] / "settings" / "disabled-settings" / XElements("setting-ref") / XAttribute("ref")

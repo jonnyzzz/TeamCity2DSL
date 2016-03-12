@@ -3,7 +3,6 @@ package org.jonnyzzz.teamcity.dsl.generating
 import org.jonnyzzz.teamcity.dsl.api.buildMixin
 import org.jonnyzzz.teamcity.dsl.div
 import org.jonnyzzz.teamcity.dsl.model.TCBuildType
-import org.jonnyzzz.teamcity.dsl.model.TCBuildTypeSettings
 import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.writeUTF
 import java.io.File
@@ -48,7 +47,19 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
 
           paramsWithSpec(build.parameters)
           generateSettings(context, build) {
-            generateSettingsRunners(build)
+            val runners = build.runners?.filter { it.id != null } ?: listOf()
+            val order = build.runnersOrder ?: runners.map { it.id }.filterNotNull()
+            val idToRunner = runners.map { it.id to it }.toMap()
+
+            val generateRunner = generateRunners(runners)
+            order.forEach {
+              val runner = idToRunner[it]
+              if (runner == null) {
+                appendln("runnerRef(${it.quote()})")
+              } else {
+                generateRunner(runner)
+              }
+            }
           }
         }
 
@@ -57,22 +68,6 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
           appendln("id += mixin")
         }
       }
-    }
-  }
-}
-
-fun KotlinWriter.generateSettingsRunners(settings : TCBuildTypeSettings) {
-  val runners = settings.runners?.filter { it.id != null } ?: listOf()
-  val order = settings.runnersOrder ?: runners.map { it.id }.filterNotNull()
-  val idToRunner = runners.map { it.id to it }.toMap()
-
-  val generateRunner = generateRunners(runners)
-  order.forEach {
-    val runner = idToRunner[it]
-    if (runner == null) {
-      appendln("runnerRef(${it.quote()})")
-    } else {
-      generateRunner(runner)
     }
   }
 }

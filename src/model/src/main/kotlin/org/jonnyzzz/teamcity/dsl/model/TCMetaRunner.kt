@@ -11,7 +11,12 @@ interface TCMetaRunnerRef {
 }
 
 @XRoot("meta-runner")
-abstract class TCMetaRunner(override val id : String) : TCMetaRunnerSettings(), TCID, TCMetaRunnerRef {
+abstract class TCMetaRunner(override val id : String) : TCBuildSettings(), TCID, TCMetaRunnerRef {
   var name by JXML[0x100] / XAttribute("name")
   var description by JXML[0x200] / "description" / XText - ""
+
+  init {
+    buildTriggers = null
+    vcs = null
+  }
 }
