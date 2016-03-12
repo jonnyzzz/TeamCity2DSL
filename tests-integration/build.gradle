@@ -11,6 +11,41 @@ subprojects {
   def DSL_package = "org.jonnyzzz.autodsl.${project.name.replaceAll("[^a-z0-9]", "_")}"
   def DSL_classes = project.sourceSets.main.output.classesDir
 
+  def TEST_classes =  project.file('generated/tests')
+  def TEST_file =  file("$TEST_classes/test.kt")
+  def testPackage = 'org.jonnyzzz.teamcity.dsl.integration_tests'
+  def testName = project.name.replaceAll("[^a-zA-Z0-9]+", "_")
+
+  sourceSets {
+    main.kotlin.srcDirs += DSLs
+    test.kotlin.srcDirs += TEST_classes
+  }
+
+  task generateTestClass {
+    inputs.file project.buildFile
+    inputs.file rootProject.buildFile
+    inputs.file thisBuildScript
+    outputs.dir TEST_classes
+
+    doLast {
+      delete TEST_file
+      TEST_file.parentFile.mkdirs()
+
+      def source = """@file:Suppress("PackageDirectoryMismatch")
+    package $testPackage
+    ///This is generated file. Do not touch!
+    import org.jonnyzzz.teamcity.dsl.util.IntegrationTestBase
+
+    class $testName : IntegrationTestBase()
+
+    """
+
+      TEST_file.text = source
+    }
+  }
+
+  compileKotlin.dependsOn generateTestClass
+
   task cleanGenerated {
     doLast {
       delete XMLs_out
@@ -19,10 +54,6 @@ subprojects {
   }
 
   clean.dependsOn cleanGenerated
-
-  sourceSets {
-    main.kotlin.srcDirs += DSLs
-  }
 
   dependencies {
     //TODO: fixme. Use modules with fewer dependencies here
