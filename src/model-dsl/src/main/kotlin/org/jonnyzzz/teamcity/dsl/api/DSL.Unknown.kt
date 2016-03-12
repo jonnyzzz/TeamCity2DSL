@@ -10,7 +10,7 @@ interface TCUnknownBuilder {
   fun text(text : String)
 }
 
-fun elementImpl(name : String, builder : TCUnknownBuilder.() -> Unit) : Element {
+internal fun elementImpl(name : String, builder : TCUnknownBuilder.() -> Unit) : Element {
   val element = Element(name)
   object : TCUnknownBuilder {
     override fun element(name: String, builder: TCUnknownBuilder.() -> Unit) {

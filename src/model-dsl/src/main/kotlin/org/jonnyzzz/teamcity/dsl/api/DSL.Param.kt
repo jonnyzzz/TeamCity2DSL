@@ -42,11 +42,12 @@ fun <T, P : TCParameter> T.addParameterImpl(parameters: KMutableProperty1<T, Lis
     }.builder(p)
   })
 }
+
 fun <T, P : TCAbstractParam> T.addAbstractParameterImpl(parameters: KMutableProperty1<T, List<P>?>,
-                                            name: String,
-                                            value: String?,
-                                            newParameter: () -> P,
-                                            builder: TCAbstractParameterBuilder.(P) -> Unit) {
+                                                        name: String,
+                                                        value: String?,
+                                                        newParameter: () -> P,
+                                                        builder: TCAbstractParameterBuilder.(P) -> Unit) {
   val actualParameter = parameters.get(this)?.firstOrNull { it.name == name }
   val p = actualParameter ?: newParameter().apply { this.name = name }
   p.value = value
@@ -74,19 +75,19 @@ fun <T, P : TCAbstractParam> T.addAbstractParameterImpl(parameters: KMutableProp
   }
 }
 
-fun <T> T.addParameter(parameters: KMutableProperty1<T, List<TCParameter>?>,
-                                            name: String,
-                                            value: String?,
-                                            builder: TCParameterBuilder.() -> Unit) {
+internal fun <T> T.addParameter(parameters: KMutableProperty1<T, List<TCParameter>?>,
+                                name: String,
+                                value: String?,
+                                builder: TCParameterBuilder.() -> Unit) {
   addParameterImpl(parameters, name, value, { TCParameter() }, {
     builder()
   })
 }
 
-fun <T> T.addParameterWithSpec(parameters: KMutableProperty1<T, List<TCParameterWithSpec>?>,
-                               name : String,
-                               value : String?,
-                               builder : TCParameterWithSpecBuilder.() -> Unit) {
+internal fun <T> T.addParameterWithSpec(parameters: KMutableProperty1<T, List<TCParameterWithSpec>?>,
+                                        name : String,
+                                        value : String?,
+                                        builder : TCParameterWithSpecBuilder.() -> Unit) {
 
   addParameterImpl(parameters, name, value, { TCParameterWithSpec() }, { p ->
     object : TCParameterWithSpecBuilder, TCParameterBuilder by this {
@@ -108,10 +109,10 @@ fun TCSettingsOptions.option(name : String, value : String? = null, builder : TC
   proxy().addOption(proxy::options2, name, value, builder)
 }
 
-fun <T> T.addOption(parameters: KMutableProperty1<T, List<TCSettingsOption>?>,
-                               name : String,
-                               value : String?,
-                               builder : TCOptionBuilder.() -> Unit) {
+internal fun <T> T.addOption(parameters: KMutableProperty1<T, List<TCSettingsOption>?>,
+                             name : String,
+                             value : String?,
+                             builder : TCOptionBuilder.() -> Unit) {
 
   addAbstractParameterImpl(parameters, name, value, { TCSettingsOption() }, { p ->
     object : TCOptionBuilder, TCAbstractParameterBuilder by this {
