@@ -31,7 +31,9 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
           setter("name", runner.name)
           setter("description", runner.description)
 
-          paramsWithSpec(runner.parameters)
+          block("parameters") {
+            paramsWithSpec(runner.parameters)
+          }
 
           generateSettings(context, runner) {
             val generateRunner = generateRunners(runner.runners)

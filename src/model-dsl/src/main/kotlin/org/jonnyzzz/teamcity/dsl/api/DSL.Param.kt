@@ -5,12 +5,28 @@ import org.jonnyzzz.teamcity.dsl.xml.generateXMLString
 import kotlin.comparisons.compareBy
 import kotlin.reflect.KMutableProperty1
 
-fun TCBuildSettings.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) {
-  addParameterWithSpec(TCBuildSettings::parameters, name, value, builder)
+interface TCBuildSettingsParameters {
+  fun param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {})
 }
 
-fun TCProject.param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {}) : Unit {
-  addParameterWithSpec(TCProject::parameters, name, value, builder)
+fun TCBuildSettings.parameters(builder : TCBuildSettingsParameters.() -> Unit) {
+  object:TCBuildSettingsParameters {
+    override fun param(name : String, value : String?, builder : TCParameterWithSpecBuilder.() -> Unit) {
+      addParameterWithSpec(TCBuildSettings::parameters, name, value, builder)
+    }
+  }.builder()
+}
+
+interface TCProjectParameters {
+  fun param(name : String, value : String? = null, builder : TCParameterWithSpecBuilder.() -> Unit = {})
+}
+
+fun TCProject.parameters(builder : TCProjectParameters.() -> Unit) {
+  object:TCProjectParameters {
+    override fun param(name : String, value : String?, builder : TCParameterWithSpecBuilder.() -> Unit) {
+      addParameterWithSpec(TCProject::parameters, name, value, builder)
+    }
+  }.builder()
 }
 
 fun TCSettingsRunner.param(name : String, value : String? = null, builder : TCParameterBuilder.() -> Unit = {}) {

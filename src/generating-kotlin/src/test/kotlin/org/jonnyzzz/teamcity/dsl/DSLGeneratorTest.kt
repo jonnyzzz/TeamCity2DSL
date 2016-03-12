@@ -231,7 +231,9 @@ class ModelToDSLGeneratorTest {
   @Test
   fun should_generate_nice_param_newlines() {
     val input = object:TCBuildType("q"){ }.apply {
+      parameters {
         param("artifactRules", "\nworker/worker-server/logs => %logs%.zip\n")
+      }
     }
 
     val x = kotlinWriter {

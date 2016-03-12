@@ -29,7 +29,9 @@ fun generateTemplate(context: GenerationContext, home: File, project : TCProject
           setter("name", template.name)
           setter("description", template.description)
 
-          paramsWithSpec(template.parameters)
+          block("parameters") {
+            paramsWithSpec(template.parameters)
+          }
 
           generateSettings(context, template) {
             val generateRunner = generateRunners(template.runners)

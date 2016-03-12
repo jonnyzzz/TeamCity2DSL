@@ -48,7 +48,9 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
           setter("name", project.name)
           setter("description", project.description)
 
-          paramsWithSpec(project.parameters)
+          block("parameters") {
+            paramsWithSpec(project.parameters)
+          }
 
           val cleanup = project.cleanup
           if (cleanup != null) {

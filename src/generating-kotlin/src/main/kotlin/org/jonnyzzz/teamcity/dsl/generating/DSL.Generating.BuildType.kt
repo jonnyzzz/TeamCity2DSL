@@ -45,7 +45,10 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
           setter("name", build.name)
           setter("description", build.description)
 
-          paramsWithSpec(build.parameters)
+          block("parameters") {
+            paramsWithSpec(build.parameters)
+          }
+
           generateSettings(context, build) {
             val runners = build.runners?.filter { it.id != null } ?: listOf()
             val order = build.runnersOrder ?: runners.map { it.id }.filterNotNull()
