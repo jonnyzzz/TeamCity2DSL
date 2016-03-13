@@ -67,6 +67,8 @@ subprojects {
 
   task test_dsl(type : Test) {
     dependsOn cleanGenerated
+
+    inputs.file thisBuildScript
     inputs.dir XMLs_in
     outputs.dir DSLs
 
@@ -78,6 +80,7 @@ subprojects {
   compileGeneratedKotlin.dependsOn test_dsl
 
   task test_xml(type : Test) {
+    inputs.file thisBuildScript
     dependsOn test_dsl
     dependsOn generatedClasses
 
@@ -87,6 +90,7 @@ subprojects {
   }
 
   test {
+    inputs.file thisBuildScript
     dependsOn test_xml
 
     useJUnit {
