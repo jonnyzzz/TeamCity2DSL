@@ -33,4 +33,8 @@ sealed class TeamCityVersion(val fieldName: String, val version : String) {
     val latest : TeamCityVersion
       get() = v10
   }
+
+  override fun toString(): String {
+    return fieldName
+  }
 }
