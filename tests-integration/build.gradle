@@ -8,16 +8,17 @@ subprojects {
   def XMLs_in = project.file("teamcity")
   def XMLs_out = project.file("generated/teamcity")
   def DSLs = project.file("generated/kotlin")
-  def DSL_package = "org.jonnyzzz.autodsl.${project.name.replaceAll("[^a-z0-9]", "_")}"
-  def DSL_classes = project.sourceSets.main.output.classesDir
 
   def TEST_classes =  project.file('generated/tests')
   def TEST_file =  file("$TEST_classes/test.kt")
   def testPackage = 'org.jonnyzzz.teamcity.dsl.integration_tests'
   def testName = project.name.replaceAll("[^a-zA-Z0-9]+", "_")
+  def testName_check = "${testName}_check"
+  def testName_dsl = "${testName}_dsl"
+  def testName_xml = "${testName}_xml"
 
   sourceSets {
-    main.kotlin.srcDirs += DSLs
+    generated.kotlin.srcDirs += DSLs
     test.kotlin.srcDirs += TEST_classes
   }
 
@@ -34,9 +35,11 @@ subprojects {
       def source = """@file:Suppress("PackageDirectoryMismatch")
     package $testPackage
     ///This is generated file. Do not touch!
-    import org.jonnyzzz.teamcity.dsl.util.IntegrationTestBase
+    import org.jonnyzzz.teamcity.dsl.util.*
 
-    class $testName : IntegrationTestBase()
+    class $testName_check : IntegrationTestBase()
+    class $testName_dsl : GenerateDSLsTestBase()
+    class $testName_xml : GenerateXMLsTestBase()
 
     """
 
@@ -44,7 +47,7 @@ subprojects {
     }
   }
 
-  compileKotlin.dependsOn generateTestClass
+  compileTestKotlin.dependsOn generateTestClass
 
   task cleanGenerated {
     doLast {
@@ -57,73 +60,43 @@ subprojects {
 
   dependencies {
     //TODO: fixme. Use modules with fewer dependencies here
-    compile project(':src:model-dsl')
+    generatedCompile project(':src:model-dsl')
 
     testCompile project(":src:test-integration-helper")
   }
 
-  compileKotlin.dependsOn "generateDSL"
-  test.dependsOn "generateXMLs"
+  task test_dsl(type : Test) {
+    dependsOn cleanGenerated
 
-  def runGenerator = { argz ->
-    def baseTask = (JavaExec) project(":src:DSL").tasks.run
-
-    javaexec {
-      main = baseTask.main
-      classpath = baseTask.classpath
-      jvmArgs = baseTask.jvmArgs
-      args = argz
+    useJUnit {
+      includeCategories "org.jonnyzzz.teamcity.dsl.util.GenerateDSLCategory"
     }
   }
 
-  task generateDSL {
-    inputs.dir XMLs_in
-    inputs.file project.buildFile
-    inputs.file thisBuildScript
+  compileGeneratedKotlin.dependsOn test_dsl
 
-    outputs.dir DSLs
+  task test_xml(type : Test) {
+    dependsOn test_dsl
+    dependsOn generatedClasses
 
-    dependsOn ":src:DSL:classes"
-    dependsOn "clean"
-
-    doLast {
-      delete DSLs
-
-      runGenerator(["import",
-                    "$DSL_package",
-                    "$XMLs_in",
-                    "$DSLs"])
+    useJUnit {
+      includeCategories "org.jonnyzzz.teamcity.dsl.util.GenerateXMLCategory"
     }
   }
-
-  task generateXMLs {
-    inputs.dir DSLs
-    inputs.file project.buildFile
-    inputs.file thisBuildScript
-
-    outputs.dir XMLs_out
-
-    dependsOn ":src:DSL:classes"
-    dependsOn "classes"
-
-    doLast {
-      delete XMLs_out
-
-      runGenerator(["generate",
-                    "$DSL_package",
-                    "$XMLs_out",
-                    "$DSL_classes"])
-    }
-  }
-
 
   test {
-    useJUnit()
+    dependsOn test_xml
 
-    dependsOn "generateDSL"
-    dependsOn "generateXMLs"
+    useJUnit {
+      includeCategories "org.jonnyzzz.teamcity.dsl.util.GenerateCheckCategory"
+    }
+  }
 
-    systemProperty "DATA_XMLS_IN", "$XMLs_in"
-    systemProperty "DATA_XMLS_OUT", "$XMLs_out"
+  [test_dsl, test_xml, test].each {task ->
+    task.systemProperty "DATA_XMLS_IN", "$XMLs_in"
+    task.systemProperty "DATA_XMLS_OUT", "$XMLs_out"
+
+    task.systemProperty "DATA_DSL_OUT", "$DSLs"
+    task.systemProperty "DATA_DSL_CLASSES", project.sourceSets.generated.output.classesDir.path
   }
 }
