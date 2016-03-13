@@ -9,28 +9,28 @@ fun assertGeneratedTeamCityModel(orig : File, temp : File) {
   fun File.loadForCompare() = loadUTF().replace("\r\n", "\n")
 
   fun selectFilesToCompare(root: File) : Map<String, String> = root
-          .listFiles { it -> it.isDirectory() }!!
+          .listFiles { it -> it.isDirectory }!!
           .flatMap {
             val key = "project:" + it.name
             val projectConfig = it / "project-config.xml"
-            if (!projectConfig.isFile())
+            if (!projectConfig.isFile)
               listOf()
             else
               listOf(key to projectConfig.loadForCompare()) +
                     ((it / "buildTypes")
-                            .listFiles { it -> it.isFile() && it.name.endsWith(".xml") }
+                            .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
                             ?.map { (key + "/Build_" + it.name) to it.loadForCompare() }
                             ?: listOf()) +
                     ((it / "vcsRoots")
-                            .listFiles { it -> it.isFile() && it.name.endsWith(".xml") }
+                            .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
                             ?.map { (key + "/VCSRoot_" + it.name) to it.loadForCompare() }
                             ?: listOf()) +
                     ((it / "pluginData")
-                            .listFiles { it -> it.isFile() && it.name.endsWith(".xml") }
+                            .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
                             ?.map { (key + "/" + it.name) to it.loadForCompare() }
                             ?: listOf()) +
                     ((it / "pluginData" / "metaRunners")
-                            .listFiles { it -> it.isFile() && it.name.endsWith(".xml") }
+                            .listFiles { it -> it.isFile && it.name.endsWith(".xml") }
                             ?.map { (key + "/meta-" + it.name) to it.loadForCompare() }
                             ?: listOf())
           }.toMap()
@@ -48,7 +48,7 @@ fun assertGeneratedTeamCityModel(orig : File, temp : File) {
     val (file, origText) = kv
     actualData[file] != origText
   } . map { it.key } .toSortedSet()
-  println("Total errors: ${errors.size} of ${origData.size}: ${errors}")
+  println("Total errors: ${errors.size} of ${origData.size}: $errors")
   println()
 
   for ((file, origText) in origData) {
@@ -64,6 +64,7 @@ fun assertGeneratedTeamCityModel(orig : File, temp : File) {
       println("================")
       println("Expected file:")
       println(origText)
+      println("================")
       throw t
     }
   }
