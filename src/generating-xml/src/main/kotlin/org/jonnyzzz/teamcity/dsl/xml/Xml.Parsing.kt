@@ -35,12 +35,19 @@ object XmlParsing {
        return TeamCityModel(TeamCityVersion.latest, listOf())
     }
 
-    val versions = modelProjects.map { it.version }.distinct()
+    val versions = modelProjects.groupBy { it.version }
     if (versions.size != 1) {
-      throw Error("Only one version of files is allowed, but were: $versions")
+      throw Error("Only one TeamCity version is allowed, but were:\n" + buildString {
+        versions.forEach {
+          appendln("${it.key}")
+          it.value.forEach {
+            appendln("  Project: ${it.project.id}")
+          }
+        }
+      })
     }
 
-    return TeamCityModel(versions.single(), modelProjects.map { it.project }.toList())
+    return TeamCityModel(versions.keys.single(), modelProjects.map { it.project }.toList())
   }
 
   private fun parseTeamCityTargetVersion(rootElement: Element) : TeamCityVersion {
