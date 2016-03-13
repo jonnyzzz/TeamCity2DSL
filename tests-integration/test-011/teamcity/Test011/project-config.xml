@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="aef70cf1-9906-442d-95f4-8c3ac7ef9765" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>4 - PHP Tests &#x1f6a6;</name>
+  <parameters />
+  <cleanup />
+</project>
+
