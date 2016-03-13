@@ -67,6 +67,8 @@ subprojects {
 
   task test_dsl(type : Test) {
     dependsOn cleanGenerated
+    inputs.dir XMLs_in
+    outputs.dir DSLs
 
     useJUnit {
       includeCategories "org.jonnyzzz.teamcity.dsl.util.GenerateDSLCategory"
