@@ -1,0 +1,12 @@
+
+subprojects {
+
+  group = 'org.jonnyzzz.teamcity.dsl.special'
+
+  dependencies {
+    compile project(':src:lang-api')
+  }
+
+
+}
+

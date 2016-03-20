@@ -1,0 +1,8 @@
+
+dependencies {
+
+  compile project(':src:model')
+  compile project(':src:model-dsl')
+  compile project(':src:generating-kotlin')
+
+}

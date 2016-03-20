@@ -3,6 +3,7 @@ rootProject.name = 'TeamCity2DSL'
 include ':src:DSL',
         ':src:model',
         ':src:model-dsl',
+        ':src:lang-api',
         ':src:generating-kotlin',
         ':src:generating-xml',
         ':src:gradle-plugin',
@@ -15,6 +16,7 @@ include ':src:DSL',
 
         ':tests-integration-gradle-plugin'
 
+include ':plugins:java-coverage'
 
 
 
