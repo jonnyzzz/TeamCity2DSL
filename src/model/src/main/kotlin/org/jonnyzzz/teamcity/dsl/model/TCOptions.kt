@@ -12,6 +12,6 @@ class TCSettingsOptions {
 
 class TCSettingsOption : TCAbstractParam {
   override var name by JXML / XAttribute("name")
-  override var value  by JXML / XAttribute("value")
+  override var value by JXML / XAttribute("value")
 }
 
