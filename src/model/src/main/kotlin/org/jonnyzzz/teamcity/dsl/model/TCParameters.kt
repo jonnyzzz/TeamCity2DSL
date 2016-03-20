@@ -71,3 +71,6 @@ open class TCParameter : TCAbstractParam {
 open class TCParameterWithSpec : TCParameter() {
   var spec by JXML[3] / XAttribute("spec")
 }
+
+
+fun <T : TCAbstractParam> List<T>?.find(name : String) : T? = this?.find { name == it.name }
