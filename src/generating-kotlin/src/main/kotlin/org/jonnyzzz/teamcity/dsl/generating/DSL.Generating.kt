@@ -1,6 +1,7 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
 import org.jonnyzzz.teamcity.dsl.div
+import org.jonnyzzz.teamcity.dsl.lang.api.ExtensionContext
 import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.writeUTF
 import java.io.File
@@ -13,7 +14,7 @@ class DSLOptions {
   var packageName : String = "org.jonnyzzz.teamcity.autodsl"
 }
 
-interface GenerationContext {
+interface GenerationContext : ExtensionContext {
   val options : DSLOptions
 
   fun isDeclared(project : TCProject) : Boolean
@@ -35,6 +36,12 @@ object DSLGenerating {
     if (!file.isDirectory) throw Error("Failed to cleanup destination folder")
 
     val context = object : GenerationContext {
+      override val projects: List<TCProject>
+        get() = model.projects
+
+      override val version: TeamCityVersion
+        get() = model.version
+
       override val options: DSLOptions = options
       override fun isDeclared(project: TCProject): Boolean = projects.any {it.id == project.id }
       override fun isDeclared(root: TCVCSRoot): Boolean = projects.any {it.vcsRoots.any { it.id == root.id }}

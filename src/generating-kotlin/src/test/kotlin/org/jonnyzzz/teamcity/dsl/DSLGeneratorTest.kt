@@ -145,55 +145,6 @@ class ModelToDSLGeneratorTest {
     Assert.assertEquals("rule(\"bb\") {\n  ref(\"aaa\") - `equals` - \"bbb\"\n}", x)
   }
 
-  @Test
-  fun should_use_predefined_runner_mixin() {
-    val r = TCSettingsRunner().apply {
-      id = "555"
-      runnerType = "zzz"
-      coverageIDEA.asBuilder()()
-      coverageJOCOCO.asBuilder()()
-    }
-
-    val x = kotlinWriter {
-      generateRunners(listOf(r))(r)
-    }.trim()
-
-    println(x)
-
-    Assert.assertTrue(x.trim().startsWith("runner(\"555\", \"zzz\") + coverageIDEA + coverageJOCOCO + {"))
-  }
-
-  @Test
-  fun should_use_predefined_runner_mixin_in_mixin() {
-    val r1 = TCSettingsRunner().apply {
-      id = "555"
-      runnerType = "zzz"
-      coverageIDEA.asBuilder()()
-      coverageJOCOCO.asBuilder()()
-      param("z", "x")
-      param("q", "x")
-    }
-    val r2 = TCSettingsRunner().apply {
-      id = "777"
-      runnerType = "zzz"
-      coverageIDEA.asBuilder()()
-      coverageJOCOCO.asBuilder()()
-      param("z", "x")
-      param("R", "x")
-    }
-
-    val x = kotlinWriter {
-      val d = generateRunners(listOf(r1, r2))
-      d(r1)
-      d(r2)
-    }.trim()
-
-    println(x)
-
-    Assert.assertTrue(x.contains("val runnerMixin1 = runnerMixin() + coverageIDEA + coverageJOCOCO + {"))
-    Assert.assertTrue(x.contains("runner(\"555\", \"zzz\") + runnerMixin1 + {"))
-    Assert.assertTrue(x.contains("runner(\"777\", \"zzz\") + runnerMixin1 + {"))
-  }
 
   @Test
   fun should_generate_nice_options() {
@@ -267,21 +218,5 @@ class ModelToDSLGeneratorTest {
     Assert.assertTrue(x.contains("rule(\"\")"))
   }
 
-
-  private val context = object :GenerationContext {
-    override val options: DSLOptions = DSLOptions()
-
-    override fun isDeclared(project: TCProject): Boolean = false
-    override fun isDeclared(root: TCVCSRoot): Boolean = false
-    override fun isDeclared(ref: TCSettingsVCSRef): Boolean = false
-    override fun findBuild(buildId: String?): TCBuildType? = null
-    override fun findTemplate(templateId: String?): TCBuildTemplate? = null
-    override fun findProject(projectId: String?): TCProject? = null
-  }
-
-  private val contextWithLookup = object:GenerationContext by context {
-    override fun findBuild(buildId: String?): TCBuildType? = buildId?.let { object:TCBuildType(buildId) { } }
-    override fun findProject(projectId: String?): TCProject? = projectId?.let { object:TCProject(projectId) { } }
-  }
 }
 

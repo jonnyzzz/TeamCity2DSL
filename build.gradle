@@ -47,12 +47,12 @@ subprojects {
 
   afterEvaluate {
     configurations.all.each {
-      publishToMavenLocal.dependsOn it
+      rootProject.localUploadEx.dependsOn it
 
       it.allDependencies.withType(ProjectDependency).each {
-        publishToMavenLocal.dependsOn it.dependencyProject.tasks.classes
-        publishToMavenLocal.dependsOn it.dependencyProject.tasks.jar
-        publishToMavenLocal.dependsOn it.dependencyProject.tasks.publishToMavenLocal
+        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.classes
+        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.jar
+        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.publishToMavenLocal
       }
     }
 
@@ -64,6 +64,7 @@ subprojects {
       }
     }
   }
+
   publishToMavenLocal.inputs.file project.buildFile
 
   tasks.withType(Test).each { test ->

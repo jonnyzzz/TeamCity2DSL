@@ -34,7 +34,7 @@ fun generateTemplate(context: GenerationContext, home: File, project : TCProject
           }
 
           generateSettings(context, template) {
-            val generateRunner = generateRunners(template.runners)
+            val generateRunner = generateRunners(context, template.runners)
             template.runners?.forEach { generateRunner(it) }
           }
         }

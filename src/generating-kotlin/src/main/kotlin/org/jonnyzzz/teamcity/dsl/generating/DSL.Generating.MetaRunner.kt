@@ -36,7 +36,7 @@ fun generateMetaRunner(context: GenerationContext, home: File, project : TCProje
           }
 
           generateSettings(context, runner) {
-            val generateRunner = generateRunners(runner.runners)
+            val generateRunner = generateRunners(context, runner.runners)
             runner.runners?.forEach { generateRunner(it) }
           }
         }

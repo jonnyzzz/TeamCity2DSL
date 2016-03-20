@@ -44,19 +44,6 @@ fun runnerMixin(runnerType: String? = null, builder: TCSettingsRunner.() -> Unit
   } + builder
 }
 
-val coverageIDEA: TCRunnerMixin = runnerMixin {
-  param("teamcity.coverage.idea.includePatterns", "*")
-}
-
-val coverageEMMA: TCRunnerMixin = runnerMixin {
-  param("teamcity.coverage.emma.include.source", "true")
-  param("teamcity.coverage.emma.instr.parameters", "-ix -*Test*")
-}
-
-val coverageJOCOCO: TCRunnerMixin = runnerMixin {
-  param("teamcity.coverage.jacoco.patterns", "+:*")
-}
-
 val normalStep: TCRunnerMixin = runnerMixin {
   param("teamcity.step.mode", "default")
 }

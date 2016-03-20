@@ -54,7 +54,7 @@ fun generateBuildType(context: GenerationContext, home: File, project : TCProjec
             val order = build.runnersOrder ?: runners.map { it.id }.filterNotNull()
             val idToRunner = runners.map { it.id to it }.toMap()
 
-            val generateRunner = generateRunners(runners)
+            val generateRunner = generateRunners(context, runners)
             order.forEach {
               val runner = idToRunner[it]
               if (runner == null) {

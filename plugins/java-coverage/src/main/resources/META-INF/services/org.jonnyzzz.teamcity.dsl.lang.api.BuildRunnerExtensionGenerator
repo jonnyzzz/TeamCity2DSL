@@ -1,0 +1,4 @@
+org.jonnyzzz.teamcity.dsl.special.java.coverage.JOCOCOCoverageRunnerExtension
+org.jonnyzzz.teamcity.dsl.special.java.coverage.IDEACoverageRunnerExtension
+org.jonnyzzz.teamcity.dsl.special.java.coverage.EMMACoverageRunnerExtension
+

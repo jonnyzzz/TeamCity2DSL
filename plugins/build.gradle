@@ -5,8 +5,16 @@ subprojects {
 
   dependencies {
     compile project(':src:lang-api')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testCompile "junit:junit:4.12"
+    testCompile project(':src:test-helper')
+    testCompile project(':src:generating-kotlin')
+    testCompile project(':src:generating-kotlin-test')
   }
 
-
+  test {
+    useJUnit()
+  }
 }
 

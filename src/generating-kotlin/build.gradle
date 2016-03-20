@@ -1,9 +1,11 @@
 dependencies {
   compile project(':src:model')
   compile project(':src:model-dsl')
+  compile project(':src:lang-api')
   compile project(':src:util')
 
   testCompile project(':src:test-helper')
+  testCompile project(':src:generating-kotlin-test')
 
   compile "org.apache.commons:commons-lang3:3.3.2"
 }

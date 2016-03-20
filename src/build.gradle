@@ -8,7 +8,6 @@ subprojects {
 
   test {
     useJUnit()
-    testLogging.showStandardStreams = true
   }
 }
 
