@@ -18,7 +18,7 @@ dependencies {
 
 def pluginProject = project(':src:gradle-plugin')
 test {
-  dependsOn pluginProject.tasks.publishToMavenLocal
+  dependsOn rootProject.tasks.localUploadEx
   dependsOn configurations.plugin_binaries
 
   useJUnit()
