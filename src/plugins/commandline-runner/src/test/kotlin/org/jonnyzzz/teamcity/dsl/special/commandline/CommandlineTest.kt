@@ -26,7 +26,7 @@ class ModelToDSLGeneratorTest2 {
 
     println(x)
 
-    Assert.assertTrue(x.trim().startsWith("runner(\"555\") {\n  script(\"#!/bin/bash"))
+    Assert.assertTrue(x.trim().startsWith("runner(\"555\") {\n  script {\n    + \"#!/bin/bash"))
   }
 
   @Test

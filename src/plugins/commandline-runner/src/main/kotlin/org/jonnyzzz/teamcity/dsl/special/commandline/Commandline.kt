@@ -42,9 +42,14 @@ class CommandlineGenerator : BuildRunnerGenerator(){
     }
 
     if (custom == "true") {
-      val content = runner.parameters?.find(CMD_content)?.value ?: return null
+      val content = runner.parameters?.find(CMD_content)?.value?.split('\n') ?: return null
+
       return BuildRunnerGeneratorResult(setOf(CMD_use_custom, CMD_content)) {
-        appendln("${TCSettingsRunner::script.name}(${content.quoteWithRefs()})")
+        block("${TCSettingsRunner::script.name}") {
+          for (line in content) {
+            appendln("+ " + line.quoteWithRefs())
+          }
+        }
       }
     }
 
