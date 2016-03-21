@@ -62,6 +62,11 @@ subprojects {
     //TODO: fixme. Use modules with fewer dependencies here
     generatedCompile project(':src:model-dsl')
 
+    //include plugins to be available in gradle by default
+    project(':src:plugins').subprojects {
+      generatedCompile it
+    }
+
     testCompile project(":src:test-integration-helper")
   }
 
