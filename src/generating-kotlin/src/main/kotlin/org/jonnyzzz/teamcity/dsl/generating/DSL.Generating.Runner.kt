@@ -15,24 +15,16 @@ fun KotlinWriter.generateRunners(context: GenerationContext, runners: List<TCSet
   return { d ->
     val item = d
 
-    val generators = mutableListOf<BuildRunnerGeneratorResult>()
+    val generators = mutableListOf<BuildRunnerExtensionGeneratorResult>()
 
     for (ext in Host.runnerExtensions) {
-      val runnerContext = object: BuildRunnerExtensionGeneratorContext, ExtensionContext by context {
-        override val runner: TCSettingsRunner
-          get() = d
-
-        override val selectedGenerators: List<BuildRunnerGeneratorResult>
-          get() = generators.toList()
-      }
+      val runnerContext = runnerExtensionContext(context, d, generators)
 
       val generator = ext.generate(runnerContext) ?: continue
       generators += generator
     }
 
-    val blockName = buildString {
-      append("${TCBuildSettings::runner.name}(${d.id?.quote()}, ${d.runnerType?.quote()})")
-
+    val mixins = buildString {
       for (gen in generators) {
         val builder = gen.builder
         val text = " + " + kotlinBlockWriter(builder)
@@ -45,13 +37,42 @@ fun KotlinWriter.generateRunners(context: GenerationContext, runners: List<TCSet
       }
     }
 
-    val allParameters = generators.flatMap { it.parameterNames }.toSet()
+    val runnerGenerator = Host.runners.asSequence().map { it.generate(runnerContext(context, d, generators)) }.filterNotNull().firstOrNull()
+
+    val blockName = when {
+      runnerGenerator == null -> "${TCBuildSettings::runner.name}(${d.id?.quote()}, ${d.runnerType?.quote()})"
+      else -> "${TCBuildSettings::runner.name}(${d.id?.quote()})"
+    } + mixins
+
     block(blockName) {
       if (item.name != null) setter("name", item.name)
 
+      runnerGenerator?.apply { builder() }
+
+      val allParameters = generators.flatMap { it.parameterNames }.toSet() + (runnerGenerator?.parameterNames ?: setOf())
       params(item.parameters?.filter {
         val name = it.name
         name == null || !allParameters.contains(it.name) })
     }
+  }
+}
+
+private fun runnerExtensionContext(context: GenerationContext, d: TCSettingsRunner, generators: MutableList<BuildRunnerExtensionGeneratorResult>): BuildRunnerExtensionGeneratorContext {
+  return object : BuildRunnerExtensionGeneratorContext, ExtensionContext by context {
+    override val runner: TCSettingsRunner
+      get() = d
+
+    override val selectedGenerators: List<BuildRunnerExtensionGeneratorResult>
+      get() = generators.toList()
+  }
+}
+
+private fun runnerContext(context: GenerationContext, d: TCSettingsRunner, generators: MutableList<BuildRunnerExtensionGeneratorResult>): BuildRunnerGeneratorContext {
+  return object : BuildRunnerGeneratorContext, ExtensionContext by context {
+    override val runner: TCSettingsRunner
+      get() = d
+
+    override val selectedGenerators: List<BuildRunnerExtensionGeneratorResult>
+      get() = generators.toList()
   }
 }

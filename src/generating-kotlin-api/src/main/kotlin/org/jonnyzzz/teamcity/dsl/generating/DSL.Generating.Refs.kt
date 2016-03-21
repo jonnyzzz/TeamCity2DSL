@@ -1,5 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
+import org.apache.commons.lang3.StringEscapeUtils
 import kotlin.text.*
 
 fun String.quoteWithRefs() : String {
@@ -39,4 +40,9 @@ fun String.quoteWithRefs() : String {
   }
 
   return result.toString()
+}
+
+fun String.quote() : String {
+  val encoded = StringEscapeUtils.escapeJava(this)!!.replace("\$", "\\\$")
+  return "\"$encoded\""
 }

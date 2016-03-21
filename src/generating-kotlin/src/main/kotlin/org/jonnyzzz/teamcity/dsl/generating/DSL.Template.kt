@@ -1,6 +1,5 @@
 package org.jonnyzzz.teamcity.dsl.generating
 
-import org.apache.commons.lang3.StringEscapeUtils
 import org.jdom2.Element
 import org.jonnyzzz.teamcity.dsl.api.version
 import kotlin.collections.forEach
@@ -101,46 +100,8 @@ fun KotlinWriter.elementInternals(element : Element?) {
   }
 }
 
-fun KotlinWriter.block(text : String, omitEmpty : Boolean = false, builder : KotlinWriter.() -> Unit) {
-  var hasContent = false
-  val that = this
-  val offset = that.offset()
-  object : KotlinWriter by offset {
-    override fun appendln(line: String) {
-      if (hasContent == false) {
-        that.appendln(text + " {")
-        hasContent = true
-      }
-      offset.appendln(line)
-    }
-  }.builder()
-
-  when {
-    hasContent -> appendln("}")
-    !omitEmpty -> appendln(text + " { }")
-    else -> appendln(text)
-  }
-}
-
-fun KotlinWriter.block2(text : String, builder : KotlinWriter.() -> Unit) {
-  appendln(text + " {init{")
-  offset().builder()
-  appendln("}}")
-}
-
-fun KotlinWriter.setter(name : String, value : String?) {
-  if (value == null) return
-  val encoded = value.quote()
-  appendln("$name = $encoded")
-}
-
 fun KotlinWriter.setter(name : String, value : Element?) {
   if (value == null) return
   element(value, "$name = ")
-}
-
-fun String.quote() : String {
-  val encoded = StringEscapeUtils.escapeJava(this)!!.replace("\$", "\\\$")
-  return "\"$encoded\""
 }
 

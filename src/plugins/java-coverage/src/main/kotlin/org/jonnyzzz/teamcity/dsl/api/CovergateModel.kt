@@ -6,7 +6,7 @@ val coverageJOCOCO: TCRunnerMixin = runnerMixin {
   param(coverageJOCOCO_param, coverageJOCOCO_value)
 }
 
-val   coverageIDEA: TCRunnerMixin = runnerMixin {
+val coverageIDEA: TCRunnerMixin = runnerMixin {
   param(coverageIDEA_param, coverageIDEA_value)
 }
 

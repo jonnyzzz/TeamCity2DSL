@@ -1,3 +1,4 @@
+@file:JvmName("DSL_Writer_Impl")
 package org.jonnyzzz.teamcity.dsl.generating
 
 fun kotlinWriter(builder: KotlinWriter.() -> Unit): String {

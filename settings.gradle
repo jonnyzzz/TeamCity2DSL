@@ -18,7 +18,8 @@ include ':src:DSL',
 
         ':tests-integration-gradle-plugin'
 
-include ':plugins:java-coverage'
+include ':src:plugins:java-coverage'
+include ':src:plugins:commandline-runner'
 
 
 

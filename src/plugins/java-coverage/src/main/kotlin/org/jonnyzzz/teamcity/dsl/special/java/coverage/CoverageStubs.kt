@@ -5,7 +5,7 @@ import org.jonnyzzz.teamcity.dsl.api.coverageIDEA
 import org.jonnyzzz.teamcity.dsl.api.coverageJOCOCO
 import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerExtensionGenerator
 import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerExtensionGeneratorContext
-import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerGeneratorResult
+import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerExtensionGeneratorResult
 import org.jonnyzzz.teamcity.dsl.model.find
 
 
@@ -25,13 +25,13 @@ val coverageEMMA_instr_value = "-ix -*Test*"
 class JOCOCOCoverageRunnerExtension : BuildRunnerExtensionGenerator() {
   override val priority: Double = 1003.toDouble()
 
-  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerGeneratorResult? {
+  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerExtensionGeneratorResult? {
     val runner = context.runner
 
     val jococo = runner.parameters.find(coverageJOCOCO_param) ?: return null
     if (jococo.value != coverageJOCOCO_value) return null
 
-    return BuildRunnerGeneratorResult(setOf(coverageJOCOCO_param)) {
+    return BuildRunnerExtensionGeneratorResult(setOf(coverageJOCOCO_param)) {
       constant(::coverageJOCOCO.name)
     }
   }
@@ -40,13 +40,13 @@ class JOCOCOCoverageRunnerExtension : BuildRunnerExtensionGenerator() {
 class IDEACoverageRunnerExtension : BuildRunnerExtensionGenerator() {
   override val priority: Double = 1001.toDouble()
 
-  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerGeneratorResult? {
+  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerExtensionGeneratorResult? {
     val runner = context.runner
 
     val idea = runner.parameters.find(coverageIDEA_param) ?: return null
     if (idea.value != coverageIDEA_value) return null
 
-    return BuildRunnerGeneratorResult(setOf(coverageIDEA_param)) {
+    return BuildRunnerExtensionGeneratorResult(setOf(coverageIDEA_param)) {
       constant(::coverageIDEA.name)
     }
   }
@@ -55,7 +55,7 @@ class IDEACoverageRunnerExtension : BuildRunnerExtensionGenerator() {
 class EMMACoverageRunnerExtension : BuildRunnerExtensionGenerator() {
   override val priority: Double = 1002.toDouble()
 
-  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerGeneratorResult? {
+  override fun generate(context: BuildRunnerExtensionGeneratorContext): BuildRunnerExtensionGeneratorResult? {
     val runner = context.runner
 
     val emma_include = runner.parameters.find(coverageEMMA_include_param) ?: return null
@@ -64,7 +64,7 @@ class EMMACoverageRunnerExtension : BuildRunnerExtensionGenerator() {
     if (emma_include.value != coverageEMMA_include_value) return null
     if (emma_instr.value != coverageEMMA_instr_value) return null
 
-    return BuildRunnerGeneratorResult(setOf(coverageEMMA_include_param, coverageEMMA_instr_param)) {
+    return BuildRunnerExtensionGeneratorResult(setOf(coverageEMMA_include_param, coverageEMMA_instr_param)) {
       constant(::coverageEMMA.name)
     }
   }
