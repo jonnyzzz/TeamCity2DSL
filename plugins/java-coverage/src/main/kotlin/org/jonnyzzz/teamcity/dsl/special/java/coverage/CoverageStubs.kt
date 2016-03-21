@@ -5,7 +5,6 @@ import org.jonnyzzz.teamcity.dsl.api.coverageIDEA
 import org.jonnyzzz.teamcity.dsl.api.coverageJOCOCO
 import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerExtensionGenerator
 import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerExtensionGeneratorContext
-import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerGeneratorContext
 import org.jonnyzzz.teamcity.dsl.lang.api.BuildRunnerGeneratorResult
 import org.jonnyzzz.teamcity.dsl.model.find
 
