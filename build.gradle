@@ -45,26 +45,6 @@ subprojects {
     maven { url "http://dl.bintray.com/jonnyzzz/maven" }
   }
 
-  afterEvaluate {
-    configurations.all.each {
-      rootProject.localUploadEx.dependsOn it
-
-      it.allDependencies.withType(ProjectDependency).each {
-        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.classes
-        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.jar
-        rootProject.localUploadEx.dependsOn it.dependencyProject.tasks.publishToMavenLocal
-      }
-    }
-
-    configurations.all.each {
-      bintrayUpload.dependsOn it
-
-      it.allDependencies.withType(ProjectDependency).each {
-        bintrayUpload.dependsOn it.dependencyProject.tasks.bintrayUpload
-      }
-    }
-  }
-
   publishToMavenLocal.inputs.file project.buildFile
 
   tasks.withType(Test).each { test ->
@@ -81,9 +61,9 @@ task wrapper(type: Wrapper) {
 }
 
 task bintrayUploadEx {
-  dependsOn ':src:gradle-plugin:bintrayUpload'
+  //NOP
 }
 
 task localUploadEx {
-  dependsOn ':src:gradle-plugin:publishToMavenLocal'
+  //NOP
 }

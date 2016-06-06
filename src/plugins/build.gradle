@@ -12,3 +12,5 @@ subprojects {
   }
 }
 
+
+ext.skipUpload = true

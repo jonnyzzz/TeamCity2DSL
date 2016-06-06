@@ -3,3 +3,5 @@ dependencies {
   compile project(':src:DSL')
   compile project(':src:test-helper')
 }
+
+ext.skipUpload = true

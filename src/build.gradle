@@ -48,6 +48,22 @@ subprojects {
         vcsUrl = 'https://github.com/jonnyzzz/TeamCity2DSL'
       }
     }
-  }
 
+  }
+}
+
+ext.skipUpload = true
+
+afterEvaluate {
+  allprojects {
+    if (hasProperty("skipUpload")) return;
+
+    //setting up publishing
+    rootProject.localUploadEx.dependsOn tasks.publishToMavenLocal
+
+    def bintrayUpload = tasks.findByName("bintrayUpload")
+    if (bintrayUpload != null) {
+      rootProject.bintrayUploadEx.dependsOn bintrayUpload
+    }
+  }
 }
