@@ -17,13 +17,14 @@ class GeneratorPlugin : Plugin<Project> {
       config.plugin("kotlin")
     }
 
-    val renamer = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
-
     project.buildscript.repositories.forEach { project.repositories.add(it) }
 
+    val configuration = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
     project.dependencies.apply {
-      add(renamer.name, GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version)
-      add("compile",    GradlePluginBuildConstants.group + ":" + GradlePluginBuildConstants.name_DSL + ":" + GradlePluginBuildConstants.version) //TODO: use API module here!
+      val reference = "${GradlePluginBuildConstants.group}:${GradlePluginBuildConstants.name_DSL}:${GradlePluginBuildConstants.version}"
+
+      add(configuration.name, reference)
+      add("compile", reference) //TODO: use API module here!
     }
 
     val settings = project.DSLSettings
