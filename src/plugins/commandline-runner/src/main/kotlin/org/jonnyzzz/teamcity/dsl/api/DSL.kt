@@ -42,5 +42,7 @@ fun TCSettingsRunner.command(command : String, arguments : TCCommandLineCommandB
   runnerType = CMD_runnerType
 
   param(CMD_command, command)
+
+  //TODO: may not have the block in runner parameters
   param(CMD_params, paramz.joinToString("\n"))
 }
