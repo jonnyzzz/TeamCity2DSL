@@ -1,7 +1,7 @@
 buildscript {
-  ext.kotlin_version = '1.0.1'
-  ext.kotlin_xml_dsl_version = '0.1.5'
-  ext.kotlin_xml_bind_version = '0.1.8'
+  ext.kotlin_version = '1.0.2'
+  ext.kotlin_xml_dsl_version = '0.1.6'
+  ext.kotlin_xml_bind_version = '0.1.9'
 
   repositories {
     mavenCentral()
