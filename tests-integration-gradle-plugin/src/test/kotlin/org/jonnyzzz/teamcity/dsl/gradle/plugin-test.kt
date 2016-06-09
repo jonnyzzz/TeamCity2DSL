@@ -20,19 +20,17 @@ class IntegrationPluginTest {
     val DSL_PLUGIN_NAME = System.getProperty("TEST_PLUGIN_NAME")!!
     """
     buildscript {
-
       repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "http://dl.bintray.com/jonnyzzz/maven" }
       }
 
       dependencies {
-        classpath '${DSL_PLUGIN_CLASSPATH}'
+        classpath '$DSL_PLUGIN_CLASSPATH'
       }
     }
 
-    apply plugin: '${DSL_PLUGIN_NAME}'
+    apply plugin: '$DSL_PLUGIN_NAME'
 
    """
   }
@@ -48,7 +46,7 @@ class IntegrationPluginTest {
     val home = temp.newFolder() / "gradle-test"
     home.mkdirs()
 
-    var build_gradle = scriptHeader
+    val build_gradle = scriptHeader
     val args = mutableListOf("--stacktrace")
     val assertTasks = mutableListOf<() -> Unit>()
 

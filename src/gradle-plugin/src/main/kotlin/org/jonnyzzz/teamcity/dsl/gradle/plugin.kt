@@ -17,7 +17,13 @@ class GeneratorPlugin : Plugin<Project> {
       config.plugin("kotlin")
     }
 
-    project.buildscript.repositories.forEach { project.repositories.add(it) }
+    //TODO: include means to setup maven proxy for those repositories
+    project.repositories.apply {
+      jcenter()
+      mavenCentral()
+      maven { it.setUrl("http://dl.bintray.com/jonnyzzz/maven") }
+      mavenLocal()
+    }
 
     val configuration = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
     project.dependencies.apply {
