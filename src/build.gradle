@@ -58,9 +58,6 @@ afterEvaluate {
   allprojects {
     if (hasProperty("skipUpload")) return;
 
-    //setting up publishing
-    rootProject.localUploadEx.dependsOn tasks.publishToMavenLocal
-
     def bintrayUpload = tasks.findByName("bintrayUpload")
     if (bintrayUpload != null) {
       rootProject.bintrayUploadEx.dependsOn bintrayUpload
