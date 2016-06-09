@@ -61,7 +61,7 @@ configure(project(':src:gradle-plugin')) {
 
     plugins {
       teamcity2dsl {
-        id = 'org.jonnyzzz.teamcity2dsl'
+        id = 'org.jonnyzzz.teamcity.dsl'
         displayName = 'TeamCity2DSL'
       }
     }
