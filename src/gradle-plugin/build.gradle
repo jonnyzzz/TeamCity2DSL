@@ -6,7 +6,9 @@ configurations {
 
 dependencies {
   compile gradleApi()
-  compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  //https://youtrack.jetbrains.com/issue/KT-5756
+  //compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  compile "gradle.plugin.com.zoltu:kotlin:$kotlin_version"
 
   testCompile gradleTestKit()
 }

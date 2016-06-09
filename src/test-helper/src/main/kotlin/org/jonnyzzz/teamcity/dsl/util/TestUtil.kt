@@ -5,11 +5,11 @@ import org.jonnyzzz.teamcity.dsl.deleteAll
 import org.jonnyzzz.teamcity.dsl.loadUTF
 import java.io.File
 
-inline fun <Y> runUnderTempDirectory(action: (File) -> Y) {
+inline fun <Y> runUnderTempDirectory(action: (File) -> Y) : Y {
   val file = Files.createTempDir()!!.canonicalFile;
   file.mkdirs();
   try {
-    action(file);
+    return action(file);
   } finally {
     file.deleteAll()
   }
