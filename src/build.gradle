@@ -48,7 +48,23 @@ subprojects {
         vcsUrl = 'https://github.com/jonnyzzz/TeamCity2DSL'
       }
     }
+  }
+}
 
+configure(project(':src:gradle-plugin')) {
+  apply plugin: "com.gradle.plugin-publish"
+  pluginBundle {
+    website = 'https://github.com/jonnyzzz/TeamCity2DSL'
+    vcsUrl = 'https://github.com/jonnyzzz/TeamCity2DSL'
+    description = 'teamcity2dsl'
+    tags = ['TeamCity', 'DSL', 'Kotlin']
+
+    plugins {
+      teamcity2dsl {
+        id = 'org.jonnyzzz.teamcity2dsl'
+        displayName = 'TeamCity2DSL'
+      }
+    }
   }
 }
 
