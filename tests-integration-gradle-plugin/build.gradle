@@ -12,14 +12,11 @@ dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   compile project(':src:test-helper')
-
-  plugin_binaries project(':src:gradle-plugin')
 }
 
 def pluginProject = project(':src:gradle-plugin')
 test {
   dependsOn rootProject.tasks.localUploadEx
-  dependsOn configurations.plugin_binaries
 
   useJUnit()
 

@@ -70,11 +70,16 @@ configure(project(':src:gradle-plugin')) {
 
 ext.skipUpload = true
 
-allprojects {
-  if (this.ext.hasProperty("skipUpload")) return;
+afterEvaluate {
+  allprojects {
+    if (this.ext.hasProperty("skipUpload")) return;
 
-  def bintrayUpload = tasks.findByName("bintrayUpload")
-  if (bintrayUpload != null) {
-    rootProject.bintrayUploadEx.dependsOn bintrayUpload
+    rootProject.localUploadEx.dependsOn configurations.compile
+    rootProject.localUploadEx.dependsOn tasks.publishToMavenLocal
+
+    def bintrayUpload = tasks.findByName("bintrayUpload")
+    if (bintrayUpload != null) {
+      rootProject.bintrayUploadEx.dependsOn bintrayUpload
+    }
   }
 }

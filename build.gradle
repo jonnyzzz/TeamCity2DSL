@@ -67,7 +67,5 @@ task bintrayUploadEx {
 }
 
 task localUploadEx {
-  [':src:gradle-plugin', ':src:DSL'].each {
-    dependsOn project(it).tasks.publishToMavenLocal
-  }
+  //NOP
 }
