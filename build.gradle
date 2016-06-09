@@ -63,6 +63,7 @@ task wrapper(type: Wrapper) {
 }
 
 task bintrayUploadEx {
+  dependsOn project(':src:gradle-plugin').tasks.publishPlugins
   //NOP
 }
 
