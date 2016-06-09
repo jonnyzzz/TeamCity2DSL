@@ -66,6 +66,8 @@ configure(project(':src:gradle-plugin')) {
       }
     }
   }
+
+  rootProject.bintrayUploadEx.dependsOn tasks.publishPlugins
 }
 
 ext.skipUpload = true
