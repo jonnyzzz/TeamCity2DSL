@@ -4,4 +4,4 @@ dependencies {
   compile project(':src:test-helper')
 }
 
-ext.skipUpload = true
+ext.teamcity2dsl_notForMaven = true

@@ -4,4 +4,4 @@ dependencies {
   compile "junit:junit:4.12"
 }
 
-ext.skipUpload = true
+ext.teamcity2dsl_notForMaven = true

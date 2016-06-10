@@ -13,4 +13,4 @@ subprojects {
 }
 
 
-ext.skipUpload = true
+ext.teamcity2dsl_notForMaven = true
