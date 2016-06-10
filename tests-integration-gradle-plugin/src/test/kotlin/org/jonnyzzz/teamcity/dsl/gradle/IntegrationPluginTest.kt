@@ -1,24 +1,11 @@
 package org.jonnyzzz.teamcity.dsl.gradle
 
-import org.gradle.testkit.runner.BuildResult
 import org.hamcrest.core.StringContains
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
 import java.nio.file.Files
 
-
-class IntegrationPluginTest {
-  @Rule
-  @JvmField()
-  val temp = TemporaryFolder()
-
-
-  private fun runSuccessfulBuild(setup: RunSetup.() -> Unit): BuildResult = runSuccessfulGradleBuild {
-    script = TeamCity2DSLPlugin.scriptHeader
-    setup()
-  }
+class IntegrationPluginTest : IntegrationPluginTestCase() {
 
   @Test
   fun `apply plugin works`() {
