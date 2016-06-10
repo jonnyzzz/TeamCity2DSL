@@ -13,8 +13,6 @@ dependencies {
 
 def pluginProject = project(':src:gradle-plugin')
 test {
-  dependsOn rootProject.tasks.localUploadEx
-
   useJUnit()
 
   systemProperty "TEST_DATA_HOME", "$projectDir"
@@ -22,3 +20,5 @@ test {
   systemProperty "TEST_PLUGIN_VERSION", pluginProject.version
   systemProperty "TEST_PLUGIN_NAME", "org.jonnyzzz.teamcity.dsl"
 }
+
+test.dependsOn rootProject.tasks.localUploadEx
