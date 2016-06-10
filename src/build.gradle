@@ -20,9 +20,7 @@ subprojects {
     from sourceSets.main.allSource
   }
 
-  artifacts {
-    archives sourceJar
-  }
+  println("Updating project maven: $project.path. ${project.hasProperty('teamcity2dsl_notForMaven')}")
 
   publishing {
     publications {
@@ -34,6 +32,9 @@ subprojects {
       }
     }
   }
+
+  //register dependency
+  rootProject.localUploadEx.dependsOn publishToMavenLocal
 
   if (rootProject.hasProperty("bintrayUser")) {
     bintray {
@@ -48,6 +49,8 @@ subprojects {
         vcsUrl = 'https://github.com/jonnyzzz/TeamCity2DSL'
       }
     }
+
+    rootProject.bintrayUploadEx.dependsOn bintrayUpload
   }
 }
 
@@ -68,20 +71,4 @@ configure(project(':src:gradle-plugin')) {
   }
 
   rootProject.bintrayUploadEx.dependsOn tasks.publishPlugins
-}
-
-ext.skipUpload = true
-
-afterEvaluate {
-  allprojects {
-    if (this.ext.hasProperty("skipUpload")) return;
-
-    rootProject.localUploadEx.dependsOn configurations.compile
-    rootProject.localUploadEx.dependsOn tasks.publishToMavenLocal
-
-    def bintrayUpload = tasks.findByName("bintrayUpload")
-    if (bintrayUpload != null) {
-      rootProject.bintrayUploadEx.dependsOn bintrayUpload
-    }
-  }
 }
