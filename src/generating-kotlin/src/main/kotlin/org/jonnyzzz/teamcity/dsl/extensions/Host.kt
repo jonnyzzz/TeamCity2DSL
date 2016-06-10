@@ -6,13 +6,24 @@ import org.jonnyzzz.teamcity.dsl.lang.api.ExtensionPriority
 import java.util.*
 
 object Host {
-  val runnerExtensions = load(BuildRunnerExtensionGenerator::class.java)
-  val runners = load(BuildRunnerGenerator::class.java)
+  val runnerExtensions by lazy { load(BuildRunnerExtensionGenerator::class.java) }
+  val runners by lazy { load(BuildRunnerGenerator::class.java) }
 
 
-  private fun <T : ExtensionPriority> load(clazz : Class<T>) =
-    ServiceLoader.load(clazz, javaClass.classLoader)
+  private fun <T : ExtensionPriority> load(clazz : Class<T>) : List<T> {
+    val result = ServiceLoader.load(clazz)
             .toList()
             .sortedBy { it.priority }
             .toList()
+
+    println(buildString {
+      appendln("Loaded extensions of type ${clazz.simpleName}:")
+      result.map { it.javaClass.simpleName }.sorted().forEach {
+        appendln("  $it")
+      }
+      appendln()
+    })
+
+    return result
+  }
 }
