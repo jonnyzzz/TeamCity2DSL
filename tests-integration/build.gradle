@@ -64,7 +64,11 @@ subprojects {
 
     //include plugins to be available in gradle by default
     project(':src:plugins').subprojects {
+      //include plugin DSL API for the generator
       generatedCompile it
+
+      //include plugins to generator classpath
+      testCompile it
     }
 
     testCompile project(":src:test-integration-helper")

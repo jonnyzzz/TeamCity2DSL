@@ -16,7 +16,7 @@ dependencies {
   compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
   //include plugins to be available in gradle by default
-  project(':src:plugins').subprojects {
-    compile it
-  }
+//  project(':src:plugins').subprojects {
+//    compile it
+//  }
 }
