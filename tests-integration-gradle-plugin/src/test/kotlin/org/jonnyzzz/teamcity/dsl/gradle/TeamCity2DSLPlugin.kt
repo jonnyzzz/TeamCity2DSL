@@ -35,14 +35,15 @@ object TeamCity2DSLPlugin {
       repositories {
         mavenLocal()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
       }
 
       dependencies {
-        classpath '${DSL_PLUGIN_CLASSPATH}'
+        classpath '$DSL_PLUGIN_CLASSPATH'
       }
     }
 
-    apply plugin: '${DSL_PLUGIN_NAME}'
+    apply plugin: '$DSL_PLUGIN_NAME'
 
    """
   }
