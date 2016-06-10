@@ -2,9 +2,6 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
-configurations {
-  plugin_binaries
-}
 
 dependencies {
   testCompile gradleTestKit()
@@ -21,6 +18,7 @@ test {
   useJUnit()
 
   systemProperty "TEST_DATA_HOME", "$projectDir"
-  systemProperty "TEST_PLUGIN_CLASSPATH", "$pluginProject.group:gradle-plugin:$pluginProject.version"
+  systemProperty "TEST_PLUGIN_CLASSPATH", "$pluginProject.group:$pluginProject.name"
+  systemProperty "TEST_PLUGIN_VERSION", pluginProject.version
   systemProperty "TEST_PLUGIN_NAME", "org.jonnyzzz.teamcity.dsl"
 }
