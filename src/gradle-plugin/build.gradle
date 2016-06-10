@@ -1,8 +1,3 @@
-apply plugin: 'java-gradle-plugin'
-
-configurations {
-  used_implicitly_by_plugin
-}
 
 dependencies {
   compile gradleApi()
