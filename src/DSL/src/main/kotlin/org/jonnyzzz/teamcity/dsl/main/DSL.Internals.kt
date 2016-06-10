@@ -280,13 +280,13 @@ fun importProjects(xmlRoot : File, pkg : String, destRoot : File) : Unit {
   println("Loading model from XML files...")
   val model = XmlParsing.parse(xmlRoot)
   println("Parsed ${model.size} project(s).")
-  println("Generating DSL code...")
+  println("Generating DSL code into ${destRoot}...")
 
   val dest = destRoot.getCanonicalFile()
   dest.deleteAll()
   dest.mkdirs()
 
-  var options = DSLOptions().apply {
+  val options = DSLOptions().apply {
     packageName = pkg
   }
   DSLGenerating.generate(model, dest, options)
