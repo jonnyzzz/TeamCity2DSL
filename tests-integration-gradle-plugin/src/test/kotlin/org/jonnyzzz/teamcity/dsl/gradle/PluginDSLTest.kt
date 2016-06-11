@@ -49,7 +49,7 @@ class PluginDSLTest {
     }
 
     teamcity2dsl {
-      addx22 "org.jonnyzzz.teamcity.dsl.special:commandline-runner:${TeamCity2DSLPlugin.DSL_PLUGIN_LATEST_PUBLIC_VERSION}"
+      extension 'org.jonnyzzz.teamcity.dsl.special:commandline-runner:${TeamCity2DSLPlugin.DSL_PLUGIN_LATEST_PUBLIC_VERSION}'
     }
 
     """
@@ -57,10 +57,8 @@ class PluginDSLTest {
       val toHome = home / ".teamcity"
       val gen = home / "dsl.generated"
 
-      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-002"), toHome)
+      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-012"), toHome)
 
-      val tcMarker = (toHome / "marker.1").apply { parentFile.mkdirs(); writeText("aaa") }
-      val dslMarker = (gen / "marker.2").apply { parentFile.mkdirs(); writeText("bbb") }
 
       Files.walk(toHome.toPath()).forEach {
         println(".teamcity: $it")
@@ -69,8 +67,15 @@ class PluginDSLTest {
       args("xml2dsl", "dsl2xml")
 
       assert {
-        Assert.assertFalse(tcMarker.exists())
-        Assert.assertFalse(dslMarker.exists())
+        Files.walk(gen.toPath()).forEach {
+          println("gen: $it")
+        }
+
+        val text = (gen / "commandline/build_Jonnyzzz_Test.tcdsl.kt").readText()
+        println(text)
+
+        Assert.assertTrue(text.contains("script {"))
+        Assert.assertTrue(text.contains("+ \"echo 239\""))
       }
     }
   }
