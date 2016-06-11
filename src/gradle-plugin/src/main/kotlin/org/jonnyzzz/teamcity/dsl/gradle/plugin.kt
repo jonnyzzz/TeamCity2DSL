@@ -12,6 +12,8 @@ class GeneratorPlugin : Plugin<Project> {
   override fun apply(project: Project?) {
     if (project == null) return
 
+    project.extensions.create("teamcity2dsl", DSLSettings::class.java)
+
     project.apply { config ->
       config.plugin("java")
       config.plugin("kotlin")
@@ -33,17 +35,29 @@ class GeneratorPlugin : Plugin<Project> {
       add("compile", reference) //TODO: use API module here!
     }
 
-    val settings = project.DSLSettings
+
+    project.afterEvaluate { project ->
+      val settings = project.DSLSettings.toResolvedSettings(project)
+
+      settings.plugins.forEach {
+        project.dependencies.add("compile", it)
+        project.dependencies.add(configuration.name, it) //TODO: use API module here!
+      }
+    }
 
     project.tasks.create("xml2dsl", Xml2Dsl::class.java)
 
     val dsl2xml = project.tasks.create("dsl2xml", Dsl2Xml::class.java)
     dsl2xml.dependsOn(project.tasks.getByName("classes"))
 
-    println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
-    val sourceSets = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+    project.afterEvaluate { project ->
+      val settings = project.DSLSettings.toResolvedSettings(project)
 
-    println("Source sets: ${sourceSets.names}")
-    sourceSets.getByName("main").java.srcDir( settings.dslPath!!.path )
+      println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
+      val sourceSets = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+
+      println("Source sets: ${sourceSets.names}")
+      sourceSets.getByName("main").java.srcDir( settings.dslPath.path )
+    }
   }
 }

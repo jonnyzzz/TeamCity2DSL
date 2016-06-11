@@ -1,37 +1,36 @@
 package org.jonnyzzz.teamcity.dsl.gradle
 
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 import java.io.File
+import java.util.*
 
 
 val Project.DSLSettings: DSLSettings
-  get() = with(project.extensions) {
-    findByType(DSLSettings::class.java) ?: create("teamcity2dsl", DSLSettings::class.java, project.projectDir)
-  }
+  get() = project.extensions.getByType(DSLSettings::class.java)!!
 
 
-open class DSLSettings(private val baseDir : File) {
-  var `package` : String? = "org.jonnyzzz.teamcity.dsl_generated"
+open class DSLSettings {
+  var targetPackage = "org.jonnyzzz.teamcity.dsl_generated"
+  var dslPath = "dsl.generated"
+  var xmlPath = ".teamcity"
+  var extensions = ArrayList<Any?>()
 
-  var dslPath : File? = baseDir / "dsl.generated"
-  var xmlPath : File? = baseDir / ".teamcity"
-
-
-  val toResolvedSettings by lazy {
-    fun failTask(message : String) : Throwable {
-      throw GradleException(message)
-    }
-
-    val xmlRoot = xmlPath ?: throw failTask("TeamCity XML root is not defined")
-    val dslRoot = dslPath ?: throw failTask("TeamCity DSL root is not defined")
-    val pkg = `package` ?: throw failTask("DSL Generation package is not defined")
-
-    ResolvedDSLSettings(pkg, dslRoot.absoluteFile, xmlRoot.absoluteFile)
+  fun extension(x: Any) {
+    extensions.add(x)
   }
 }
 
-data class ResolvedDSLSettings(val pkg : String,
+
+fun DSLSettings.toResolvedSettings(p: Project): ResolvedDSLSettings {
+  val xmlRoot = p.file(xmlPath)
+  val dslRoot = p.file(dslPath)
+  val pkg = targetPackage
+
+  return ResolvedDSLSettings(extensions.filterNotNull().toList(), pkg, dslRoot.absoluteFile, xmlRoot.absoluteFile)
+}
+
+data class ResolvedDSLSettings(val plugins : List<Any>,
+                               val pkg : String,
                                val dslPath : File,
                                val xmlPath : File)
 

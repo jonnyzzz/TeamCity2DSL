@@ -38,4 +38,40 @@ class PluginDSLTest {
       }
     }
   }
+
+  @Test
+  fun `include_commandline_plugin_via_DSL_002`() {
+    runSuccessfulGradleBuild {
+      script = """
+
+    plugins {
+      id "${TeamCity2DSLPlugin.DSL_PLUGIN_NAME}" version "${TeamCity2DSLPlugin.DSL_PLUGIN_LATEST_PUBLIC_VERSION}"
+    }
+
+    teamcity2dsl {
+      addx22 "org.jonnyzzz.teamcity.dsl.special:commandline-runner:${TeamCity2DSLPlugin.DSL_PLUGIN_LATEST_PUBLIC_VERSION}"
+    }
+
+    """
+
+      val toHome = home / ".teamcity"
+      val gen = home / "dsl.generated"
+
+      Paths.copyRec(Paths.teamcityProjectTestDataPath("test-002"), toHome)
+
+      val tcMarker = (toHome / "marker.1").apply { parentFile.mkdirs(); writeText("aaa") }
+      val dslMarker = (gen / "marker.2").apply { parentFile.mkdirs(); writeText("bbb") }
+
+      Files.walk(toHome.toPath()).forEach {
+        println(".teamcity: $it")
+      }
+
+      args("xml2dsl", "dsl2xml")
+
+      assert {
+        Assert.assertFalse(tcMarker.exists())
+        Assert.assertFalse(dslMarker.exists())
+      }
+    }
+  }
 }

@@ -15,19 +15,20 @@ abstract class BaseDSLTask : DefaultTask() {
 
   @TaskAction
   fun `action!`() {
-    val extension = project.DSLSettings
+    val extension = project.DSLSettings.toResolvedSettings(project)
 
     println("Running TeamCity2DSL: ${javaClass.simpleName.toLowerCase()}")
-    println("  package: ${extension.`package`}")
-    println("  dslPath: ${extension.dslPath}")
-    println("  xmlPath: ${extension.xmlPath}")
+    println("  package:    ${extension.pkg}")
+    println("  dslPath:    ${extension.dslPath}")
+    println("  xmlPath:    ${extension.xmlPath}")
+    println("  extensions: ${extension.plugins}")
 
     val config = project.configurations.getByName(TEAMCITY_RUNNER_CONFIGURATION) ?: throw failTask("Failed to find internal configuration")
     URLClassLoader(config.files.map{ it.toURI().toURL() }.toTypedArray(), URLClassLoader(arrayOf(), null)).context {
       //TODO: use API not stdout
       standardOutputCapture.start()
       try {
-        executeTaskImpl(this, extension.toResolvedSettings)
+        executeTaskImpl(this, extension)
       } finally {
         standardOutputCapture.stop()
       }
