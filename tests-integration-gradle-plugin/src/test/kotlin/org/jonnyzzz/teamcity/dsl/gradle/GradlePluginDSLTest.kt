@@ -2,10 +2,16 @@ package org.jonnyzzz.teamcity.dsl.gradle
 
 import org.junit.Assert
 import org.junit.Test
+import org.junit.experimental.categories.Category
+import org.w3c.dom.Element
+import java.net.URL
 import java.nio.file.Files
+import javax.xml.parsers.DocumentBuilderFactory
 
+interface GradlePluginDSL
 
-class PluginDSLTest {
+@Category(GradlePluginDSL::class)
+class GradlePluginDSLTest {
 
   @Test
   fun `it should wipe output_001`() {

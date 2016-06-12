@@ -12,13 +12,24 @@ dependencies {
 }
 
 def pluginProject = project(':src:gradle-plugin')
-test {
-  useJUnit()
-
+tasks.withType(Test) {
   systemProperty "TEST_DATA_HOME", "$projectDir"
   systemProperty "TEST_PLUGIN_CLASSPATH", "$pluginProject.group:$pluginProject.name"
   systemProperty "TEST_PLUGIN_VERSION", pluginProject.version
   systemProperty "TEST_PLUGIN_NAME", "org.jonnyzzz.teamcity.dsl"
+}
+
+test {
+  useJUnit {
+    excludeCategories 'org.jonnyzzz.teamcity.dsl.gradle.GradlePluginDSL'
+  }
+
+}
+
+task testPublishedPlugin(type: Test) {
+  useJUnit {
+    includeCategories 'org.jonnyzzz.teamcity.dsl.gradle.GradlePluginDSL'
+  }
 }
 
 test.dependsOn rootProject.tasks.localUploadEx
