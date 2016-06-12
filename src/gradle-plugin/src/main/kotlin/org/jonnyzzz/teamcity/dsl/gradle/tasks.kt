@@ -23,7 +23,7 @@ abstract class BaseDSLTask : DefaultTask() {
     println("  xmlPath:    ${extension.xmlPath}")
     println("  extensions: ${extension.plugins}")
 
-    val config = project.configurations.getByName(TEAMCITY_RUNNER_CONFIGURATION) ?: throw failTask("Failed to find internal configuration")
+    val config = project.configurations.getByName("compile")!!
     URLClassLoader(config.files.map{ it.toURI().toURL() }.toTypedArray(), URLClassLoader(arrayOf(), null)).context {
       //TODO: use API not stdout
       standardOutputCapture.start()

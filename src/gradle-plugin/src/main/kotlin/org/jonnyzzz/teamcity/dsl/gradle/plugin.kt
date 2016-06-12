@@ -5,8 +5,6 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.jonnyzzz.teamcity.dsl.gradle.generated.GradlePluginBuildConstants
 
-val TEAMCITY_RUNNER_CONFIGURATION = "teamcity_runner"
-
 
 class GeneratorPlugin : Plugin<Project> {
   override fun apply(project: Project?) {
@@ -27,21 +25,17 @@ class GeneratorPlugin : Plugin<Project> {
       mavenLocal()
     }
 
-    val configuration = project.configurations.maybeCreate(TEAMCITY_RUNNER_CONFIGURATION).setVisible(false).setTransitive(true)
     project.dependencies.apply {
       val reference = "${GradlePluginBuildConstants.group}:${GradlePluginBuildConstants.name_DSL}:${GradlePluginBuildConstants.version}"
-
-      add(configuration.name, reference)
-      add("compile", reference) //TODO: use API module here!
+      add("compile", reference) //TODO: split API & generator dependencies here!
     }
-
 
     project.afterEvaluate { project ->
       val settings = project.DSLSettings.toResolvedSettings(project)
 
       settings.plugins.forEach {
         project.dependencies.add("compile", it)
-        project.dependencies.add(configuration.name, it) //TODO: use API module here!
+        //TODO: split API & generator dependencies here!
       }
     }
 
