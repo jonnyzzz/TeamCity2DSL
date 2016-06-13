@@ -1,7 +1,6 @@
 package org.jonnyzzz.teamcity.dsl.gradle
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -33,10 +32,6 @@ abstract class BaseDSLTask : DefaultTask() {
         standardOutputCapture.stop()
       }
     }
-  }
-
-  protected fun failTask(message : String) : Throwable {
-    throw GradleException(message)
   }
 
   protected abstract fun executeTaskImpl(dslClasses : ClassLoader, settings : ResolvedDSLSettings)
