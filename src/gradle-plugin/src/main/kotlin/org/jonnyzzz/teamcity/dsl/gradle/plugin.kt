@@ -44,7 +44,7 @@ class GeneratorPlugin : Plugin<Project> {
     val dsl2xml = project.tasks.create("dsl2xml", Dsl2Xml::class.java)
     dsl2xml.dependsOn(project.tasks.getByName("classes"))
 
-    project.afterEvaluate { project ->
+    project.block { project ->
       val settings = project.DSLSettings.toResolvedSettings(project)
 
       println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
@@ -55,3 +55,5 @@ class GeneratorPlugin : Plugin<Project> {
     }
   }
 }
+
+fun <T, Y> T.block(a : (T) -> Y) : Y = a(this)
