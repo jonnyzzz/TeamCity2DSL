@@ -10,7 +10,13 @@ class GeneratorPlugin : Plugin<Project> {
   override fun apply(project: Project?) {
     if (project == null) return
 
-    project.extensions.create("teamcity2dsl", DSLSettings::class.java)
+    val extensionHandler = object:ExtensionHandler {
+      override fun extension(x: Any) {
+        project.dependencies.add("compile", x)
+      }
+    }
+
+    project.extensions.create("teamcity2dsl", DSLSettings::class.java, extensionHandler)
 
     project.apply { config ->
       config.plugin("java")
@@ -25,35 +31,20 @@ class GeneratorPlugin : Plugin<Project> {
       mavenLocal()
     }
 
-    project.dependencies.apply {
-      val reference = "${GradlePluginBuildConstants.group}:${GradlePluginBuildConstants.name_DSL}:${GradlePluginBuildConstants.version}"
-      add("compile", reference) //TODO: split API & generator dependencies here!
-    }
-
-    project.afterEvaluate { project ->
-      val settings = project.DSLSettings.toResolvedSettings(project)
-
-      settings.plugins.forEach {
-        project.dependencies.add("compile", it)
-        //TODO: split API & generator dependencies here!
-      }
-    }
+    //TODO: split API & generator dependencies here!
+    extensionHandler.extension("${GradlePluginBuildConstants.group}:${GradlePluginBuildConstants.name_DSL}:${GradlePluginBuildConstants.version}")
 
     project.tasks.create("xml2dsl", Xml2Dsl::class.java)
 
     val dsl2xml = project.tasks.create("dsl2xml", Dsl2Xml::class.java)
     dsl2xml.dependsOn(project.tasks.getByName("classes"))
 
-    project.block { project ->
-      val settings = project.DSLSettings.toResolvedSettings(project)
+    val settings = project.DSLSettings.toResolvedSettings(project)
 
-      println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
-      val sourceSets = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+    println("Adding DSL path to Kotlin source set: ${settings.dslPath}")
+    val sourceSets = project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets
 
-      println("Source sets: ${sourceSets.names}")
-      sourceSets.getByName("main").java.srcDir( settings.dslPath.path )
-    }
+    println("Source sets: ${sourceSets.names}")
+    sourceSets.getByName("main").java.srcDir( settings.dslPath.path )
   }
 }
-
-fun <T, Y> T.block(a : (T) -> Y) : Y = a(this)

@@ -8,16 +8,15 @@ import java.util.*
 val Project.DSLSettings: DSLSettings
   get() = project.extensions.getByType(DSLSettings::class.java)!!
 
+interface ExtensionHandler {
+  fun extension(x: Any)
+}
 
-open class DSLSettings {
+open class DSLSettings(private val extensionHandler: ExtensionHandler) : ExtensionHandler by extensionHandler {
   var targetPackage = "org.jonnyzzz.teamcity.dsl_generated"
   var dslPath = "dsl.generated"
   var xmlPath = ".teamcity"
   var extensions = ArrayList<Any?>()
-
-  fun extension(x: Any) {
-    extensions.add(x)
-  }
 }
 
 
