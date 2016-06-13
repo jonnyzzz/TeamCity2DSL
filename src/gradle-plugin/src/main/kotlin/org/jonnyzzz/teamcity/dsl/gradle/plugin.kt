@@ -28,7 +28,10 @@ class GeneratorPlugin : Plugin<Project> {
       jcenter()
       mavenCentral()
       maven { it.setUrl("http://dl.bintray.com/jonnyzzz/maven") }
-      mavenLocal()
+
+      if (GradlePluginBuildConstants.version.contains("SNAPSHOT")) {
+        mavenLocal()
+      }
     }
 
     //TODO: split API & generator dependencies here!
