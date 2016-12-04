@@ -24,6 +24,8 @@ abstract class TCProject(override val id : String) : TCUUID, TCProjectRef {
   var description  by JXML / "description" / XText
   var parameters by JXML / "parameters" / XElements("param") / XSub(TCParameterWithSpec::class.java) - listOf()
 
+  var projectExtensions by JXML / "project-extensions" / XSub(TCProjectExtensions::class.java)
+
   var cleanup by JXML / "cleanup" / XUnknown
 
   var ordering by JXML / XSub(TCProjectOrdering::class.java)
