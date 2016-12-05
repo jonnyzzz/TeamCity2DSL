@@ -6,7 +6,6 @@ import org.jonnyzzz.teamcity.dsl.model.TCProject
 import org.jonnyzzz.teamcity.dsl.model.isEmpty
 import org.jonnyzzz.teamcity.dsl.writeUTF
 import java.io.File
-import kotlin.collections.forEach
 
 val TCProject.className: String
   get() = "Project_" + id
@@ -64,6 +63,18 @@ fun generateProject(context: GenerationContext, home: File, project: TCProject) 
             block("plugins") {
               plugins.settings?.forEach {
                 element(it)
+              }
+            }
+          }
+
+          val extensions = project.projectExtensions
+          if (extensions != null) {
+            block("extensions") {
+              extensions.extensions?.forEach { ext ->
+
+                block("extension(${ext.id?.quote()}, ${ext.type?.quote()})") {
+                  params(ext.parameters)
+                }
               }
             }
           }

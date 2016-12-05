@@ -3,6 +3,7 @@ package org.jonnyzzz.teamcity.dsl.api
 import org.jonnyzzz.teamcity.dsl.api.internal.DSLRegistry
 import org.jonnyzzz.teamcity.dsl.model.*
 import org.jonnyzzz.teamcity.dsl.setIfNull
+import kotlin.comparisons.compareBy
 
 interface TCProjectOrderingBuilder {
   operator fun TCProjectRef.unaryPlus()
@@ -95,4 +96,35 @@ fun TCProjectRef.project(id : String, builder : TCProject.() -> Unit = {}) : TCP
       this + builder
     }
   }
+}
+
+interface TCProjectExtensionBuilder {
+  fun param(name : String, value : String? = null, builder: TCParameterBuilder.() -> Unit = {})
+
+}
+
+interface TCProjectExtensionsBuilder {
+  fun extension(id : String, type : String, builder : TCProjectExtensionBuilder.() -> Unit)
+}
+
+fun TCProject.extensions(builder : TCProjectExtensionsBuilder.() -> Unit) {
+  val host = TCProjectExtensions()
+  projectExtensions = host
+
+  object : TCProjectExtensionsBuilder {
+    override fun extension(id: String, type: String, builder: TCProjectExtensionBuilder.() -> Unit) {
+      val ext = TCProjectExtension()
+      ext.id = id
+      ext.type = type
+
+      object : TCProjectExtensionBuilder {
+        override fun param(name: String, value: String?, builder: TCParameterBuilder.() -> Unit) {
+          ext.addParameter(TCProjectExtension::parameters, name, value, builder)
+          ext.parameters = ext.parameters?.sortedWith(compareBy { it.name ?: "" })
+        }
+      }.builder()
+
+      host.extensions = (host.extensions ?: listOf()) + ext
+    }
+  }.builder()
 }
