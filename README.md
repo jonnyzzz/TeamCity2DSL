@@ -12,7 +12,9 @@ Blog Posts & Ideas
 ==================
 
 http://jonnyzzz.com/blog/2016/03/08/gradle-for-dsl/ 
+ 
 http://jonnyzzz.com/blog/2016/09/02/dsl-building/ 
+
 http://jonnyzzz.com/blog/2016/09/16/power-of-dsl/ 
 
 
